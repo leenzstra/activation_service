@@ -1,0 +1,1 @@
+ALTER TABLE licenses ADD COLUMN school_name TEXT;

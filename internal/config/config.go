@@ -11,22 +11,24 @@ type Config struct {
 }
 
 func LoadConfig(prod bool) (c Config, err error) {
-	viper.AddConfigPath(".")
+	v := viper.New()
+	v.AddConfigPath(".")
+
 	if prod {
-		viper.SetConfigName("prod")
+		v.SetConfigName("prod")
 	} else {
-		viper.SetConfigName("dev")
+		v.SetConfigName("dev")
 	}
 	
-	viper.SetConfigType("env")
+	v.SetConfigType("env")
 
-	err = viper.ReadInConfig()
+	err = v.ReadInConfig()
 
 	if err != nil {
 		return
 	}
 
-	err = viper.Unmarshal(&c)
+	err = v.Unmarshal(&c)
 
 	return
 }

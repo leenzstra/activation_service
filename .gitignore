@@ -1,0 +1,6 @@
+licenses.db
+licenses_backup.db
+licenses_test.db
+prov.env
+dev.env
+.env

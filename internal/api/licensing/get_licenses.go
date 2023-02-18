@@ -9,27 +9,24 @@ import (
 )
 
 type LicenseResponse struct {
-	Key         string                `json:"key"`
-	MaxUses     int                   `json:"max_uses"`
-	Contacts    string                `json:"contacts"`
-	LicenseUses []*LicenseUseResponse `json:"uses"`
-}
-
-type LicenseUseResponse struct {
-	MachineId string    `json:"machine_id"`
-	Activation    time.Time `json:"activation"`
-	Expiration    time.Time `json:"expiration"`
+	Key        string    `json:"key"`
+	MaxUses    int       `json:"max_uses"`
+	Contacts   string    `json:"contacts"`
+	Expiration time.Time `json:"expiration"`
+	Uses       int       `json:"uses"`
 }
 
 func modelsToResponses(models []*models.License) []*LicenseResponse {
 	responses := []*LicenseResponse{}
 
 	for _, m := range models {
-		uses := []*LicenseUseResponse{}
-		for _, u := range m.LicenseUses {
-			uses = append(uses, &LicenseUseResponse{MachineId: u.MachineId, Activation: u.ActivationDate, Expiration: u.ExpirationDate})
-		}
-		responses = append(responses, &LicenseResponse{Key: m.Key, MaxUses: m.MaxUses, LicenseUses: uses, Contacts: m.Contacts})
+		responses = append(responses, &LicenseResponse{
+			Key:        m.Key,
+			MaxUses:    m.MaxUses,
+			Contacts:   m.Contacts,
+			Expiration: m.Expiration,
+			Uses:       len(m.LicenseUses),
+		})
 
 	}
 	return responses

@@ -4,6 +4,8 @@ go 1.19
 
 require (
 	github.com/gofiber/fiber/v2 v2.41.0
+	github.com/gofiber/keyauth/v2 v2.1.31
+	github.com/hyperboloide/lk v0.0.0-20221004131154-cb9733bc66d0
 	github.com/spf13/viper v1.14.0
 	gorm.io/driver/sqlite v1.4.4
 	gorm.io/gorm v1.24.3
@@ -11,11 +13,8 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/gofiber/keyauth/v2 v2.1.31 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hyperboloide/lk v0.0.0-20221004131154-cb9733bc66d0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/compress v1.15.14 // indirect
