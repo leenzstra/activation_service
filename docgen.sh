@@ -2,6 +2,8 @@
 
 go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 
+sudo apt install markdown
+
 ls
 
 packagelist=(
@@ -19,7 +21,8 @@ packagelist=(
     "./internal/api/license" 
 )
 
-
 gomarkdoc --output "./docs/doc.md" ${packagelist[@]}
+
+markdown ./docs/doc.md > ./docs/index.html
                             
                             
