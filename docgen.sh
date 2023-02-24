@@ -9,7 +9,7 @@ packagelist=(
     "./internal/utils"
     "./internal/responses"
     "./internal/models"                  
-    "./internal/middlewares"
+    "./internal/middlewares/access"
     "./internal/keypair" 
     "./internal/db" 
     "./internal/config" 
