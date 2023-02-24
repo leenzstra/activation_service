@@ -37,11 +37,13 @@ jobs:
           name: Build ${{ github.run_number }}
           path: ./dist/server
 
+      - run: ls
+
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:
           name: Docs ${{ github.run_number }}
-          path: .\docs
+          path: ./docs
   docs:
     name: Upload docs
     runs-on: ubuntu-latest
