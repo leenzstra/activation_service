@@ -1,4 +1,4 @@
-package licensing
+package license
 
 import (
 	"time"
@@ -13,7 +13,7 @@ type LicenseInfoResponse struct {
 	Key          string                 `json:"key"`
 	MaxUses      int                    `json:"max_uses"`
 	Contacts     string                 `json:"contacts"`
-	Expiration   time.Time              `json:"expiration"`
+	Period       string                 `json:"period"`
 	LicenseUses  []*LicenseUseResponse  `json:"uses"`
 	SubjectsInfo []*SubjectInfoResponse `json:"subjects_info"`
 }
@@ -26,14 +26,15 @@ type SubjectInfoResponse struct {
 }
 
 type LicenseUseResponse struct {
-	MachineInfoHash string `json:"machine_info_hash"`
+	MachineInfoHash string    `json:"machine_info_hash"`
+	Expiration      time.Time `json:"expiration"`
 }
 
 func modelsToLicenseInfoResponses(license *models.License, selectedSubjects []*models.Subject) *LicenseInfoResponse {
 
 	uses := []*LicenseUseResponse{}
 	for _, use := range license.LicenseUses {
-		uses = append(uses, &LicenseUseResponse{MachineInfoHash: use.MachineInfoHash})
+		uses = append(uses, &LicenseUseResponse{MachineInfoHash: use.MachineInfoHash, Expiration: use.Expiration})
 	}
 
 	subjects := []*SubjectInfoResponse{}
@@ -56,7 +57,7 @@ func modelsToLicenseInfoResponses(license *models.License, selectedSubjects []*m
 		Key:          license.Key,
 		MaxUses:      license.MaxUses,
 		Contacts:     license.Contacts,
-		Expiration:   license.Expiration,
+		Period:       license.Period,
 		LicenseUses:  uses,
 		SubjectsInfo: subjects,
 	}
@@ -83,5 +84,5 @@ func (h handler) GetLicenseInfo(c *fiber.Ctx) error {
 		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
 	}
 
-	return c.JSON(utils.WrapResponse(true, "ok", modelsToLicenseInfoResponses(license, subjects)))
+	return c.JSON(utils.WrapResponse(true, "", modelsToLicenseInfoResponses(license, subjects)))
 }

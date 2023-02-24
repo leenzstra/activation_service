@@ -1,4 +1,4 @@
-package licensing
+package info
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -39,5 +39,5 @@ func (h handler) GetSubjects(c *fiber.Ctx) error {
 		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
 	}
 
-	return c.JSON(utils.WrapResponse(true, "ok", modelsToSubjectResponses(subjects)))
+	return c.JSON(utils.WrapResponse(true, "", modelsToSubjectResponses(subjects)))
 }

@@ -1,0 +1,61 @@
+name: Build release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Enable windows
+        run: flutter config --enable-windows-desktop
+
+      - name: Run tests
+        run: flutter test
+
+  release:
+    name: release
+    needs: [test]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Enable windows
+        run: flutter config --enable-windows-desktop
+
+      - name: Build
+        run: flutter build windows --release --target=.\lib\main_prod.dart
+
+      - name: Make archive
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: zip
+          filename: Release.zip
+          path: .\build\windows\runner\Release
+
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: Build
+          files: Release.zip

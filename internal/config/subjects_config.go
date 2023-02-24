@@ -5,6 +5,7 @@ import "github.com/spf13/viper"
 type SubjectsConfig struct {
 	Subjects []struct {
 		Id      int      `yaml:"id"`
+		Sid      int      `yaml:"sid"`
 		Name    string   `yaml:"name"`
 		Alias   string   `yaml:"alias"`
 		Classes []string `yaml:"classes"`

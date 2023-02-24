@@ -45,7 +45,7 @@ func (d Database) InitSubjectsInfo(sc *config.SubjectsConfig) error {
 
 	if subjectsCount == 0 {
 		for _, subject := range sc.Subjects {
-			subjModel := models.Subject{Sid: subject.Id, Name: subject.Name, Alias: subject.Alias}
+			subjModel := models.Subject{Sid: subject.Sid, Name: subject.Name, Alias: subject.Alias}
 			d.Gorm.Create(&subjModel)
 			subjClasses := collections.Map(subject.Classes, func(s string) models.SubjectClass { return models.SubjectClass{SubjectID: subjModel.ID, Class: s} })
 			d.Gorm.Create(&subjClasses)

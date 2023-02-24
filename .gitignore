@@ -1,6 +1,7 @@
 licenses.db
 licenses_backup.db
 licenses_test.db
+licenses1.db
 prov.env
-dev.env
 .env
+files/*
