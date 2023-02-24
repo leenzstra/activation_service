@@ -1,0 +1,7 @@
+licenses_backup.db
+licenses_test.db
+licenses1.db
+licenses.db
+prod.env
+.env
+files/*
