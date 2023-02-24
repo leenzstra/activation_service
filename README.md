@@ -27,6 +27,8 @@ import "github.com/leenzstra/activation_service/internal/utils"
 func WrapResponse(result bool, message string, data interface{}) *responses.ResponseBase
 ```
 
+Обёртка для ответа от сервера формата: \{ "result":bool, "data":interface\{\}, "message":string \}
+
 # responses
 
 ```go
