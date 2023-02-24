@@ -21,8 +21,6 @@ packagelist=(
     "./internal/api/license" 
 )
 
-gomarkdoc --output "./docs/doc.md" ${packagelist[@]}
-
-markdown ./docs/doc.md > ./docs/README.md
+gomarkdoc --output "./docs/README.md" ${packagelist[@]}
                             
                             
