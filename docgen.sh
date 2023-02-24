@@ -23,6 +23,6 @@ packagelist=(
 
 gomarkdoc --output "./docs/doc.md" ${packagelist[@]}
 
-markdown ./docs/doc.md > ./docs/index.html
+markdown ./docs/doc.md > ./docs/README.md
                             
                             
