@@ -1,4 +1,4 @@
-name: Build release
+name: Build main
 
 on:
   push:
@@ -7,55 +7,56 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    name: Test
-    runs-on: windows-latest
+  build:
+    name: Build and upload artifact
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - name: Install Go
+        uses: actions/setup-go@v3
         with:
-          channel: "stable"
+          go-version: '^1.13.1'
 
-      - name: Enable windows
-        run: flutter config --enable-windows-desktop
+      # - name: Run tests
+      #   run: go test
 
-      - name: Run tests
-        run: flutter test
-
-  release:
-    name: release
-    needs: [test]
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-
-      - name: Enable windows
-        run: flutter config --enable-windows-desktop
+      - name: Generate docs
+        run: |
+         chmod +x ./docgen.sh
+         ./docgen.sh
+        shell: bash
 
       - name: Build
-        run: flutter build windows --release --target=.\lib\main_prod.dart
+        run: go build -o ./dist/server
 
-      - name: Make archive
-        uses: thedoctor0/zip-release@0.7.1
+      - name: Upload build
+        uses: actions/upload-artifact@v3
         with:
-          type: zip
-          filename: Release.zip
-          path: .\build\windows\runner\Release
+          name: Build ${{ github.run_number }}
+          path: ./dist/server
 
-      - name: Release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Upload docs
+        uses: actions/upload-artifact@v3
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: Build
-          files: Release.zip
+          name: Docs ${{ github.run_number }}
+          path: .\docs
+  docs:
+    name: Upload docs
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get docs
+        uses: actions/download-artifact@v3
+        with:
+          name: Docs ${{ github.run_number }}
+          
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
