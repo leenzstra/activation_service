@@ -13,20 +13,21 @@ type License struct {
 	Contacts       string
 	LicenseUses    []*LicenseUse
 	SubjectClasses []*SubjectClass `gorm:"many2many:license_subject_classes;"`
-	Expiration     time.Time
+	Period         string
 }
 
 type LicenseUse struct {
 	gorm.Model
 	LicenseID       uint
+	Expiration      time.Time
 	MachineInfoHash string
 }
 
 type Subject struct {
 	gorm.Model
-	Sid          int `gorm:"unique"`
-	Name         string
-	Alias        string `gorm:"unique"`
+	Sid            int `gorm:"unique"`
+	Name           string
+	Alias          string `gorm:"unique"`
 	SubjectClasses []*SubjectClass
 }
 

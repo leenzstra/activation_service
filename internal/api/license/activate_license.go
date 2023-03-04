@@ -1,13 +1,16 @@
-package licensing
+package license
 
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/hyperboloide/lk"
+	"github.com/leenzstra/activation_service/internal/keypair"
 	"github.com/leenzstra/activation_service/internal/models"
+	"github.com/leenzstra/activation_service/internal/responses"
 	"github.com/leenzstra/activation_service/internal/utils"
 	"gorm.io/gorm"
 )
@@ -23,6 +26,26 @@ type LicenseBody struct {
 	Expiration      time.Time `json:"expiration"`
 }
 
+func generateLicenseHash(keypair *keypair.KeyPair, body *LicenseBody) (string, error) {
+
+	licenseBody, err := json.Marshal(body)
+	if err != nil {
+		return "", ErrLicenseCreation
+	}
+
+	licenseObj, err := lk.NewLicense(keypair.Private, licenseBody)
+	if err != nil {
+		return "", ErrLicenseCreation
+	}
+
+	licenseHash, err := licenseObj.ToHexString()
+	if err != nil {
+		return "", ErrLicenseCreation
+	}
+
+	return licenseHash, nil
+}
+
 func (h handler) ActivateLicense(c *fiber.Ctx) error {
 	payload := LicenseActivationBody{}
 	if err := c.BodyParser(&payload); err != nil {
@@ -34,15 +57,21 @@ func (h handler) ActivateLicense(c *fiber.Ctx) error {
 		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
 	}
 
-	_, err = h.DB.GetLicenseUse(payload.Key, payload.MachineInfoHash)
+	license_use, err := h.DB.GetLicenseUse(payload.Key, payload.MachineInfoHash)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		if len(license.LicenseUses) >= license.MaxUses {
 			return c.JSON(utils.WrapResponse(false, "превышен лимит активаций ключа", nil))
 		}
 
+		period := &responses.LicenseDuration{}
+		if err := period.FromString(license.Period); err != nil {
+			return c.JSON(utils.WrapResponse(false, err.Error(), nil))
+		}
+
 		license_use := &models.LicenseUse{
 			LicenseID:       license.ID,
 			MachineInfoHash: payload.MachineInfoHash,
+			Expiration:      time.Now().UTC().AddDate(period.Years, period.Months, period.Days),
 		}
 
 		if err := h.DB.AddLicenseUse(license_use); err != nil {
@@ -50,23 +79,24 @@ func (h handler) ActivateLicense(c *fiber.Ctx) error {
 		}
 	} else if err != nil {
 		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
-	}
+	} 
 
-	licenseBody, _ := json.Marshal(LicenseBody{
+	licenseBody := LicenseBody{
 		Key:             payload.Key,
 		MachineInfoHash: payload.MachineInfoHash,
-		Expiration:      license.Expiration,
-	})
-
-	licenseObj, err := lk.NewLicense(h.PrivateKey, licenseBody)
-	if err != nil {
-		return c.JSON(utils.WrapResponse(false, "ошибка при создании лицензии", nil))
+		Expiration:      license_use.Expiration,
 	}
 
-	licenseHash, err := licenseObj.ToHexString()
+	license_use, err = h.DB.GetLicenseUse(payload.Key, payload.MachineInfoHash)
 	if err != nil {
-		return c.JSON(utils.WrapResponse(false, "ошибка при преобразовании лицензии", nil))
+		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
 	}
-
-	return c.JSON(utils.WrapResponse(true, "ok", licenseHash))
+	
+	hash, err := generateLicenseHash(h.KeyPair, &licenseBody)
+	if err != nil {
+		return c.JSON(utils.WrapResponse(false, err.Error(), nil))
+	}
+	
+	fmt.Println(licenseBody, hash)
+	return c.JSON(utils.WrapResponse(true, "", hash))
 }

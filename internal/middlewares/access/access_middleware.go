@@ -9,12 +9,11 @@ import (
 
 type Config struct {
 	Filter       func(c *fiber.Ctx) bool // Required
+
 	Unauthorized fiber.Handler           // middleware specfic
 	Validator    func(*fiber.Ctx) (bool, error)
-
 	SuccessHandler fiber.Handler
-
-	ErrorHandler fiber.ErrorHandler
+	ErrorHandler fiber.ErrorHandler 
 }
 
 

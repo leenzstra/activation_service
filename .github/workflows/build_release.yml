@@ -1,0 +1,42 @@
+name: Build release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and upload release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.13.1'
+
+      # - name: Run tests
+      #   run: go test
+
+      - name: Build
+        run: go build -o ./dist/server ./cmd/main.go 
+
+      - name: Make archive
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: zip
+          filename: Release.zip
+          path: ./dist
+
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: Build
+          files: Release.zip

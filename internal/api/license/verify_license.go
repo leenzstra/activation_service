@@ -1,4 +1,4 @@
-package licensing
+package license
 
 import (
 	"encoding/json"
@@ -13,6 +13,10 @@ type LicenseVerificationBody struct {
 	MachineInfoHash string `json:"machine_info_hash"`
 }
 
+type VerifiedBody struct {
+	Status     int `json:"status"`
+}
+
 func (h handler) VerifyLicense(c *fiber.Ctx) error {
 	payload := LicenseVerificationBody{}
 	if err := c.BodyParser(&payload); err != nil {
@@ -24,7 +28,7 @@ func (h handler) VerifyLicense(c *fiber.Ctx) error {
 		return c.JSON(utils.WrapResponse(false, "ошибка при создании лицензии", nil))
 	}
 
-	if ok, err := licenseObj.Verify(h.PubKey); err != nil {
+	if ok, err := licenseObj.Verify(h.KeyPair.Public); err != nil {
 		return c.JSON(utils.WrapResponse(false, "ошибка верификации лицензии", nil))
 	} else if !ok {
 		return c.JSON(utils.WrapResponse(false, "лицензия недействительна", nil))
@@ -45,5 +49,5 @@ func (h handler) VerifyLicense(c *fiber.Ctx) error {
 		return c.JSON(utils.WrapResponse(false, "лицензия активирована на другой компьютер", nil))
 	}
 
-	return c.JSON(utils.WrapResponse(true, "ok", nil))
+	return c.JSON(utils.WrapResponse(true, "", VerifiedBody{Status: 1}))
 }
