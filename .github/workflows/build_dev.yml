@@ -56,9 +56,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Docs ${{ github.run_number }}
+          path: ./docs
           
       - name: Deploy docs
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./docs
