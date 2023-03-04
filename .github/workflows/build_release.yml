@@ -22,14 +22,14 @@ jobs:
       # - name: Run tests
       #   run: go test
 
+      - name: Install docs module
+        run: go install go101.org/golds@latest
+
       - name: Generate docs
-        run: |
-         chmod +x ./docgen.sh
-         ./docgen.sh
-        shell: bash
+        run: golds -gen -dir=generated -nouses ./...
 
       - name: Build
-        run: go build -o ./dist/server ./cmd/main.go
+        run: go build -o ./dist/server ./cmd/main.go 
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Docs ${{ github.run_number }}
-          path: ./docs
+          path: ./generated
   docs:
     name: Upload docs
     runs-on: ubuntu-latest
