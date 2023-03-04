@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/valyala/fasthttp/stackless</title>
+<link href="../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>stackless</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/valyala/fasthttp/stackless">github.com/valyala/fasthttp/stackless</a><i> (on <a href="https://pkg.go.dev/github.com/valyala/fasthttp/stackless" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/valyala/fasthttp/stackless.html">6 packages</a>, and imported by <a href="../../../../dep/github.com/valyala/fasthttp/stackless.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">   <a href="../../../../src/github.com/valyala/fasthttp/stackless/doc.go.html#doc">#d</a> <a href="../../../../src/github.com/valyala/fasthttp/stackless/doc.go.html">doc.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package stackless provides functionality that may save stack space
+		for high number of concurrently running goroutines.</span>
+</span>
+	<span class="nodocs">      <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html">func.go</a></span>
+	<span class="nodocs">      <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html">writer.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 6, in which 2 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-NewWriterFunc" data-popularity="35">	<input type='checkbox' class="fold" id="NewWriterFunc-fold-content"><label for="NewWriterFunc-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-23">NewWriterFunc</a> <i>(func)</i></label><span id='NewWriterFunc-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewWriterFunc must return new writer that will be wrapped into
+		stackless writer.</span>
+
+		<input type='checkbox' class="fold" id="NewWriterFunc-fold-params"><label for="NewWriterFunc-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='NewWriterFunc-fold-params-items' class="fold-items"><span>
+			func <a href="#name-NewWriter">NewWriter</a>(dstW <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, newWriter <b>NewWriterFunc</b>) <a href="#name-Writer">Writer</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Writer" data-popularity="2055">	<input type='checkbox' class="fold" id="Writer-fold-content"><label for="Writer-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-14">Writer</a> <b><i>(interface)</i></b></label><span id='Writer-fold-content-docs' class="fold-docs">
+<span class="md-text">		Writer is an interface stackless writer must conform to.
+		
+		The interface contains common subset for Writers from compress/* packages.</span>
+
+		<input type='checkbox' class="fold" id="Writer-fold-methods"><label for="Writer-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='Writer-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( Writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-17">Close</a>() <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">( Writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-16">Flush</a>() <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">( Writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-18">Reset</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>)</span></span><span>
+			<span class="nodocs">( Writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-15">Write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-impledby"><label for="Writer-fold-impledby">Implemented By (<i>at least 8, in which 7 are exported</i>)</label><span id='Writer-fold-impledby-items' class="fold-items"><span>
+			*github.com/andybalholm/brotli.<a href="../../andybalholm/brotli.html#name-Writer">Writer</a></span><span>
+			*github.com/klauspost/compress/flate.<a href="../../klauspost/compress/flate.html#name-Writer">Writer</a></span><span>
+			*github.com/klauspost/compress/gzip.<a href="../../klauspost/compress/gzip.html#name-Writer">Writer</a></span><span>
+			*github.com/klauspost/compress/zlib.<a href="../../klauspost/compress/zlib.html#name-Writer">Writer</a></span><span>
+			*compress/flate.<a href="../../../compress/flate.html#name-Writer">Writer</a></span><span>
+			*compress/gzip.<a href="../../../compress/gzip.html#name-Writer">Writer</a></span><span>
+			*compress/zlib.<a href="../../../compress/zlib.html#name-Writer">Writer</a></span>
+			<input type='checkbox' class="showhide" id="Writer-showhide-impedBys"><i><label for="Writer-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="Writer-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			*<a href="#name-writer">writer</a></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-impls"><label for="Writer-fold-impls">Implements (<i>at least 5, in which 3 are exported</i>)</label><span id='Writer-fold-impls-items' class="fold-items"><span>
+			 Writer : io.<a href="../../../io.html#name-Closer">Closer</a></span><span>
+			 Writer : io.<a href="../../../io.html#name-WriteCloser">WriteCloser</a></span><span>
+			 Writer : io.<a href="../../../io.html#name-Writer">Writer</a></span>
+			<input type='checkbox' class="showhide" id="Writer-showhide-impls"><i><label for="Writer-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="Writer-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			 Writer : github.com/valyala/fasthttp.<a href="../fasthttp.html#name-writeFlusher">writeFlusher</a></i></span><span class="hidden"><i>
+			 Writer : crypto/tls.<a href="../../../crypto/tls.html#name-transcriptHash">transcriptHash</a></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-results"><label for="Writer-fold-results">As Outputs Of (<i>at least 4, in which 1 is exported</i>)</label><span id='Writer-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewWriter">NewWriter</a>(dstW <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, newWriter <a href="#name-NewWriterFunc">NewWriterFunc</a>) <b>Writer</b></span>
+			<input type='checkbox' class="showhide" id="Writer-showhide-inputofs"><i><label for="Writer-showhide-inputofs" class="show-inline">/* 3+ unexporteds ... */</label><label for="Writer-showhide-inputofs" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-acquireStacklessBrotliWriter">acquireStacklessBrotliWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, level <a href="../../../builtin.html#name-int">int</a>) <b>Writer</b></i></span><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-acquireStacklessDeflateWriter">acquireStacklessDeflateWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, level <a href="../../../builtin.html#name-int">int</a>) <b>Writer</b></i></span><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-acquireStacklessGzipWriter">acquireStacklessGzipWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, level <a href="../../../builtin.html#name-int">int</a>) <b>Writer</b></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-params"><label for="Writer-fold-params">As Inputs Of (<i>at least 3, none are exported</i>)</label><span id='Writer-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Writer-showhide-outputofs"><i><label for="Writer-showhide-outputofs" class="show-inline">/* 3+ unexporteds ... */</label><label for="Writer-showhide-outputofs" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-releaseStacklessBrotliWriter">releaseStacklessBrotliWriter</a>(sw <b>Writer</b>, level <a href="../../../builtin.html#name-int">int</a>)</i></span><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-releaseStacklessDeflateWriter">releaseStacklessDeflateWriter</a>(sw <b>Writer</b>, level <a href="../../../builtin.html#name-int">int</a>)</i></span><span class="hidden"><i>
+			func github.com/valyala/fasthttp.<a href="../fasthttp.html#name-releaseStacklessGzipWriter">releaseStacklessGzipWriter</a>(sw <b>Writer</b>, level <a href="../../../builtin.html#name-int">int</a>)</i></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-funcWork" data-popularity="145">	<input type='checkbox' class="fold" id="funcWork-fold-content"><label for="funcWork-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-76">funcWork</a> <i>(struct)</i></label><span id='funcWork-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="funcWork-fold-fields"><label for="funcWork-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='funcWork-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="funcWork-showhide-fields"><i><label for="funcWork-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="funcWork-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-77">ctx</a> <i>interface{}</i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-78">done</a> <i>chan struct{}</i></span></i></span></span>
+		<input type='checkbox' class="fold" id="funcWork-fold-results"><label for="funcWork-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='funcWork-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="funcWork-showhide-inputofs"><i><label for="funcWork-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="funcWork-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-getFuncWork">getFuncWork</a>() *<b>funcWork</b></i></span></span>
+		<input type='checkbox' class="fold" id="funcWork-fold-params"><label for="funcWork-fold-params">As Inputs Of (<i>at least 2, neither is exported</i>)</label><span id='funcWork-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="funcWork-showhide-outputofs"><i><label for="funcWork-showhide-outputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="funcWork-showhide-outputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-funcWorker">funcWorker</a>(funcWorkCh &lt;-chan *<b>funcWork</b>, f func(ctx interface{}))</i></span><span class="hidden"><i>
+			func <a href="#name-putFuncWork">putFuncWork</a>(fw *<b>funcWork</b>)</i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-op" data-popularity="15">	<input type='checkbox' class="fold" id="op-fold-content"><label for="op-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-52">op</a> <a href="../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='op-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="op-fold-values"><label for="op-fold-values">As Types Of (<i>total 4, none are exported</i>)</label><span id='op-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="op-showhide-values"><i><label for="op-showhide-values" class="show-inline">/* 4 unexporteds ... */</label><label for="op-showhide-values" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			const <a href="#name-opClose">opClose</a></i></span><span class="hidden"><i>
+			const <a href="#name-opFlush">opFlush</a></i></span><span class="hidden"><i>
+			const <a href="#name-opReset">opReset</a></i></span><span class="hidden"><i>
+			const <a href="#name-opWrite">opWrite</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-writer" data-popularity="550">	<input type='checkbox' class="fold" id="writer-fold-content"><label for="writer-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-40">writer</a> <i>(struct)</i></label><span id='writer-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="writer-fold-fields"><label for="writer-fold-fields">Fields (<i>total 7, none are exported</i>)</label><span id='writer-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="writer-showhide-fields"><i><label for="writer-showhide-fields" class="show-inline">/* 7 unexporteds ... */</label><label for="writer-showhide-fields" class="hide-inline">/* 7 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-41">dstW</a> <i><a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-45">err</a> <i><a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-46">n</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-49">op</a> <i><a href="#name-op">op</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-48">p</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-43">xw</a> <i><a href="#name-xWriter">xWriter</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-42">zw</a> <i><a href="#name-Writer">Writer</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="writer-fold-methods"><label for="writer-fold-methods">Methods (<i>total 5, in which 4 are exported</i>)</label><span id='writer-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-72">Close</a>() <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-68">Flush</a>() <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-76">Reset</a>(dstW <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>)</span></span><span>
+			<span class="nodocs">(*writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-61">Write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span>
+			<input type='checkbox' checked class="showhide" id="writer-showhide-methods"><i><label for="writer-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="writer-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*writer) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-82">do</a>(op <a href="#name-op">op</a>) <a href="../../../builtin.html#name-error">error</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="writer-fold-impls"><label for="writer-fold-impls">Implements (<i>at least 6, in which 4 are exported</i>)</label><span id='writer-fold-impls-items' class="fold-items"><span>
+			*writer : <a href="#name-Writer">Writer</a></span><span>
+			*writer : io.<a href="../../../io.html#name-Closer">Closer</a></span><span>
+			*writer : io.<a href="../../../io.html#name-WriteCloser">WriteCloser</a></span><span>
+			*writer : io.<a href="../../../io.html#name-Writer">Writer</a></span>
+			<input type='checkbox' checked class="showhide" id="writer-showhide-impls"><i><label for="writer-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="writer-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			*writer : github.com/valyala/fasthttp.<a href="../fasthttp.html#name-writeFlusher">writeFlusher</a></i></span><span class="hidden"><i>
+			*writer : crypto/tls.<a href="../../../crypto/tls.html#name-transcriptHash">transcriptHash</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-xWriter" data-popularity="200">	<input type='checkbox' class="fold" id="xWriter-fold-content"><label for="xWriter-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-120">xWriter</a> <i>(struct)</i></label><span id='xWriter-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="xWriter-fold-fields"><label for="xWriter-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='xWriter-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="xWriter-showhide-fields"><i><label for="xWriter-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="xWriter-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-121">bb</a> <i>*<a href="../bytebufferpool.html">bytebufferpool</a>.<a href="../bytebufferpool.html#name-ByteBuffer">ByteBuffer</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="xWriter-fold-methods"><label for="xWriter-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='xWriter-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*xWriter) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-131">Reset</a>()</span></span><span>
+			<span class="nodocs">(*xWriter) <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-124">Write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span></span>
+		<input type='checkbox' class="fold" id="xWriter-fold-impls"><label for="xWriter-fold-impls">Implements (<i>at least 2, in which 1 is exported</i>)</label><span id='xWriter-fold-impls-items' class="fold-items"><span>
+			*xWriter : io.<a href="../../../io.html#name-Writer">Writer</a></span>
+			<input type='checkbox' checked class="showhide" id="xWriter-showhide-impls"><i><label for="xWriter-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="xWriter-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			*xWriter : crypto/tls.<a href="../../../crypto/tls.html#name-transcriptHash">transcriptHash</a></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 6, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewFunc">	<input type='checkbox' class="fold" id="NewFunc-fold-content"><label for="NewFunc-fold-content"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-21">NewFunc</a>(f func(ctx interface{})) func(ctx interface{}) <a href="../../../builtin.html#name-bool">bool</a></label><span id='NewFunc-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewFunc returns stackless wrapper for the function f.
+		
+		Unlike f, the returned stackless wrapper doesn't use stack space
+		on the goroutine that calls it.
+		The wrapper may save a lot of stack space if the following conditions
+		are met:
+		
+		  - f doesn't contain blocking calls on network, I/O or channels;
+		  - f uses a lot of stack space;
+		  - the wrapper is called from high number of concurrent goroutines.
+		
+		The stackless wrapper returns false if the call cannot be processed
+		at the moment due to high load.</span>
+
+</span></div><div class="anchor value-res" id="name-NewWriter">	<input type='checkbox' class="fold" id="NewWriter-fold-content"><label for="NewWriter-fold-content"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-32">NewWriter</a>(dstW <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, newWriter <a href="#name-NewWriterFunc">NewWriterFunc</a>) <a href="#name-Writer">Writer</a></label><span id='NewWriter-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewWriter creates a stackless writer around a writer returned
+		from newWriter.
+		
+		The returned writer writes data to dstW.
+		
+		Writers that use a lot of stack space may be wrapped into stackless writer,
+		thus saving stack space for high number of concurrently running goroutines.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-funcWorker"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-52">funcWorker</a>(funcWorkCh &lt;-chan *<a href="#name-funcWork">funcWork</a>, f func(ctx interface{}))</span></i></div><div class="anchor value-res hidden" id="name-getFuncWork"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-59">getFuncWork</a>() *<a href="#name-funcWork">funcWork</a></span></i></div><div class="anchor value-res hidden" id="name-putFuncWork"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-69">putFuncWork</a>(fw *<a href="#name-funcWork">funcWork</a>)</span></i></div><div class="anchor value-res hidden" id="name-writerFunc"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-103">writerFunc</a>(ctx interface{})</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 4, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-bufferPool"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-138">bufferPool</a> <a href="../bytebufferpool.html">bytebufferpool</a>.<a href="../bytebufferpool.html#name-Pool">Pool</a></span></i></div><div class="anchor value-res hidden" id="name-errHighLoad"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-99">errHighLoad</a> <a href="../../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-funcWorkPool"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/stackless/func.go.html#line-74">funcWorkPool</a> <a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Pool">Pool</a></span></i></div><div class="anchor value-res hidden" id="name-stacklessWriterFunc"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-101">stacklessWriterFunc</a> func(ctx interface{}) <a href="../../../builtin.html#name-bool">bool</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 4, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-opClose"><i>	<span class="nodocs">const <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-57">opClose</a> <a href="#name-op">op</a> = 2</span></i></div><div class="anchor value-res hidden" id="name-opFlush"><i>	<span class="nodocs">const <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-56">opFlush</a> <a href="#name-op">op</a> = 1</span></i></div><div class="anchor value-res hidden" id="name-opReset"><i>	<span class="nodocs">const <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-58">opReset</a> <a href="#name-op">op</a> = 3</span></i></div><div class="anchor value-res hidden" id="name-opWrite"><i>	<span class="nodocs">const <a href="../../../../src/github.com/valyala/fasthttp/stackless/writer.go.html#line-55">opWrite</a> <a href="#name-op">op</a> = 0</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

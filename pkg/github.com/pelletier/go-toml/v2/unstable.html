@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/pelletier/go-toml/v2/unstable</title>
+<link href="../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>unstable</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-github.com/pelletier/go-toml/v2/unstable">github.com/pelletier/go-toml/v2/unstable</a><i> (on <a href="https://pkg.go.dev/github.com/pelletier/go-toml/v2/unstable" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/github.com/pelletier/go-toml/v2/unstable.html">6 packages</a>, and imported by <a href="../../../../../dep/github.com/pelletier/go-toml/v2/unstable.html#imported-by">2 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html">ast.go</a></span>
+	<span class="nodocs">      <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html">builder.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-2-fold-content"><label for="file-2-fold-content">   <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/doc.go.html#doc">#d</a> <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/doc.go.html">doc.go</a></label><span id='file-2-fold-content-items' class="fold-items">
+<span class="md-text">		Package unstable provides APIs that do not meet the backward compatibility
+		guarantees yet.</span>
+</span>
+	<span class="nodocs">      <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html">kind.go</a></span>
+	<span class="nodocs">      <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html">parser.go</a></span>
+	<span class="nodocs">      <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html">scanner.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 10, in which 6 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Iterator" data-popularity="300">	<input type='checkbox' class="fold" id="Iterator-fold-content"><label for="Iterator-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-21">Iterator</a> <i>(struct)</i></label><span id='Iterator-fold-content-docs' class="fold-docs">
+<span class="md-text">		Iterator over a sequence of nodes.
+		
+		Starts uninitialized, you need to call Next() first.
+		
+		For example:
+		
+			it := n.Children()
+			for it.Next() {
+				n := it.Node()
+				// do something with n
+			}</span>
+
+		<input type='checkbox' class="fold" id="Iterator-fold-fields"><label for="Iterator-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='Iterator-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Iterator-showhide-fields"><i><label for="Iterator-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="Iterator-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-23">node</a> <i>*<a href="#name-Node">Node</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-22">started</a> <i><a href="../../../../builtin.html#name-bool">bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Iterator-fold-methods"><label for="Iterator-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='Iterator-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Iterator-fold-method-IsLast"><label for="Iterator-fold-method-IsLast">(*Iterator) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-39">IsLast</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Iterator-fold-method-IsLast-docs' class="fold-docs">
+<span class="md-text">				IsLast returns true if the current node of the iterator is the last
+				one.  Subsequent calls to Next() will return false.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Iterator-fold-method-Next"><label for="Iterator-fold-method-Next">(*Iterator) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-28">Next</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Iterator-fold-method-Next-docs' class="fold-docs">
+<span class="md-text">				Next moves the iterator forward and returns true if points to a
+				node, false otherwise.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Iterator-fold-method-Node"><label for="Iterator-fold-method-Node">(*Iterator) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-44">Node</a>() *<a href="#name-Node">Node</a></label><span id='Iterator-fold-method-Node-docs' class="fold-docs">
+<span class="md-text">				Node returns a pointer to the node pointed at by the iterator.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Iterator-fold-results"><label for="Iterator-fold-results">As Outputs Of (<i>at least 2, both are exported</i>)</label><span id='Iterator-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Node">Node</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-134">Children</a>() <b>Iterator</b></span><span>
+			func (*<a href="#name-Node">Node</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-111">Key</a>() <b>Iterator</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-Kind" data-popularity="215">	<input type='checkbox' class="fold" id="Kind-fold-content"><label for="Kind-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-6">Kind</a> <a href="../../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='Kind-fold-content-docs' class="fold-docs">
+<span class="md-text">		Kind represents the type of TOML structure contained in a given Node.</span>
+
+		<input type='checkbox' class="fold" id="Kind-fold-methods"><label for="Kind-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Kind-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Kind-fold-method-String"><label for="Kind-fold-method-String">( Kind) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-35">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='Kind-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String implementation of fmt.Stringer.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Kind-fold-impls"><label for="Kind-fold-impls">Implements (<i>at least 3, in which 1 is exported</i>)</label><span id='Kind-fold-impls-items' class="fold-items"><span>
+			 Kind : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="Kind-showhide-impls"><i><label for="Kind-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="Kind-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			 Kind : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 Kind : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="Kind-fold-values"><label for="Kind-fold-values">As Types Of (<i>total 16, all are exported</i>)</label><span id='Kind-fold-values-items' class="fold-items"><span>
+			const <a href="#name-Array">Array</a></span><span>
+			const <a href="#name-ArrayTable">ArrayTable</a></span><span>
+			const <a href="#name-Bool">Bool</a></span><span>
+			const <a href="#name-Comment">Comment</a></span><span>
+			const <a href="#name-DateTime">DateTime</a></span><span>
+			const <a href="#name-Float">Float</a></span><span>
+			const <a href="#name-InlineTable">InlineTable</a></span><span>
+			const <a href="#name-Integer">Integer</a></span><span>
+			const <a href="#name-Invalid">Invalid</a></span><span>
+			const <a href="#name-Key">Key</a></span><span>
+			const <a href="#name-KeyValue">KeyValue</a></span><span>
+			const <a href="#name-LocalDate">LocalDate</a></span><span>
+			const <a href="#name-LocalDateTime">LocalDateTime</a></span><span>
+			const <a href="#name-LocalTime">LocalTime</a></span><span>
+			const <a href="#name-String">String</a></span><span>
+			const <a href="#name-Table">Table</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Node" data-popularity="1060">	<input type='checkbox' class="fold" id="Node-fold-content"><label for="Node-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-63">Node</a> <i>(struct)</i></label><span id='Node-fold-content-docs' class="fold-docs">
+<span class="md-text">		Node in a TOML expression AST.
+		
+		Depending on Kind, its sequence of children should be interpreted
+		differently.
+		
+		  - Array have one child per element in the array.
+		  - InlineTable have one child per key-value in the table (each of kind
+		    InlineTable).
+		  - KeyValue have at least two children. The first one is the value. The rest
+		    make a potentially dotted key.
+		  - Table and ArrayTable's children represent a dotted key (same as
+		    KeyValue, but without the first node being the value).
+		
+		When relevant, Raw describes the range of bytes this node is refering to in
+		the input document. Use Parser.Raw() to retrieve the actual bytes.</span>
+
+		<input type='checkbox' class="fold" id="Node-fold-fields"><label for="Node-fold-fields">Fields (<i>total 5, in which 3 are exported</i>)</label><span id='Node-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Node-fold-field-Data"><label for="Node-fold-field-Data"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-66">Data</a> <i>[]<a href="../../../../builtin.html#name-byte">byte</a></i></label><span id='Node-fold-field-Data-docs' class="fold-docs">
+<span class="md-text">				// Node value (either allocated or referencing the input).</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-64">Kind</a> <i><a href="#name-Kind">Kind</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-field-Raw"><label for="Node-fold-field-Raw"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-65">Raw</a> <i><a href="#name-Range">Range</a></i></label><span id='Node-fold-field-Raw-docs' class="fold-docs">
+<span class="md-text">				// Raw bytes from the input.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Node-showhide-fields"><i><label for="Node-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="Node-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Node-fold-field-child"><label for="Node-fold-field-child"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-72">child</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Node-fold-field-child-docs' class="fold-docs">
+<span class="md-text">				// 0 if no child</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Node-fold-field-next"><label for="Node-fold-field-next"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-71">next</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Node-fold-field-next-docs' class="fold-docs">
+<span class="md-text">				References to other nodes, as offsets in the backing array
+				from this node. References can go backward, so those can be
+				negative.</span>
+<span class="md-text">				// 0 if last element</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Node-fold-methods"><label for="Node-fold-methods">Methods (<i>total 6, all are exported</i>)</label><span id='Node-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Child"><label for="Node-fold-method-Child">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-94">Child</a>() *<b>Node</b></label><span id='Node-fold-method-Child-docs' class="fold-docs">
+<span class="md-text">				Child returns a pointer to the first child node of this node. Other children
+				can be accessed calling Next on the first child.  Returns an nil if this Node
+				has no child.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Children"><label for="Node-fold-method-Children">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-134">Children</a>() <a href="#name-Iterator">Iterator</a></label><span id='Node-fold-method-Children-docs' class="fold-docs">
+<span class="md-text">				Children returns an iterator over a node's children.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Key"><label for="Node-fold-method-Key">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-111">Key</a>() <a href="#name-Iterator">Iterator</a></label><span id='Node-fold-method-Key-docs' class="fold-docs">
+<span class="md-text">				Key returns the children nodes making the Key on a supported node. Panics
+				otherwise.  They are guaranteed to be all be of the Kind Key. A simple key
+				would return just one element.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Next"><label for="Node-fold-method-Next">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-82">Next</a>() *<b>Node</b></label><span id='Node-fold-method-Next-docs' class="fold-docs">
+<span class="md-text">				Next returns a pointer to the next node, or nil if there is no next node.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Valid"><label for="Node-fold-method-Valid">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-104">Valid</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Node-fold-method-Valid-docs' class="fold-docs">
+<span class="md-text">				Valid returns true if the node's kind is set (not to Invalid).</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Node-fold-method-Value"><label for="Node-fold-method-Value">(*Node) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-129">Value</a>() *<b>Node</b></label><span id='Node-fold-method-Value-docs' class="fold-docs">
+<span class="md-text">				Value returns a pointer to the value node of a KeyValue.
+				Guaranteed to be non-nil.  Panics if not called on a KeyValue node,
+				or if the Children are malformed.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Node-fold-results"><label for="Node-fold-results">As Outputs Of (<i>at least 5, all are exported</i>)</label><span id='Node-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Iterator">Iterator</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-44">Node</a>() *<b>Node</b></span><span>
+			func (*Node).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-94">Child</a>() *<b>Node</b></span><span>
+			func (*Node).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-82">Next</a>() *<b>Node</b></span><span>
+			func (*Node).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-129">Value</a>() *<b>Node</b></span><span>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-136">Expression</a>() *<b>Node</b></span></span>
+		<input type='checkbox' class="fold" id="Node-fold-params"><label for="Node-fold-params">As Inputs Of (<i>at least 11, in which 5 are exported</i>)</label><span id='Node-fold-params-items' class="fold-items"><span>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-KeyTracker">KeyTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-32">Pop</a>(node *<b>Node</b>)</span><span>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-KeyTracker">KeyTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-24">Push</a>(node *<b>Node</b>)</span><span>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-KeyTracker">KeyTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-18">UpdateArrayTable</a>(node *<b>Node</b>)</span><span>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-KeyTracker">KeyTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-12">UpdateTable</a>(node *<b>Node</b>)</span><span>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-153">CheckExpression</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></span>
+			<input type='checkbox' class="showhide" id="Node-showhide-outputofs"><i><label for="Node-showhide-outputofs" class="show-inline">/* 6+ unexporteds ... */</label><label for="Node-showhide-outputofs" class="hide-inline">/* 6+ unexporteds: */</label></i><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2.<a href="../v2.html#name-keyLocation">keyLocation</a>(node *<b>Node</b>) []<a href="../../../../builtin.html#name-byte">byte</a></i></span><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-309">checkArray</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-222">checkArrayTable</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-329">checkInlineTable</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-270">checkKeyValue</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2/internal/tracker.(*<a href="internal/tracker.html#name-SeenTracker">SeenTracker</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-169">checkTable</a>(node *<b>Node</b>) <a href="../../../../builtin.html#name-error">error</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-Parser" data-popularity="1350">	<input type='checkbox' class="fold" id="Parser-fold-content"><label for="Parser-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-54">Parser</a> <i>(struct)</i></label><span id='Parser-fold-content-docs' class="fold-docs">
+<span class="md-text">		Parser scans over a TOML-encoded document and generates an iterative AST.
+		
+		To prime the Parser, first reset it with the contents of a TOML document.
+		Then, process all top-level expressions sequentially. See Example.
+		
+		Don't forget to check Error() after you're done parsing.
+		
+		Each top-level expression needs to be fully processed before calling
+		NextExpression() again. Otherwise, calls to various Node methods may panic if
+		the parser has moved on the next expression.
+		
+		For performance reasons, go-toml doesn't make a copy of the input bytes to
+		the parser. Make sure to copy all the bytes you need to outlive the slice
+		given to the parser.
+		
+		The parser doesn't provide nodes for comments yet, nor for whitespace.</span>
+
+		<input type='checkbox' class="fold" id="Parser-fold-fields"><label for="Parser-fold-fields">Fields (<i>total 6, none are exported</i>)</label><span id='Parser-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Parser-showhide-fields"><i><label for="Parser-showhide-fields" class="show-inline">/* 6 unexporteds ... */</label><label for="Parser-showhide-fields" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-56">builder</a> <i><a href="#name-builder">builder</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-55">data</a> <i>[]<a href="../../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-59">err</a> <i><a href="../../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-60">first</a> <i><a href="../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-58">left</a> <i>[]<a href="../../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-57">ref</a> <i><a href="#name-reference">reference</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Parser-fold-methods"><label for="Parser-fold-methods">Methods (<i>total 27, in which 7 are exported</i>)</label><span id='Parser-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Data"><label for="Parser-fold-method-Data">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-64">Data</a>() []<a href="../../../../builtin.html#name-byte">byte</a></label><span id='Parser-fold-method-Data-docs' class="fold-docs">
+<span class="md-text">				Data returns the slice provided to the last call to Reset.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Error"><label for="Parser-fold-method-Error">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-141">Error</a>() <a href="../../../../builtin.html#name-error">error</a></label><span id='Parser-fold-method-Error-docs' class="fold-docs">
+<span class="md-text">				Error returns any error that has occured during parsing.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Expression"><label for="Parser-fold-method-Expression">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-136">Expression</a>() *<a href="#name-Node">Node</a></label><span id='Parser-fold-method-Expression-docs' class="fold-docs">
+<span class="md-text">				Expression returns a pointer to the node representing the last successfully
+				parsed expresion.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-NextExpression"><label for="Parser-fold-method-NextExpression">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-99">NextExpression</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Parser-fold-method-NextExpression-docs' class="fold-docs">
+<span class="md-text">				NextExpression parses the next top-level expression. If an expression was
+				successfully parsed, it returns true. If the parser is at the end of the
+				document or an error occurred, it returns false.
+				
+				Retrieve the parsed expression with Expression().</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Range"><label for="Parser-fold-method-Range">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-71">Range</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="#name-Range">Range</a></label><span id='Parser-fold-method-Range-docs' class="fold-docs">
+<span class="md-text">				Range returns a range description that corresponds to a given slice of the
+				input. If the argument is not a subslice of the parser input, this function
+				panics.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Raw"><label for="Parser-fold-method-Raw">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-79">Raw</a>(raw <a href="#name-Range">Range</a>) []<a href="../../../../builtin.html#name-byte">byte</a></label><span id='Parser-fold-method-Raw-docs' class="fold-docs">
+<span class="md-text">				Raw returns the slice corresponding to the bytes in the given range.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Parser-fold-method-Reset"><label for="Parser-fold-method-Reset">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-85">Reset</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>)</label><span id='Parser-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset brings the parser to its initial state for a given input. It wipes an
+				reuses internal storage to reduce allocation.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Parser-showhide-methods"><i><label for="Parser-showhide-methods" class="show-inline">/* 20 unexporteds ... */</label><label for="Parser-showhide-methods" class="hide-inline">/* 20 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-209">parseArrayTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-780">parseBasicString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-158">parseExpression</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-397">parseInlineTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-914">parseIntOrFloatOrDateTime</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-715">parseKey</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-263">parseKeyval</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-388">parseLiteralString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-584">parseMultilineBasicString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-565">parseMultilineLiteralString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-145">parseNewline</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-536">parseOptionalWhitespaceCommentNewline</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-758">parseSimpleKey</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (raw, key, rest []<a href="../../../../builtin.html#name-byte">byte</a>, err <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-238">parseStdTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-200">parseTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-301">parseVal</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-458">parseValArray</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-904">parseWhitespace</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) []<a href="../../../../builtin.html#name-byte">byte</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-962">scanDateTime</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Parser) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1028">scanIntOrFloat</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<a href="#name-reference">reference</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-ParserError" data-popularity="135">	<input type='checkbox' class="fold" id="ParserError-fold-content"><label for="ParserError-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-16">ParserError</a> <i>(struct)</i></label><span id='ParserError-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParserError describes an error relative to the content of the document.
+		
+		It cannot outlive the instance of Parser it refers to, and may cause panics
+		if the parser is reset.</span>
+
+		<input type='checkbox' class="fold" id="ParserError-fold-fields"><label for="ParserError-fold-fields">Fields (<i>total 3, all are exported</i>)</label><span id='ParserError-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-17">Highlight</a> <i>[]<a href="../../../../builtin.html#name-byte">byte</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="ParserError-fold-field-Key"><label for="ParserError-fold-field-Key"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-19">Key</a> <i>[]<a href="../../../../builtin.html#name-string">string</a></i></label><span id='ParserError-fold-field-Key-docs' class="fold-docs">
+<span class="md-text">				// optional</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-18">Message</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="ParserError-fold-methods"><label for="ParserError-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='ParserError-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="ParserError-fold-method-Error"><label for="ParserError-fold-method-Error">(*ParserError) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-23">Error</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='ParserError-fold-method-Error-docs' class="fold-docs">
+<span class="md-text">				Error is the implementation of the error interface.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="ParserError-fold-impls"><label for="ParserError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='ParserError-fold-impls-items' class="fold-items"><span>
+			*ParserError : <a href="../../../../builtin.html#name-error">error</a></span></span>
+		<input type='checkbox' class="fold" id="ParserError-fold-params"><label for="ParserError-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='ParserError-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="ParserError-showhide-outputofs"><i><label for="ParserError-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="ParserError-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func github.com/pelletier/go-toml/v2.<a href="../v2.html#name-wrapDecodeError">wrapDecodeError</a>(document []<a href="../../../../builtin.html#name-byte">byte</a>, de *<b>ParserError</b>) *<a href="../v2.html">toml</a>.<a href="../v2.html#name-DecodeError">DecodeError</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-Range" data-popularity="110">	<input type='checkbox' class="fold" id="Range-fold-content"><label for="Range-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/ast.go.html#line-76">Range</a> <i>(struct)</i></label><span id='Range-fold-content-docs' class="fold-docs">
+<span class="md-text">		Range of bytes in the document.</span>
+
+		<input type='checkbox' class="fold" id="Range-fold-fields"><label for="Range-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='Range-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/golang.org/x/sys/unix/ztypes_linux.go.html#line-3904">Length</a> <i><a href="../../../../builtin.html#name-uint32">uint32</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/golang.org/x/sys/unix/ztypes_linux.go.html#line-3903">Offset</a> <i><a href="../../../../builtin.html#name-uint32">uint32</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="Range-fold-results"><label for="Range-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Range-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-71">Range</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <b>Range</b></span></span>
+		<input type='checkbox' class="fold" id="Range-fold-params"><label for="Range-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='Range-fold-params-items' class="fold-items"><span>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-79">Raw</a>(raw <b>Range</b>) []<a href="../../../../builtin.html#name-byte">byte</a></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-builder" data-popularity="350">	<input type='checkbox' class="fold" id="builder-fold-content"><label for="builder-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-31">builder</a> <i>(struct)</i></label><span id='builder-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="builder-fold-fields"><label for="builder-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='builder-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="builder-showhide-fields"><i><label for="builder-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="builder-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-33">lastIdx</a> <i><a href="../../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-32">tree</a> <i><a href="#name-root">root</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="builder-fold-methods"><label for="builder-fold-methods">Methods (<i>total 7, all are exported</i>)</label><span id='builder-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-65">AttachChild</a>(parent <a href="#name-reference">reference</a>, child <a href="#name-reference">reference</a>)</span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-69">Chain</a>(from <a href="#name-reference">reference</a>, to <a href="#name-reference">reference</a>)</span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-40">NodeAt</a>(ref <a href="#name-reference">reference</a>) *<a href="#name-Node">Node</a></span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-49">Push</a>(n <a href="#name-Node">Node</a>) <a href="#name-reference">reference</a></span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-55">PushAndChain</a>(n <a href="#name-Node">Node</a>) <a href="#name-reference">reference</a></span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-44">Reset</a>()</span></span><span>
+			<span class="nodocs">(*builder) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-36">Tree</a>() *<a href="#name-root">root</a></span></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-reference" data-popularity="955">	<input type='checkbox' class="fold" id="reference-fold-content"><label for="reference-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-23">reference</a> <a href="../../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='reference-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="reference-fold-methods"><label for="reference-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='reference-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( reference) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-27">Valid</a>() <a href="../../../../builtin.html#name-bool">bool</a></span></span></span>
+		<input type='checkbox' class="fold" id="reference-fold-results"><label for="reference-fold-results">As Outputs Of (<i>at least 12, none are exported</i>)</label><span id='reference-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="reference-showhide-inputofs"><i><label for="reference-showhide-inputofs" class="show-inline">/* 12+ unexporteds ... */</label><label for="reference-showhide-inputofs" class="hide-inline">/* 12+ unexporteds: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-209">parseArrayTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-158">parseExpression</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-397">parseInlineTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-914">parseIntOrFloatOrDateTime</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-715">parseKey</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-263">parseKeyval</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-238">parseStdTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-200">parseTable</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-301">parseVal</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-458">parseValArray</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-962">scanDateTime</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func (*<a href="#name-Parser">Parser</a>).<a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1028">scanIntOrFloat</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) (<b>reference</b>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></span></span>
+		<input type='checkbox' class="fold" id="reference-fold-values"><label for="reference-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='reference-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="reference-showhide-values"><i><label for="reference-showhide-values" class="show-inline">/* one unexported ... */</label><label for="reference-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			const <a href="#name-invalidReference">invalidReference</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-root" data-popularity="100">	<input type='checkbox' class="fold" id="root-fold-content"><label for="root-fold-content"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-6">root</a> <i>(struct)</i></label><span id='root-fold-content-docs' class="fold-docs">
+<span class="md-text">		root contains a full AST.
+		
+		It is immutable once constructed with Builder.</span>
+
+		<input type='checkbox' class="fold" id="root-fold-fields"><label for="root-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='root-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="root-showhide-fields"><i><label for="root-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="root-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-7">nodes</a> <i>[]<a href="#name-Node">Node</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="root-fold-methods"><label for="root-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='root-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="root-fold-method-Iterator"><label for="root-fold-method-Iterator">(*root) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-11">Iterator</a>() <a href="#name-Iterator">Iterator</a></label><span id='root-fold-method-Iterator-docs' class="fold-docs">
+<span class="md-text">				Iterator over the top level nodes.</span>
+</span></span>
+			<input type='checkbox' checked class="showhide" id="root-showhide-methods"><i><label for="root-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="root-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*root) <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-19">at</a>(idx <a href="#name-reference">reference</a>) *<a href="#name-Node">Node</a></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-validRuneFn" data-popularity="0">	<span class="nodocs"> type <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1120">validRuneFn</a> <i>(func)</i></span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 24, in which 1 is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewParserError">	<input type='checkbox' class="fold" id="NewParserError-fold-content"><label for="NewParserError-fold-content"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-31">NewParserError</a>(highlight []<a href="../../../../builtin.html#name-byte">byte</a>, format <a href="../../../../builtin.html#name-string">string</a>, args ...interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NewParserError-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewParserError is a convenience function to create a ParserError
+		
+		Warning: Highlight needs to be a subslice of Parser.data, so only slices
+		returned by Parser.Raw are valid candidates.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 23 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 23 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-atmost"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-380">atmost</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>, n <a href="../../../../builtin.html#name-int">int</a>) []<a href="../../../../builtin.html#name-byte">byte</a></span></i></div><div class="anchor value-res hidden" id="name-expect"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1137">expect</a>(x <a href="../../../../builtin.html#name-byte">byte</a>, b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-hexToRune"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-875">hexToRune</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>, length <a href="../../../../builtin.html#name-int">int</a>) (<a href="../../../../builtin.html#name-rune">rune</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-isDigit"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1116">isDigit</a>(r <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isUnquotedKeyChar"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-46">isUnquotedKeyChar</a>(r <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isValidBinaryRune"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1133">isValidBinaryRune</a>(r <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isValidHexRune"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1122">isValidHexRune</a>(r <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isValidOctalRune"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/parser.go.html#line-1129">isValidOctalRune</a>(r <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanBasicString"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-183">scanBasicString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-bool">bool</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanComment"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-155">scanComment</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanFollows"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-5">scanFollows</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>, pattern <a href="../../../../builtin.html#name-string">string</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsFalse"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-23">scanFollowsFalse</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsInf"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-27">scanFollowsInf</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsMultilineBasicStringDelimiter"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-11">scanFollowsMultilineBasicStringDelimiter</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsMultilineLiteralStringDelimiter"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-15">scanFollowsMultilineLiteralStringDelimiter</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsNan"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-31">scanFollowsNan</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanFollowsTrue"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-19">scanFollowsTrue</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-scanLiteralString"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-50">scanLiteralString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanMultilineBasicString"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-210">scanMultilineBasicString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-bool">bool</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanMultilineLiteralString"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-71">scanMultilineLiteralString</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanUnquotedKey"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-35">scanUnquotedKey</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanWhitespace"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-141">scanWhitespace</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>)</span></i></div><div class="anchor value-res hidden" id="name-scanWindowsNewline"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/scanner.go.html#line-128">scanWindowsNewline</a>(b []<a href="../../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../../builtin.html#name-byte">byte</a>, []<a href="../../../../builtin.html#name-byte">byte</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 17, in which 16 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-Array">	<input type='checkbox' class="fold" id="Array-fold-content"><label for="Array-fold-content">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-20">Array</a> <a href="#name-Kind">Kind</a> = 6</label><span id='Array-fold-content-docs' class="fold-docs">
+<span class="md-text">		Containers values</span>
+
+</span></div><div class="anchor value-res" id="name-ArrayTable">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-16">ArrayTable</a> <a href="#name-Kind">Kind</a> = 4</span></div><div class="anchor value-res" id="name-Bool">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-25">Bool</a> <a href="#name-Kind">Kind</a> = 9</span></div><div class="anchor value-res" id="name-Comment">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-11">Comment</a> <a href="#name-Kind">Kind</a> = 1</span></div><div class="anchor value-res" id="name-DateTime">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-31">DateTime</a> <a href="#name-Kind">Kind</a> = 15</span></div><div class="anchor value-res" id="name-Float">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-26">Float</a> <a href="#name-Kind">Kind</a> = 10</span></div><div class="anchor value-res" id="name-InlineTable">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-21">InlineTable</a> <a href="#name-Kind">Kind</a> = 7</span></div><div class="anchor value-res" id="name-Integer">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-27">Integer</a> <a href="#name-Kind">Kind</a> = 11</span></div><div class="anchor value-res" id="name-Invalid">	<input type='checkbox' class="fold" id="Invalid-fold-content"><label for="Invalid-fold-content">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-10">Invalid</a> <a href="#name-Kind">Kind</a> = 0</label><span id='Invalid-fold-content-docs' class="fold-docs">
+<span class="md-text">		Meta</span>
+
+</span></div><div class="anchor value-res" id="name-Key">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-12">Key</a> <a href="#name-Kind">Kind</a> = 2</span></div><div class="anchor value-res" id="name-KeyValue">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-17">KeyValue</a> <a href="#name-Kind">Kind</a> = 5</span></div><div class="anchor value-res" id="name-LocalDate">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-28">LocalDate</a> <a href="#name-Kind">Kind</a> = 12</span></div><div class="anchor value-res" id="name-LocalDateTime">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-30">LocalDateTime</a> <a href="#name-Kind">Kind</a> = 14</span></div><div class="anchor value-res" id="name-LocalTime">	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-29">LocalTime</a> <a href="#name-Kind">Kind</a> = 13</span></div><div class="anchor value-res" id="name-String">	<input type='checkbox' class="fold" id="String-fold-content"><label for="String-fold-content">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-24">String</a> <a href="#name-Kind">Kind</a> = 8</label><span id='String-fold-content-docs' class="fold-docs">
+<span class="md-text">		Values</span>
+
+</span></div><div class="anchor value-res" id="name-Table">	<input type='checkbox' class="fold" id="Table-fold-content"><label for="Table-fold-content">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/kind.go.html#line-15">Table</a> <a href="#name-Kind">Kind</a> = 3</label><span id='Table-fold-content-docs' class="fold-docs">
+<span class="md-text">		Top level structures</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-invalidReference"><i>	<span class="nodocs">const <a href="../../../../../src/github.com/pelletier/go-toml/v2/unstable/builder.go.html#line-25">invalidReference</a> <a href="#name-reference">reference</a> = -1</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

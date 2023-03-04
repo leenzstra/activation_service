@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: ast.go in package github.com/pelletier/go-toml/v2/unstable</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	ast.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/unstable.html">github.com/pelletier/go-toml/v2/unstable</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> unstable</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"fmt"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"unsafe"</span></label></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i2"><span class="lit-string i2">"github.com/pelletier/go-toml/v2/internal/danger"</span></label></code></span>
+<span class="codeline" id="line-8"><code>)</code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// Iterator over a sequence of nodes.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// Starts uninitialized, you need to call Next() first.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// For example:</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">//	it := n.Children()</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">//	for it.Next() {</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">//		n := it.Node()</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">//		// do something with n</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">//	}</span></code></span>
+<span class="codeline" id="line-21"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/unstable.html#name-Iterator" class="ident">Iterator</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-22"><code>	started <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-23"><code>	node    *<a href="#line-63" class="ident">Node</a></code></span>
+<span class="codeline" id="line-24"><code>}</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">// Next moves the iterator forward and returns true if points to a</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// node, false otherwise.</span></code></span>
+<span class="codeline" id="line-28"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="#line-21" class="ident">Iterator</a>) <label for="r1" class="ident">Next</label>() <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-29"><code>	<span class="keyword">if</span> !<label for="r0" class="ident">c</label>.<a href="#line-22" class="ident">started</a> {</code></span>
+<span class="codeline" id="line-30"><code>		<label for="r0" class="ident">c</label>.<a href="#line-22" class="ident">started</a> = <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-31"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r0" class="ident">c</label>.<a href="#line-23" class="ident">node</a>.<a href="#line-104" class="ident">Valid</a>() {</code></span>
+<span class="codeline" id="line-32"><code>		<label for="r0" class="ident">c</label>.<a href="#line-23" class="ident">node</a> = <label for="r0" class="ident">c</label>.<a href="#line-23" class="ident">node</a>.<a href="#line-82" class="ident">Next</a>()</code></span>
+<span class="codeline" id="line-33"><code>	}</code></span>
+<span class="codeline" id="line-34"><code>	<span class="keyword">return</span> <label for="r0" class="ident">c</label>.<a href="#line-23" class="ident">node</a>.<a href="#line-104" class="ident">Valid</a>()</code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// IsLast returns true if the current node of the iterator is the last</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">// one.  Subsequent calls to Next() will return false.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="keyword">func</span> (<label for="r2" class="ident">c</label> *<a href="#line-21" class="ident">Iterator</a>) <label for="r3" class="ident">IsLast</label>() <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-40"><code>	<span class="keyword">return</span> <label for="r2" class="ident">c</label>.<a href="#line-23" class="ident">node</a>.<a href="#line-71" class="ident">next</a> == <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-41"><code>}</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// Node returns a pointer to the node pointed at by the iterator.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="keyword">func</span> (<label for="r4" class="ident">c</label> *<a href="#line-21" class="ident">Iterator</a>) <label for="r5" class="ident">Node</label>() *<a href="#line-63" class="ident">Node</a> {</code></span>
+<span class="codeline" id="line-45"><code>	<span class="keyword">return</span> <label for="r4" class="ident">c</label>.<a href="#line-23" class="ident">node</a></code></span>
+<span class="codeline" id="line-46"><code>}</code></span>
+<span class="codeline" id="line-47"><code></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// Node in a TOML expression AST.</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// Depending on Kind, its sequence of children should be interpreted</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">// differently.</span></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">//   - Array have one child per element in the array.</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">//   - InlineTable have one child per key-value in the table (each of kind</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">//     InlineTable).</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">//   - KeyValue have at least two children. The first one is the value. The rest</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">//     make a potentially dotted key.</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">//   - Table and ArrayTable's children represent a dotted key (same as</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">//     KeyValue, but without the first node being the value).</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">// When relevant, Raw describes the range of bytes this node is refering to in</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">// the input document. Use Parser.Raw() to retrieve the actual bytes.</span></code></span>
+<span class="codeline" id="line-63"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/unstable.html#name-Node" class="ident">Node</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-64"><code>	Kind <a href="kind.go.html#line-6" class="ident">Kind</a></code></span>
+<span class="codeline" id="line-65"><code>	Raw  <a href="#line-76" class="ident">Range</a>  <span class="comment">// Raw bytes from the input.</span></code></span>
+<span class="codeline" id="line-66"><code>	Data []<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a> <span class="comment">// Node value (either allocated or referencing the input).</span></code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code>	<span class="comment">// References to other nodes, as offsets in the backing array</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">	// from this node. References can go backward, so those can be</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">	// negative.</span></code></span>
+<span class="codeline" id="line-71"><code>	next  <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a> <span class="comment">// 0 if last element</span></code></span>
+<span class="codeline" id="line-72"><code>	child <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a> <span class="comment">// 0 if no child</span></code></span>
+<span class="codeline" id="line-73"><code>}</code></span>
+<span class="codeline" id="line-74"><code></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">// Range of bytes in the document.</span></code></span>
+<span class="codeline" id="line-76"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/unstable.html#name-Range" class="ident">Range</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-77"><code>	Offset <a href="../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-78"><code>	Length <a href="../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-79"><code>}</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code><span class="comment">// Next returns a pointer to the next node, or nil if there is no next node.</span></code></span>
+<span class="codeline" id="line-82"><code><span class="keyword">func</span> (<label for="r6" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r7" class="ident">Next</label>() *<a href="#line-63" class="ident">Node</a> {</code></span>
+<span class="codeline" id="line-83"><code>	<span class="keyword">if</span> <label for="r6" class="ident">n</label>.<a href="#line-71" class="ident">next</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-84"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-85"><code>	}</code></span>
+<span class="codeline" id="line-86"><code>	<label for="r8" class="ident">ptr</label> := <a href="../../../../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../../../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r6" class="ident">n</label>)</code></span>
+<span class="codeline" id="line-87"><code>	<label for="r9" class="ident">size</label> := <a href="../../../../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../../../../pkg/unsafe.html#name-Sizeof" class="ident">Sizeof</a>(<a href="#line-63" class="ident">Node</a>{})</code></span>
+<span class="codeline" id="line-88"><code>	<span class="keyword">return</span> (*<a href="#line-63" class="ident">Node</a>)(<a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/danger.html" class="ident i2">danger</a>.<a href="../internal/danger/danger.go.html#line-61" class="ident">Stride</a>(<label for="r8" class="ident">ptr</label>, <label for="r9" class="ident">size</label>, <label for="r6" class="ident">n</label>.<a href="#line-71" class="ident">next</a>))</code></span>
+<span class="codeline" id="line-89"><code>}</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code><span class="comment">// Child returns a pointer to the first child node of this node. Other children</span></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// can be accessed calling Next on the first child.  Returns an nil if this Node</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// has no child.</span></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">func</span> (<label for="r10" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r11" class="ident">Child</label>() *<a href="#line-63" class="ident">Node</a> {</code></span>
+<span class="codeline" id="line-95"><code>	<span class="keyword">if</span> <label for="r10" class="ident">n</label>.<a href="#line-72" class="ident">child</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-96"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-97"><code>	}</code></span>
+<span class="codeline" id="line-98"><code>	<label for="r12" class="ident">ptr</label> := <a href="../../../../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../../../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r10" class="ident">n</label>)</code></span>
+<span class="codeline" id="line-99"><code>	<label for="r13" class="ident">size</label> := <a href="../../../../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../../../../pkg/unsafe.html#name-Sizeof" class="ident">Sizeof</a>(<a href="#line-63" class="ident">Node</a>{})</code></span>
+<span class="codeline" id="line-100"><code>	<span class="keyword">return</span> (*<a href="#line-63" class="ident">Node</a>)(<a href="../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/danger.html" class="ident i2">danger</a>.<a href="../internal/danger/danger.go.html#line-61" class="ident">Stride</a>(<label for="r12" class="ident">ptr</label>, <label for="r13" class="ident">size</label>, <label for="r10" class="ident">n</label>.<a href="#line-72" class="ident">child</a>))</code></span>
+<span class="codeline" id="line-101"><code>}</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code><span class="comment">// Valid returns true if the node's kind is set (not to Invalid).</span></code></span>
+<span class="codeline" id="line-104"><code><span class="keyword">func</span> (<label for="r14" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r15" class="ident">Valid</label>() <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-105"><code>	<span class="keyword">return</span> <label for="r14" class="ident">n</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-106"><code>}</code></span>
+<span class="codeline" id="line-107"><code></code></span>
+<span class="codeline" id="line-108"><code><span class="comment">// Key returns the children nodes making the Key on a supported node. Panics</span></code></span>
+<span class="codeline" id="line-109"><code><span class="comment">// otherwise.  They are guaranteed to be all be of the Kind Key. A simple key</span></code></span>
+<span class="codeline" id="line-110"><code><span class="comment">// would return just one element.</span></code></span>
+<span class="codeline" id="line-111"><code><span class="keyword">func</span> (<label for="r16" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r17" class="ident">Key</label>() <a href="#line-21" class="ident">Iterator</a> {</code></span>
+<span class="codeline" id="line-112"><code>	<span class="keyword">switch</span> <label for="r16" class="ident">n</label>.<a href="#line-64" class="ident">Kind</a> {</code></span>
+<span class="codeline" id="line-113"><code>	<span class="keyword">case</span> <a href="kind.go.html#line-17" class="ident">KeyValue</a>:</code></span>
+<span class="codeline" id="line-114"><code>		<label for="r18" class="ident">value</label> := <label for="r16" class="ident">n</label>.<a href="#line-94" class="ident">Child</a>()</code></span>
+<span class="codeline" id="line-115"><code>		<span class="keyword">if</span> !<label for="r18" class="ident">value</label>.<a href="#line-104" class="ident">Valid</a>() {</code></span>
+<span class="codeline" id="line-116"><code>			<a href="../../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../../fmt/errors.go.html#line-22" class="ident">Errorf</a>(<span class="lit-string">"KeyValue should have at least two children"</span>))</code></span>
+<span class="codeline" id="line-117"><code>		}</code></span>
+<span class="codeline" id="line-118"><code>		<span class="keyword">return</span> <a href="#line-21" class="ident">Iterator</a>{<a href="#line-23" class="ident">node</a>: <label for="r18" class="ident">value</label>.<a href="#line-82" class="ident">Next</a>()}</code></span>
+<span class="codeline" id="line-119"><code>	<span class="keyword">case</span> <a href="kind.go.html#line-15" class="ident">Table</a>, <a href="kind.go.html#line-16" class="ident">ArrayTable</a>:</code></span>
+<span class="codeline" id="line-120"><code>		<span class="keyword">return</span> <a href="#line-21" class="ident">Iterator</a>{<a href="#line-23" class="ident">node</a>: <label for="r16" class="ident">n</label>.<a href="#line-94" class="ident">Child</a>()}</code></span>
+<span class="codeline" id="line-121"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-122"><code>		<a href="../../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../../fmt/errors.go.html#line-22" class="ident">Errorf</a>(<span class="lit-string">"Key() is not supported on a %s"</span>, <label for="r16" class="ident">n</label>.<a href="#line-64" class="ident">Kind</a>))</code></span>
+<span class="codeline" id="line-123"><code>	}</code></span>
+<span class="codeline" id="line-124"><code>}</code></span>
+<span class="codeline" id="line-125"><code></code></span>
+<span class="codeline" id="line-126"><code><span class="comment">// Value returns a pointer to the value node of a KeyValue.</span></code></span>
+<span class="codeline" id="line-127"><code><span class="comment">// Guaranteed to be non-nil.  Panics if not called on a KeyValue node,</span></code></span>
+<span class="codeline" id="line-128"><code><span class="comment">// or if the Children are malformed.</span></code></span>
+<span class="codeline" id="line-129"><code><span class="keyword">func</span> (<label for="r19" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r20" class="ident">Value</label>() *<a href="#line-63" class="ident">Node</a> {</code></span>
+<span class="codeline" id="line-130"><code>	<span class="keyword">return</span> <label for="r19" class="ident">n</label>.<a href="#line-94" class="ident">Child</a>()</code></span>
+<span class="codeline" id="line-131"><code>}</code></span>
+<span class="codeline" id="line-132"><code></code></span>
+<span class="codeline" id="line-133"><code><span class="comment">// Children returns an iterator over a node's children.</span></code></span>
+<span class="codeline" id="line-134"><code><span class="keyword">func</span> (<label for="r21" class="ident">n</label> *<a href="#line-63" class="ident">Node</a>) <label for="r22" class="ident">Children</label>() <a href="#line-21" class="ident">Iterator</a> {</code></span>
+<span class="codeline" id="line-135"><code>	<span class="keyword">return</span> <a href="#line-21" class="ident">Iterator</a>{<a href="#line-23" class="ident">node</a>: <label for="r21" class="ident">n</label>.<a href="#line-94" class="ident">Child</a>()}</code></span>
+<span class="codeline" id="line-136"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

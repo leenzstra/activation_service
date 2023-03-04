@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: models.go in package github.com/leenzstra/activation_service/internal/models</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	models.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html">github.com/leenzstra/activation_service/internal/models</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1
+{background: brown; color: #eed;}
+</style><input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> models</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"time"</span></label></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i1"><span class="lit-string i1">"gorm.io/gorm"</span></label></code></span>
+<span class="codeline" id="line-7"><code>)</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html#name-License" class="ident">License</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i1">gorm</a>.<a href="../../../../../gorm.io/gorm/model.go.html#line-10" class="ident">Model</a></code></span>
+<span class="codeline" id="line-11"><code>	Key            <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> <span class="lit-string">`gorm:"unique"`</span></code></span>
+<span class="codeline" id="line-12"><code>	MaxUses        <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-13"><code>	Contacts       <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-14"><code>	LicenseUses    []*<a href="#line-19" class="ident">LicenseUse</a></code></span>
+<span class="codeline" id="line-15"><code>	SubjectClasses []*<a href="#line-34" class="ident">SubjectClass</a> <span class="lit-string">`gorm:"many2many:license_subject_classes;"`</span></code></span>
+<span class="codeline" id="line-16"><code>	Period         <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-17"><code>}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html#name-LicenseUse" class="ident">LicenseUse</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-20"><code>	<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i1">gorm</a>.<a href="../../../../../gorm.io/gorm/model.go.html#line-10" class="ident">Model</a></code></span>
+<span class="codeline" id="line-21"><code>	LicenseID       <a href="../../../../../../pkg/builtin.html#name-uint" class="ident">uint</a></code></span>
+<span class="codeline" id="line-22"><code>	Expiration      <a href="../../../../../../pkg/time.html" class="ident i0">time</a>.<a href="../../../../../time/time.go.html#line-129" class="ident">Time</a></code></span>
+<span class="codeline" id="line-23"><code>	MachineInfoHash <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-24"><code>}</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html#name-Subject" class="ident">Subject</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i1">gorm</a>.<a href="../../../../../gorm.io/gorm/model.go.html#line-10" class="ident">Model</a></code></span>
+<span class="codeline" id="line-28"><code>	Sid            <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a> <span class="lit-string">`gorm:"unique"`</span></code></span>
+<span class="codeline" id="line-29"><code>	Name           <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-30"><code>	Alias          <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> <span class="lit-string">`gorm:"unique"`</span></code></span>
+<span class="codeline" id="line-31"><code>	SubjectClasses []*<a href="#line-34" class="ident">SubjectClass</a></code></span>
+<span class="codeline" id="line-32"><code>}</code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html#name-SubjectClass" class="ident">SubjectClass</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i1">gorm</a>.<a href="../../../../../gorm.io/gorm/model.go.html#line-10" class="ident">Model</a></code></span>
+<span class="codeline" id="line-36"><code>	SubjectID <a href="../../../../../../pkg/builtin.html#name-uint" class="ident">uint</a></code></span>
+<span class="codeline" id="line-37"><code>	Class     <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-38"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

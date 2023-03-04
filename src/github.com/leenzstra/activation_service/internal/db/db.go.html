@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: db.go in package github.com/leenzstra/activation_service/internal/db</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	db.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/db.html">github.com/leenzstra/activation_service/internal/db</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6,
+input[id=i7]:checked ~pre .i7,
+input[id=i8]:checked ~pre .i8
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+<input id="i7" type="radio" name="i"/>
+<input id="i8" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> db</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"log"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"os"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"time"</span></label></code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i3"><span class="lit-string i3">"github.com/leenzstra/activation_service/internal/collections"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i4"><span class="lit-string i4">"github.com/leenzstra/activation_service/internal/config"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i5"><span class="lit-string i5">"github.com/leenzstra/activation_service/internal/models"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i6"><span class="lit-string i6">"gorm.io/driver/sqlite"</span></label></code></span>
+<span class="codeline" id="line-12"><code>	<label for="i7"><span class="lit-string i7">"gorm.io/gorm"</span></label></code></span>
+<span class="codeline" id="line-13"><code>	<label for="i8"><span class="lit-string i8">"gorm.io/gorm/logger"</span></label></code></span>
+<span class="codeline" id="line-14"><code>)</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/db.html#name-Database" class="ident">Database</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-17"><code>	Gorm   *<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i7">gorm</a>.<a href="../../../../../gorm.io/gorm/gorm.go.html#line-91" class="ident">DB</a></code></span>
+<span class="codeline" id="line-18"><code>	Config *<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/config.html" class="ident i4">config</a>.<a href="../config/config.go.html#line-5" class="ident">Config</a></code></span>
+<span class="codeline" id="line-19"><code>}</code></span>
+<span class="codeline" id="line-20"><code></code></span>
+<span class="codeline" id="line-21"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/db.html#name-New" class="ident">New</a></label>(<label for="r1" class="ident">config</label> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/config.html" class="ident i4">config</a>.<a href="../config/config.go.html#line-5" class="ident">Config</a>) *<a href="#line-16" class="ident">Database</a> {</code></span>
+<span class="codeline" id="line-22"><code>	<label for="r2" class="ident">db</label>, <label for="r3" class="ident">err</label> := <a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i7">gorm</a>.<a href="../../../../../gorm.io/gorm/gorm.go.html#line-118" class="ident">Open</a>(<a href="../../../../../../pkg/gorm.io/driver/sqlite.html" class="ident i6">sqlite</a>.<a href="../../../../../gorm.io/driver/sqlite/sqlite.go.html#line-28" class="ident">Open</a>(<label for="r1" class="ident">config</label>.<a href="../config/config.go.html#line-8" class="ident">DBPath</a>), &amp;<a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i7">gorm</a>.<a href="../../../../../gorm.io/gorm/gorm.go.html#line-20" class="ident">Config</a>{<a href="../../../../../gorm.io/gorm/gorm.go.html#line-29" class="ident">Logger</a>: <a href="../../../../../../pkg/gorm.io/gorm/logger.html" class="ident i8">logger</a>.<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-86" class="ident">New</a>(<a href="../../../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../../../log/log.go.html#line-70" class="ident">New</a>(<a href="../../../../../../pkg/os.html" class="ident i1">os</a>.<a href="../../../../../os/file.go.html#line-66" class="ident">Stdout</a>, <span class="lit-string">"\r\n"</span>, <a href="../../../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../../../log/log.go.html#line-49" class="ident">LstdFlags</a>), <a href="../../../../../../pkg/gorm.io/gorm/logger.html" class="ident i8">logger</a>.<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-54" class="ident">Config</a>{</code></span>
+<span class="codeline" id="line-23"><code>		<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-55" class="ident">SlowThreshold</a>:             <a href="../../../../../../pkg/time.html" class="ident i2">time</a>.<a href="../../../../../time/time.go.html#line-635" class="ident">Second</a>, <span class="comment">// Slow SQL threshold</span></code></span>
+<span class="codeline" id="line-24"><code>		<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-59" class="ident">LogLevel</a>:                  <a href="../../../../../../pkg/gorm.io/gorm/logger.html" class="ident i8">logger</a>.<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-45" class="ident">Info</a>, <span class="comment">// Log level</span></code></span>
+<span class="codeline" id="line-25"><code>		<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-57" class="ident">IgnoreRecordNotFoundError</a>: <a href="../../../../../../pkg/builtin.html#name-false" class="ident">false</a>,       <span class="comment">// Ignore ErrRecordNotFound error for logger</span></code></span>
+<span class="codeline" id="line-26"><code>		<a href="../../../../../gorm.io/gorm/logger/logger.go.html#line-56" class="ident">Colorful</a>:                  <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,        <span class="comment">// Disable color</span></code></span>
+<span class="codeline" id="line-27"><code>	})})</code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code>	<span class="keyword">if</span> <label for="r3" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-30"><code>		<a href="../../../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../../../log/log.go.html#line-375" class="ident">Fatalln</a>(<label for="r3" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-31"><code>	}</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code>	<span class="keyword">if</span> <label for="r2" class="ident">db</label>.<a href="../../../../../gorm.io/gorm/migrator.go.html#line-27" class="ident">AutoMigrate</a>(&amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>{}, &amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-19" class="ident">LicenseUse</a>{}, &amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{}, &amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-34" class="ident">SubjectClass</a>{}) != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-34"><code>		<a href="../../../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../../../log/log.go.html#line-375" class="ident">Fatalln</a>(<label for="r3" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-35"><code>	}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code>	<span class="keyword">return</span> &amp;<a href="#line-16" class="ident">Database</a>{<a href="#line-17" class="ident">Gorm</a>: <label for="r2" class="ident">db</label>, <a href="#line-18" class="ident">Config</a>: &amp;<label for="r1" class="ident">config</label>}</code></span>
+<span class="codeline" id="line-38"><code>}</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code><span class="keyword">func</span> (<label for="r4" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r5" class="ident">InitSubjectsInfo</label>(<label for="r6" class="ident">sc</label> *<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/config.html" class="ident i4">config</a>.<a href="../config/subjects_config.go.html#line-5" class="ident">SubjectsConfig</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-41"><code>	<label for="r7" class="ident">subjectsCount</label> := <a href="../../../../../../pkg/builtin.html#name-int64" class="ident">int64</a>(<span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-42"><code>	<span class="keyword">if</span> <label for="r8" class="ident">err</label> := <label for="r4" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-18" class="ident">Model</a>(&amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{}).<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-438" class="ident">Count</a>(&amp;<label for="r7" class="ident">subjectsCount</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r8" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-43"><code>		<span class="keyword">return</span> <label for="r8" class="ident">err</label></code></span>
+<span class="codeline" id="line-44"><code>	}</code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>	<span class="keyword">if</span> <label for="r7" class="ident">subjectsCount</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-47"><code>		<span class="keyword">for</span> <label for="r9" class="ident">_</label>, <label for="r10" class="ident">subject</label> := <span class="keyword">range</span> <label for="r6" class="ident">sc</label>.<a href="../config/subjects_config.go.html#line-6" class="ident">Subjects</a> {</code></span>
+<span class="codeline" id="line-48"><code>			<label for="r11" class="ident">subjModel</label> := <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{<a href="../models/models.go.html#line-28" class="ident">Sid</a>: <label for="r10" class="ident">subject</label>.<a href="../config/subjects_config.go.html#line-8" class="ident">Sid</a>, <a href="../models/models.go.html#line-29" class="ident">Name</a>: <label for="r10" class="ident">subject</label>.<a href="../config/subjects_config.go.html#line-9" class="ident">Name</a>, <a href="../models/models.go.html#line-30" class="ident">Alias</a>: <label for="r10" class="ident">subject</label>.<a href="../config/subjects_config.go.html#line-10" class="ident">Alias</a>}</code></span>
+<span class="codeline" id="line-49"><code>			<label for="r4" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-17" class="ident">Create</a>(&amp;<label for="r11" class="ident">subjModel</label>)</code></span>
+<span class="codeline" id="line-50"><code>			<label for="r12" class="ident">subjClasses</label> := <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/collections.html" class="ident i3">collections</a>.<a href="../collections/functions.go.html#line-3" class="ident">Map</a>(<label for="r10" class="ident">subject</label>.<a href="../config/subjects_config.go.html#line-11" class="ident">Classes</a>, <span class="keyword">func</span>(<label for="r13" class="ident">s</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-34" class="ident">SubjectClass</a> { <span class="keyword">return</span> <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-34" class="ident">SubjectClass</a>{<a href="../models/models.go.html#line-36" class="ident">SubjectID</a>: <label for="r11" class="ident">subjModel</label>.<a href="../../../../../gorm.io/gorm/model.go.html#line-11" class="ident">ID</a>, <a href="../models/models.go.html#line-37" class="ident">Class</a>: <label for="r13" class="ident">s</label>} })</code></span>
+<span class="codeline" id="line-51"><code>			<label for="r4" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-17" class="ident">Create</a>(&amp;<label for="r12" class="ident">subjClasses</label>)</code></span>
+<span class="codeline" id="line-52"><code>		}</code></span>
+<span class="codeline" id="line-53"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-54"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-55"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-56"><code>	}</code></span>
+<span class="codeline" id="line-57"><code>}</code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code><span class="keyword">func</span> (<label for="r14" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r15" class="ident">AddLicense</label>(<label for="r16" class="ident">license</label> *<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-60"><code>	<span class="keyword">return</span> <label for="r14" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-17" class="ident">Create</a>(&amp;<label for="r16" class="ident">license</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a></code></span>
+<span class="codeline" id="line-61"><code>}</code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code><span class="keyword">func</span> (<label for="r17" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r18" class="ident">AddLicenseUse</label>(<label for="r19" class="ident">use</label> *<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-19" class="ident">LicenseUse</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-64"><code>	<span class="keyword">return</span> <label for="r17" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-17" class="ident">Create</a>(<label for="r19" class="ident">use</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a></code></span>
+<span class="codeline" id="line-65"><code>}</code></span>
+<span class="codeline" id="line-66"><code></code></span>
+<span class="codeline" id="line-67"><code><span class="keyword">func</span> (<label for="r20" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r21" class="ident">GetLicenseByKey</label>(<label for="r22" class="ident">key</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-68"><code>	<label for="r23" class="ident">license</label> := <a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>{}</code></span>
+<span class="codeline" id="line-69"><code>	<span class="keyword">if</span> <label for="r24" class="ident">err</label> := <label for="r20" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"LicenseUses"</span>).<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"SubjectClasses"</span>).<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-196" class="ident">Where</a>(<span class="lit-string">"key = ?"</span>, <label for="r22" class="ident">key</label>).<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-118" class="ident">First</a>(&amp;<label for="r23" class="ident">license</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r24" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-70"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r24" class="ident">err</label></code></span>
+<span class="codeline" id="line-71"><code>	}</code></span>
+<span class="codeline" id="line-72"><code></code></span>
+<span class="codeline" id="line-73"><code>	<span class="keyword">return</span> &amp;<label for="r23" class="ident">license</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-74"><code>}</code></span>
+<span class="codeline" id="line-75"><code></code></span>
+<span class="codeline" id="line-76"><code><span class="keyword">func</span> (<label for="r25" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r26" class="ident">GetSubjects</label>() ([]*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-77"><code>	<label for="r27" class="ident">subjects</label> := []*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{}</code></span>
+<span class="codeline" id="line-78"><code>	<span class="keyword">if</span> <label for="r28" class="ident">err</label> := <label for="r25" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"SubjectClasses"</span>).<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r27" class="ident">subjects</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r28" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-79"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r28" class="ident">err</label></code></span>
+<span class="codeline" id="line-80"><code>	}</code></span>
+<span class="codeline" id="line-81"><code>	<span class="keyword">return</span> <label for="r27" class="ident">subjects</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-82"><code>}</code></span>
+<span class="codeline" id="line-83"><code></code></span>
+<span class="codeline" id="line-84"><code><span class="keyword">func</span> (<label for="r29" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r30" class="ident">GetSubjectsBySid</label>(<label for="r31" class="ident">sids</label> ...<a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a>) ([]*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-85"><code>	<label for="r32" class="ident">subjects</label> := []*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{}</code></span>
+<span class="codeline" id="line-86"><code>	<span class="keyword">if</span> <label for="r33" class="ident">err</label> := <label for="r29" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"SubjectClasses"</span>).<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-196" class="ident">Where</a>(<span class="lit-string">"sid in (?)"</span>, <label for="r31" class="ident">sids</label>).<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r32" class="ident">subjects</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r33" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-87"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r33" class="ident">err</label></code></span>
+<span class="codeline" id="line-88"><code>	}</code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">return</span> <label for="r32" class="ident">subjects</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="keyword">func</span> (<label for="r34" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r35" class="ident">GetSubjectsById</label>(<label for="r36" class="ident">ids</label> ...<a href="../../../../../../pkg/builtin.html#name-uint" class="ident">uint</a>) ([]*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-93"><code>	<label for="r37" class="ident">subjects</label> := []*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-26" class="ident">Subject</a>{}</code></span>
+<span class="codeline" id="line-94"><code>	<span class="keyword">if</span> <label for="r38" class="ident">err</label> := <label for="r34" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"SubjectClasses"</span>).<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-196" class="ident">Where</a>(<span class="lit-string">"id in (?)"</span>, <label for="r36" class="ident">ids</label>).<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r37" class="ident">subjects</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r38" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-95"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r38" class="ident">err</label></code></span>
+<span class="codeline" id="line-96"><code>	}</code></span>
+<span class="codeline" id="line-97"><code>	<span class="keyword">return</span> <label for="r37" class="ident">subjects</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-98"><code>}</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code><span class="keyword">func</span> (<label for="r39" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r40" class="ident">GetLicenseUse</label>(<label for="r41" class="ident">key</label>, <label for="r42" class="ident">machineInfoHash</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-19" class="ident">LicenseUse</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-101"><code>	<label for="r43" class="ident">license</label> := &amp;<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>{}</code></span>
+<span class="codeline" id="line-102"><code>	<span class="keyword">if</span> <label for="r44" class="ident">err</label> := <label for="r39" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.</code></span>
+<span class="codeline" id="line-103"><code>		<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"LicenseUses"</span>, <span class="lit-string">"machine_info_hash = ?"</span>, <label for="r42" class="ident">machineInfoHash</label>).</code></span>
+<span class="codeline" id="line-104"><code>		<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-196" class="ident">Where</a>(<span class="lit-string">"key = ?"</span>, <label for="r41" class="ident">key</label>).</code></span>
+<span class="codeline" id="line-105"><code>		<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r43" class="ident">license</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r44" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-106"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r44" class="ident">err</label></code></span>
+<span class="codeline" id="line-107"><code>	}</code></span>
+<span class="codeline" id="line-108"><code>	<span class="keyword">if</span> <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r43" class="ident">license</label>.<a href="../models/models.go.html#line-14" class="ident">LicenseUses</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-109"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../../pkg/gorm.io/gorm.html" class="ident i7">gorm</a>.<a href="../../../../../gorm.io/gorm/errors.go.html#line-11" class="ident">ErrRecordNotFound</a></code></span>
+<span class="codeline" id="line-110"><code>	}</code></span>
+<span class="codeline" id="line-111"><code>	<span class="keyword">return</span> <label for="r43" class="ident">license</label>.<a href="../models/models.go.html#line-14" class="ident">LicenseUses</a>[<span class="lit-number">0</span>], <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-112"><code>}</code></span>
+<span class="codeline" id="line-113"><code></code></span>
+<span class="codeline" id="line-114"><code><span class="keyword">func</span> (<label for="r45" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r46" class="ident">GetSubjectClasses</label>(<label for="r47" class="ident">sid</label> <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r48" class="ident">classes</label> []<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) ([]*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-34" class="ident">SubjectClass</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-115"><code>	<label for="r49" class="ident">subjectClasses</label> := []*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-34" class="ident">SubjectClass</a>{}</code></span>
+<span class="codeline" id="line-116"><code></code></span>
+<span class="codeline" id="line-117"><code>	<span class="keyword">if</span> <label for="r50" class="ident">err</label> := <label for="r45" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.</code></span>
+<span class="codeline" id="line-118"><code>		<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-422" class="ident">Raw</a>(<span class="lit-string">"SELECT subject_classes.id, subject_classes.created_at,subject_classes.updated_at, subject_classes.deleted_at, subjects.id as subject_id, class FROM 'subjects' JOIN 'subject_classes' ON 'subjects'.'id' = 'subject_classes'.'subject_id' WHERE sid = ? AND class IN (?);"</span>, <label for="r47" class="ident">sid</label>, <label for="r48" class="ident">classes</label>).</code></span>
+<span class="codeline" id="line-119"><code>		<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r49" class="ident">subjectClasses</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r50" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-120"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r50" class="ident">err</label></code></span>
+<span class="codeline" id="line-121"><code>	}</code></span>
+<span class="codeline" id="line-122"><code>	<span class="keyword">return</span> <label for="r49" class="ident">subjectClasses</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-123"><code>}</code></span>
+<span class="codeline" id="line-124"><code></code></span>
+<span class="codeline" id="line-125"><code><span class="keyword">func</span> (<label for="r51" class="ident">d</label> <a href="#line-16" class="ident">Database</a>) <label for="r52" class="ident">GetLicenses</label>() ([]*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-126"><code>	<label for="r53" class="ident">licenses</label> := []*<a href="../../../../../../pkg/github.com/leenzstra/activation_service/internal/models.html" class="ident i5">models</a>.<a href="../models/models.go.html#line-9" class="ident">License</a>{}</code></span>
+<span class="codeline" id="line-127"><code>	<span class="keyword">if</span> <label for="r54" class="ident">err</label> := <label for="r51" class="ident">d</label>.<a href="#line-17" class="ident">Gorm</a>.</code></span>
+<span class="codeline" id="line-128"><code>		<a href="../../../../../gorm.io/gorm/chainable_api.go.html#line-366" class="ident">Preload</a>(<span class="lit-string">"LicenseUses"</span>).</code></span>
+<span class="codeline" id="line-129"><code>		<a href="../../../../../gorm.io/gorm/finisher_api.go.html#line-162" class="ident">Find</a>(&amp;<label for="r53" class="ident">licenses</label>).<a href="../../../../../gorm.io/gorm/gorm.go.html#line-93" class="ident">Error</a>; <label for="r54" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-130"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r54" class="ident">err</label></code></span>
+<span class="codeline" id="line-131"><code>	}</code></span>
+<span class="codeline" id="line-132"><code></code></span>
+<span class="codeline" id="line-133"><code>	<span class="keyword">return</span> <label for="r53" class="ident">licenses</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-134"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

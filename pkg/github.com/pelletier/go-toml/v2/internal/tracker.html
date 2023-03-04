@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/pelletier/go-toml/v2/internal/tracker</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>tracker</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/pelletier/go-toml/v2/internal/tracker">github.com/pelletier/go-toml/v2/internal/tracker</a><i> (on <a href="https://pkg.go.dev/github.com/pelletier/go-toml/v2/internal/tracker" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/pelletier/go-toml/v2/internal/tracker.html">4 packages</a>, and imported by <a href="../../../../../../dep/github.com/pelletier/go-toml/v2/internal/tracker.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html">key.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html">seen.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/tracker.go.html">tracker.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 4, in which 2 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-KeyTracker" data-popularity="300">	<input type='checkbox' class="fold" id="KeyTracker-fold-content"><label for="KeyTracker-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-7">KeyTracker</a> <i>(struct)</i></label><span id='KeyTracker-fold-content-docs' class="fold-docs">
+<span class="md-text">		KeyTracker is a tracker that keeps track of the current Key as the AST is
+		walked.</span>
+
+		<input type='checkbox' class="fold" id="KeyTracker-fold-fields"><label for="KeyTracker-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='KeyTracker-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="KeyTracker-showhide-fields"><i><label for="KeyTracker-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="KeyTracker-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-8">k</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="KeyTracker-fold-methods"><label for="KeyTracker-fold-methods">Methods (<i>total 6, in which 5 are exported</i>)</label><span id='KeyTracker-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="KeyTracker-fold-method-Key"><label for="KeyTracker-fold-method-Key">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-40">Key</a>() []<a href="../../../../../builtin.html#name-string">string</a></label><span id='KeyTracker-fold-method-Key-docs' class="fold-docs">
+<span class="md-text">				Key returns the current key</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="KeyTracker-fold-method-Pop"><label for="KeyTracker-fold-method-Pop">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-32">Pop</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>)</label><span id='KeyTracker-fold-method-Pop-docs' class="fold-docs">
+<span class="md-text">				Pop key from stack.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="KeyTracker-fold-method-Push"><label for="KeyTracker-fold-method-Push">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-24">Push</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>)</label><span id='KeyTracker-fold-method-Push-docs' class="fold-docs">
+<span class="md-text">				Push the given key on the stack.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="KeyTracker-fold-method-UpdateArrayTable"><label for="KeyTracker-fold-method-UpdateArrayTable">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-18">UpdateArrayTable</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>)</label><span id='KeyTracker-fold-method-UpdateArrayTable-docs' class="fold-docs">
+<span class="md-text">				UpdateArrayTable sets the state of the tracker with the AST array table node.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="KeyTracker-fold-method-UpdateTable"><label for="KeyTracker-fold-method-UpdateTable">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-12">UpdateTable</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>)</label><span id='KeyTracker-fold-method-UpdateTable-docs' class="fold-docs">
+<span class="md-text">				UpdateTable sets the state of the tracker with the AST table node.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="KeyTracker-showhide-methods"><i><label for="KeyTracker-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="KeyTracker-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*KeyTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/key.go.html#line-46">reset</a>()</span></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-SeenTracker" data-popularity="550">	<input type='checkbox' class="fold" id="SeenTracker-fold-content"><label for="SeenTracker-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-55">SeenTracker</a> <i>(struct)</i></label><span id='SeenTracker-fold-content-docs' class="fold-docs">
+<span class="md-text">		SeenTracker tracks which keys have been seen with which TOML type to flag
+		duplicates and mismatches according to the spec.
+		
+		Each node in the visited tree is represented by an entry. Each entry has an
+		identifier, which is provided by a counter. Entries are stored in the array
+		entries. As new nodes are discovered (referenced for the first time in the
+		TOML document), entries are created and appended to the array. An entry
+		points to its parent using its id.
+		
+		To find whether a given key (sequence of []byte) has already been visited,
+		the entries are linearly searched, looking for one with the right name and
+		parent id.
+		
+		Given that all keys appear in the document after their parent, it is
+		guaranteed that all descendants of a node are stored after the node, this
+		speeds up the search process.
+		
+		When encountering [[array tables]], the descendants of that node are removed
+		to allow that branch of the tree to be "rediscovered". To maintain the
+		invariant above, the deletion process needs to keep the order of entries.
+		This results in more copies in that case.</span>
+
+		<input type='checkbox' class="fold" id="SeenTracker-fold-fields"><label for="SeenTracker-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='SeenTracker-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="SeenTracker-showhide-fields"><i><label for="SeenTracker-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="SeenTracker-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-57">currentIdx</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-56">entries</a> <i>[]<a href="#name-entry">entry</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="SeenTracker-fold-methods"><label for="SeenTracker-fold-methods">Methods (<i>total 11, in which 1 is exported</i>)</label><span id='SeenTracker-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="SeenTracker-fold-method-CheckExpression"><label for="SeenTracker-fold-method-CheckExpression">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-153">CheckExpression</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='SeenTracker-fold-method-CheckExpression-docs' class="fold-docs">
+<span class="md-text">				CheckExpression takes a top-level node and checks that it does not contain
+				keys that have been seen in previous calls, and validates that types are
+				consistent.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="SeenTracker-showhide-methods"><i><label for="SeenTracker-showhide-methods" class="show-inline">/* 10 unexporteds ... */</label><label for="SeenTracker-showhide-methods" class="hide-inline">/* 10 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-309">checkArray</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-222">checkArrayTable</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-329">checkInlineTable</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-270">checkKeyValue</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-169">checkTable</a>(node *<a href="../unstable.html">unstable</a>.<a href="../unstable.html#name-Node">Node</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="SeenTracker-fold-method-clear"><label for="SeenTracker-fold-method-clear">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-97">clear</a>(idx <a href="../../../../../builtin.html#name-int">int</a>)</label><span id='SeenTracker-fold-method-clear-docs' class="fold-docs">
+<span class="md-text">				Remove all descendants of node at position idx.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-115">create</a>(parentIdx <a href="../../../../../builtin.html#name-int">int</a>, name []<a href="../../../../../builtin.html#name-byte">byte</a>, kind <a href="#name-keyKind">keyKind</a>, explicit <a href="../../../../../builtin.html#name-bool">bool</a>, kv <a href="../../../../../builtin.html#name-bool">bool</a>) <a href="../../../../../builtin.html#name-int">int</a></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="SeenTracker-fold-method-find"><label for="SeenTracker-fold-method-find">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-87">find</a>(parentIdx <a href="../../../../../builtin.html#name-int">int</a>, k []<a href="../../../../../builtin.html#name-byte">byte</a>) <a href="../../../../../builtin.html#name-int">int</a></label><span id='SeenTracker-fold-method-find-docs' class="fold-docs">
+<span class="md-text">				Find the index of the child of parentIdx with key k. Returns -1 if
+				it does not exist.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-62">reset</a>()</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*SeenTracker) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-140">setExplicitFlag</a>(parentIdx <a href="../../../../../builtin.html#name-int">int</a>)</span></i></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-entry" data-popularity="0">	<input type='checkbox' class="fold" id="entry-fold-content"><label for="entry-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-74">entry</a> <i>(struct)</i></label><span id='entry-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="entry-fold-fields"><label for="entry-fold-fields">Fields (<i>total 6, none are exported</i>)</label><span id='entry-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="entry-showhide-fields"><i><label for="entry-showhide-fields" class="show-inline">/* 6 unexporteds ... */</label><label for="entry-showhide-fields" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="entry-fold-field-child"><label for="entry-fold-field-child"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-76">child</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></label><span id='entry-fold-field-child-docs' class="fold-docs">
+<span class="md-text">				Use -1 to indicate no child or no sibling.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-81">explicit</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-80">kind</a> <i><a href="#name-keyKind">keyKind</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-82">kv</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-79">name</a> <i>[]<a href="../../../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-77">next</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-keyKind" data-popularity="250">	<input type='checkbox' class="fold" id="keyKind-fold-content"><label for="keyKind-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-11">keyKind</a> <a href="../../../../../builtin.html#name-uint8">uint8</a> <i>(basic type)</i></label><span id='keyKind-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="keyKind-fold-methods"><label for="keyKind-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='keyKind-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( keyKind) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-20">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="keyKind-fold-impls"><label for="keyKind-fold-impls">Implements (<i>at least 3, in which 1 is exported</i>)</label><span id='keyKind-fold-impls-items' class="fold-items"><span>
+			 keyKind : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="keyKind-showhide-impls"><i><label for="keyKind-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="keyKind-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			 keyKind : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 keyKind : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="keyKind-fold-params"><label for="keyKind-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='keyKind-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="keyKind-showhide-outputofs"><i><label for="keyKind-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="keyKind-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-SeenTracker">SeenTracker</a>).<a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-115">create</a>(parentIdx <a href="../../../../../builtin.html#name-int">int</a>, name []<a href="../../../../../builtin.html#name-byte">byte</a>, kind <b>keyKind</b>, explicit <a href="../../../../../builtin.html#name-bool">bool</a>, kv <a href="../../../../../builtin.html#name-bool">bool</a>) <a href="../../../../../builtin.html#name-int">int</a></i></span></span>
+		<input type='checkbox' class="fold" id="keyKind-fold-values"><label for="keyKind-fold-values">As Types Of (<i>total 4, none are exported</i>)</label><span id='keyKind-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="keyKind-showhide-values"><i><label for="keyKind-showhide-values" class="show-inline">/* 4 unexporteds ... */</label><label for="keyKind-showhide-values" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			const <a href="#name-arrayTableKind">arrayTableKind</a></i></span><span class="hidden"><i>
+			const <a href="#name-invalidKind">invalidKind</a></i></span><span class="hidden"><i>
+			const <a href="#name-tableKind">tableKind</a></i></span><span class="hidden"><i>
+			const <a href="#name-valueKind">valueKind</a></i></span></span>
+
+</span></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (only one, which is unexported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-pool"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-60">pool</a> <a href="../../../../../sync.html">sync</a>.<a href="../../../../../sync.html#name-Pool">Pool</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 4, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-arrayTableKind"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-17">arrayTableKind</a> <a href="#name-keyKind">keyKind</a> = 3</span></i></div><div class="anchor value-res hidden" id="name-invalidKind"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-14">invalidKind</a> <a href="#name-keyKind">keyKind</a> = 0</span></i></div><div class="anchor value-res hidden" id="name-tableKind"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-16">tableKind</a> <a href="#name-keyKind">keyKind</a> = 2</span></i></div><div class="anchor value-res hidden" id="name-valueKind"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/tracker/seen.go.html#line-15">valueKind</a> <a href="#name-keyKind">keyKind</a> = 1</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

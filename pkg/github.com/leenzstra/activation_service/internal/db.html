@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/leenzstra/activation_service/internal/db</title>
+<link href="../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>db</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-github.com/leenzstra/activation_service/internal/db">github.com/leenzstra/activation_service/internal/db</a><i> (on <a href="https://pkg.go.dev/github.com/leenzstra/activation_service/internal/db" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/github.com/leenzstra/activation_service/internal/db.html">9 packages</a>, and imported by <a href="../../../../../dep/github.com/leenzstra/activation_service/internal/db.html#imported-by">4 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html">db.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Database" data-popularity="680">	<input type='checkbox' class="fold" id="Database-fold-content"><label for="Database-fold-content"> type <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-16">Database</a> <i>(struct)</i></label><span id='Database-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Database-fold-fields"><label for="Database-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='Database-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-18">Config</a> <i>*<a href="config.html">config</a>.<a href="config.html#name-Config">Config</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-17">Gorm</a> <i>*<a href="../../../../gorm.io/gorm.html">gorm</a>.<a href="../../../../gorm.io/gorm.html#name-DB">DB</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="Database-fold-methods"><label for="Database-fold-methods">Methods (<i>total 10, all are exported</i>)</label><span id='Database-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-59">AddLicense</a>(license *<a href="models.html">models</a>.<a href="models.html#name-License">License</a>) <a href="../../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-63">AddLicenseUse</a>(use *<a href="models.html">models</a>.<a href="models.html#name-LicenseUse">LicenseUse</a>) <a href="../../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-67">GetLicenseByKey</a>(key <a href="../../../../builtin.html#name-string">string</a>) (*<a href="models.html">models</a>.<a href="models.html#name-License">License</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-100">GetLicenseUse</a>(key, machineInfoHash <a href="../../../../builtin.html#name-string">string</a>) (*<a href="models.html">models</a>.<a href="models.html#name-LicenseUse">LicenseUse</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-125">GetLicenses</a>() ([]*<a href="models.html">models</a>.<a href="models.html#name-License">License</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-114">GetSubjectClasses</a>(sid <a href="../../../../builtin.html#name-int">int</a>, classes []<a href="../../../../builtin.html#name-string">string</a>) ([]*<a href="models.html">models</a>.<a href="models.html#name-SubjectClass">SubjectClass</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-76">GetSubjects</a>() ([]*<a href="models.html">models</a>.<a href="models.html#name-Subject">Subject</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-92">GetSubjectsById</a>(ids ...<a href="../../../../builtin.html#name-uint">uint</a>) ([]*<a href="models.html">models</a>.<a href="models.html#name-Subject">Subject</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-84">GetSubjectsBySid</a>(sids ...<a href="../../../../builtin.html#name-int">int</a>) ([]*<a href="models.html">models</a>.<a href="models.html#name-Subject">Subject</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( Database) <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-40">InitSubjectsInfo</a>(sc *<a href="config.html">config</a>.<a href="config.html#name-SubjectsConfig">SubjectsConfig</a>) <a href="../../../../builtin.html#name-error">error</a></span></span></span>
+		<input type='checkbox' class="fold" id="Database-fold-results"><label for="Database-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Database-fold-results-items' class="fold-items"><span>
+			func <a href="#name-New">New</a>(config <a href="config.html">config</a>.<a href="config.html#name-Config">Config</a>) *<b>Database</b></span></span>
+		<input type='checkbox' class="fold" id="Database-fold-params"><label for="Database-fold-params">As Inputs Of (<i>at least 3, all are exported</i>)</label><span id='Database-fold-params-items' class="fold-items"><span>
+			func github.com/leenzstra/activation_service/internal/api/content.<a href="api/content.html#name-RegisterRoutes">RegisterRoutes</a>(app *<a href="../../../gofiber/fiber/v2.html">fiber</a>.<a href="../../../gofiber/fiber/v2.html#name-App">App</a>, db *<b>Database</b>)</span><span>
+			func github.com/leenzstra/activation_service/internal/api/info.<a href="api/info.html#name-RegisterRoutes">RegisterRoutes</a>(app *<a href="../../../gofiber/fiber/v2.html">fiber</a>.<a href="../../../gofiber/fiber/v2.html#name-App">App</a>, db *<b>Database</b>)</span><span>
+			func github.com/leenzstra/activation_service/internal/api/license.<a href="api/license.html#name-RegisterRoutes">RegisterRoutes</a>(app *<a href="../../../gofiber/fiber/v2.html">fiber</a>.<a href="../../../gofiber/fiber/v2.html#name-App">App</a>, db *<b>Database</b>, keyPair *<a href="keypair.html">keypair</a>.<a href="keypair.html#name-KeyPair">KeyPair</a>)</span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-New">	<span class="nodocs"> func <a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-21">New</a>(config <a href="config.html">config</a>.<a href="config.html#name-Config">Config</a>) *<a href="#name-Database">Database</a></span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: ascii.go in package github.com/pelletier/go-toml/v2/internal/characters</title>
+<link href="../../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	ascii.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html">github.com/pelletier/go-toml/v2/internal/characters</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> characters</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">var</span> <a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-invalidAsciiTable" class="ident">invalidAsciiTable</a> = [<span class="lit-number">256</span>]<a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>{</code></span>
+<span class="codeline" id="line-4"><code>	<span class="lit-number">0x00</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-5"><code>	<span class="lit-number">0x01</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-6"><code>	<span class="lit-number">0x02</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-7"><code>	<span class="lit-number">0x03</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-8"><code>	<span class="lit-number">0x04</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-9"><code>	<span class="lit-number">0x05</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-10"><code>	<span class="lit-number">0x06</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-11"><code>	<span class="lit-number">0x07</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-12"><code>	<span class="lit-number">0x08</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-13"><code>	<span class="comment">// 0x09 TAB</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">	// 0x0A LF</span></code></span>
+<span class="codeline" id="line-15"><code>	<span class="lit-number">0x0B</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-16"><code>	<span class="lit-number">0x0C</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-17"><code>	<span class="comment">// 0x0D CR</span></code></span>
+<span class="codeline" id="line-18"><code>	<span class="lit-number">0x0E</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-19"><code>	<span class="lit-number">0x0F</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-20"><code>	<span class="lit-number">0x10</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-21"><code>	<span class="lit-number">0x11</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-22"><code>	<span class="lit-number">0x12</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-23"><code>	<span class="lit-number">0x13</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-24"><code>	<span class="lit-number">0x14</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-25"><code>	<span class="lit-number">0x15</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-26"><code>	<span class="lit-number">0x16</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-27"><code>	<span class="lit-number">0x17</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-28"><code>	<span class="lit-number">0x18</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-29"><code>	<span class="lit-number">0x19</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-30"><code>	<span class="lit-number">0x1A</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-31"><code>	<span class="lit-number">0x1B</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-32"><code>	<span class="lit-number">0x1C</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-33"><code>	<span class="lit-number">0x1D</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-34"><code>	<span class="lit-number">0x1E</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-35"><code>	<span class="lit-number">0x1F</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-36"><code>	<span class="comment">// 0x20 - 0x7E Printable ASCII characters</span></code></span>
+<span class="codeline" id="line-37"><code>	<span class="lit-number">0x7F</span>: <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a>,</code></span>
+<span class="codeline" id="line-38"><code>}</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-InvalidAscii" class="ident">InvalidAscii</a></label>(<label for="r1" class="ident">b</label> <a href="../../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-41"><code>	<span class="keyword">return</span> <a href="#line-3" class="ident">invalidAsciiTable</a>[<label for="r1" class="ident">b</label>]</code></span>
+<span class="codeline" id="line-42"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

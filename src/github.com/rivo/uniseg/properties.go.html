@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: properties.go in package github.com/rivo/uniseg</title>
+<link href="../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	properties.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/rivo/uniseg.html">github.com/rivo/uniseg</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> uniseg</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// The Unicode properties as used in the various parsers. Only the ones needed</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// in the context of this package are included.</span></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-6"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prXX" class="ident">prXX</a>      = <span class="lit-number">0</span>    <span class="comment">// Same as prAny.</span></code></span>
+<span class="codeline" id="line-7"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prAny" class="ident">prAny</a>     = <a href="../../../../pkg/builtin.html#name-iota" class="ident">iota</a> <span class="comment">// prAny must be 0.</span></code></span>
+<span class="codeline" id="line-8"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prPrepend" class="ident">prPrepend</a>        <span class="comment">// Grapheme properties must come first, to reduce the number of bits stored in the state vector.</span></code></span>
+<span class="codeline" id="line-9"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCR" class="ident">prCR</a></code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prLF" class="ident">prLF</a></code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prControl" class="ident">prControl</a></code></span>
+<span class="codeline" id="line-12"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prExtend" class="ident">prExtend</a></code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prRegionalIndicator" class="ident">prRegionalIndicator</a></code></span>
+<span class="codeline" id="line-14"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSpacingMark" class="ident">prSpacingMark</a></code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prL" class="ident">prL</a></code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prV" class="ident">prV</a></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prT" class="ident">prT</a></code></span>
+<span class="codeline" id="line-18"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prLV" class="ident">prLV</a></code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prLVT" class="ident">prLVT</a></code></span>
+<span class="codeline" id="line-20"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prZWJ" class="ident">prZWJ</a></code></span>
+<span class="codeline" id="line-21"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prExtendedPictographic" class="ident">prExtendedPictographic</a></code></span>
+<span class="codeline" id="line-22"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNewline" class="ident">prNewline</a></code></span>
+<span class="codeline" id="line-23"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prWSegSpace" class="ident">prWSegSpace</a></code></span>
+<span class="codeline" id="line-24"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prDoubleQuote" class="ident">prDoubleQuote</a></code></span>
+<span class="codeline" id="line-25"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSingleQuote" class="ident">prSingleQuote</a></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prMidNumLet" class="ident">prMidNumLet</a></code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNumeric" class="ident">prNumeric</a></code></span>
+<span class="codeline" id="line-28"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prMidLetter" class="ident">prMidLetter</a></code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prMidNum" class="ident">prMidNum</a></code></span>
+<span class="codeline" id="line-30"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prExtendNumLet" class="ident">prExtendNumLet</a></code></span>
+<span class="codeline" id="line-31"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prALetter" class="ident">prALetter</a></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prFormat" class="ident">prFormat</a></code></span>
+<span class="codeline" id="line-33"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prHebrewLetter" class="ident">prHebrewLetter</a></code></span>
+<span class="codeline" id="line-34"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prKatakana" class="ident">prKatakana</a></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSp" class="ident">prSp</a></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSTerm" class="ident">prSTerm</a></code></span>
+<span class="codeline" id="line-37"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prClose" class="ident">prClose</a></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSContinue" class="ident">prSContinue</a></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prATerm" class="ident">prATerm</a></code></span>
+<span class="codeline" id="line-40"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prUpper" class="ident">prUpper</a></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prLower" class="ident">prLower</a></code></span>
+<span class="codeline" id="line-42"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSep" class="ident">prSep</a></code></span>
+<span class="codeline" id="line-43"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prOLetter" class="ident">prOLetter</a></code></span>
+<span class="codeline" id="line-44"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCM" class="ident">prCM</a></code></span>
+<span class="codeline" id="line-45"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prBA" class="ident">prBA</a></code></span>
+<span class="codeline" id="line-46"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prBK" class="ident">prBK</a></code></span>
+<span class="codeline" id="line-47"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSP" class="ident">prSP</a></code></span>
+<span class="codeline" id="line-48"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prEX" class="ident">prEX</a></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prQU" class="ident">prQU</a></code></span>
+<span class="codeline" id="line-50"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prAL" class="ident">prAL</a></code></span>
+<span class="codeline" id="line-51"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prPR" class="ident">prPR</a></code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prPO" class="ident">prPO</a></code></span>
+<span class="codeline" id="line-53"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prOP" class="ident">prOP</a></code></span>
+<span class="codeline" id="line-54"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCP" class="ident">prCP</a></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prIS" class="ident">prIS</a></code></span>
+<span class="codeline" id="line-56"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prHY" class="ident">prHY</a></code></span>
+<span class="codeline" id="line-57"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSY" class="ident">prSY</a></code></span>
+<span class="codeline" id="line-58"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNU" class="ident">prNU</a></code></span>
+<span class="codeline" id="line-59"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCL" class="ident">prCL</a></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNL" class="ident">prNL</a></code></span>
+<span class="codeline" id="line-61"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prGL" class="ident">prGL</a></code></span>
+<span class="codeline" id="line-62"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prAI" class="ident">prAI</a></code></span>
+<span class="codeline" id="line-63"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prBB" class="ident">prBB</a></code></span>
+<span class="codeline" id="line-64"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prHL" class="ident">prHL</a></code></span>
+<span class="codeline" id="line-65"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSA" class="ident">prSA</a></code></span>
+<span class="codeline" id="line-66"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prJL" class="ident">prJL</a></code></span>
+<span class="codeline" id="line-67"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prJV" class="ident">prJV</a></code></span>
+<span class="codeline" id="line-68"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prJT" class="ident">prJT</a></code></span>
+<span class="codeline" id="line-69"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNS" class="ident">prNS</a></code></span>
+<span class="codeline" id="line-70"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prZW" class="ident">prZW</a></code></span>
+<span class="codeline" id="line-71"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prB2" class="ident">prB2</a></code></span>
+<span class="codeline" id="line-72"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prIN" class="ident">prIN</a></code></span>
+<span class="codeline" id="line-73"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prWJ" class="ident">prWJ</a></code></span>
+<span class="codeline" id="line-74"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prID" class="ident">prID</a></code></span>
+<span class="codeline" id="line-75"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prEB" class="ident">prEB</a></code></span>
+<span class="codeline" id="line-76"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCJ" class="ident">prCJ</a></code></span>
+<span class="codeline" id="line-77"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prH2" class="ident">prH2</a></code></span>
+<span class="codeline" id="line-78"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prH3" class="ident">prH3</a></code></span>
+<span class="codeline" id="line-79"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prSG" class="ident">prSG</a></code></span>
+<span class="codeline" id="line-80"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prCB" class="ident">prCB</a></code></span>
+<span class="codeline" id="line-81"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prRI" class="ident">prRI</a></code></span>
+<span class="codeline" id="line-82"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prEM" class="ident">prEM</a></code></span>
+<span class="codeline" id="line-83"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prN" class="ident">prN</a></code></span>
+<span class="codeline" id="line-84"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prNa" class="ident">prNa</a></code></span>
+<span class="codeline" id="line-85"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prA" class="ident">prA</a></code></span>
+<span class="codeline" id="line-86"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prW" class="ident">prW</a></code></span>
+<span class="codeline" id="line-87"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prH" class="ident">prH</a></code></span>
+<span class="codeline" id="line-88"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prF" class="ident">prF</a></code></span>
+<span class="codeline" id="line-89"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-prEmojiPresentation" class="ident">prEmojiPresentation</a></code></span>
+<span class="codeline" id="line-90"><code>)</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// Unicode General Categories. Only the ones needed in the context of this</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// package are included.</span></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-95"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcNone" class="ident">gcNone</a> = <a href="../../../../pkg/builtin.html#name-iota" class="ident">iota</a> <span class="comment">// gcNone must be 0.</span></code></span>
+<span class="codeline" id="line-96"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcCc" class="ident">gcCc</a></code></span>
+<span class="codeline" id="line-97"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcZs" class="ident">gcZs</a></code></span>
+<span class="codeline" id="line-98"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPo" class="ident">gcPo</a></code></span>
+<span class="codeline" id="line-99"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcSc" class="ident">gcSc</a></code></span>
+<span class="codeline" id="line-100"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPs" class="ident">gcPs</a></code></span>
+<span class="codeline" id="line-101"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPe" class="ident">gcPe</a></code></span>
+<span class="codeline" id="line-102"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcSm" class="ident">gcSm</a></code></span>
+<span class="codeline" id="line-103"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPd" class="ident">gcPd</a></code></span>
+<span class="codeline" id="line-104"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcNd" class="ident">gcNd</a></code></span>
+<span class="codeline" id="line-105"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcLu" class="ident">gcLu</a></code></span>
+<span class="codeline" id="line-106"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcSk" class="ident">gcSk</a></code></span>
+<span class="codeline" id="line-107"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPc" class="ident">gcPc</a></code></span>
+<span class="codeline" id="line-108"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcLl" class="ident">gcLl</a></code></span>
+<span class="codeline" id="line-109"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcSo" class="ident">gcSo</a></code></span>
+<span class="codeline" id="line-110"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcLo" class="ident">gcLo</a></code></span>
+<span class="codeline" id="line-111"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPi" class="ident">gcPi</a></code></span>
+<span class="codeline" id="line-112"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcCf" class="ident">gcCf</a></code></span>
+<span class="codeline" id="line-113"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcNo" class="ident">gcNo</a></code></span>
+<span class="codeline" id="line-114"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcPf" class="ident">gcPf</a></code></span>
+<span class="codeline" id="line-115"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcLC" class="ident">gcLC</a></code></span>
+<span class="codeline" id="line-116"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcLm" class="ident">gcLm</a></code></span>
+<span class="codeline" id="line-117"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcMn" class="ident">gcMn</a></code></span>
+<span class="codeline" id="line-118"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcMe" class="ident">gcMe</a></code></span>
+<span class="codeline" id="line-119"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcMc" class="ident">gcMc</a></code></span>
+<span class="codeline" id="line-120"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcNl" class="ident">gcNl</a></code></span>
+<span class="codeline" id="line-121"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcZl" class="ident">gcZl</a></code></span>
+<span class="codeline" id="line-122"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcZp" class="ident">gcZp</a></code></span>
+<span class="codeline" id="line-123"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcCn" class="ident">gcCn</a></code></span>
+<span class="codeline" id="line-124"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcCs" class="ident">gcCs</a></code></span>
+<span class="codeline" id="line-125"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-gcCo" class="ident">gcCo</a></code></span>
+<span class="codeline" id="line-126"><code>)</code></span>
+<span class="codeline" id="line-127"><code></code></span>
+<span class="codeline" id="line-128"><code><span class="comment">// Special code points.</span></code></span>
+<span class="codeline" id="line-129"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-130"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-vs15" class="ident">vs15</a> = <span class="lit-number">0xfe0e</span> <span class="comment">// Variation Selector-15 (text presentation)</span></code></span>
+<span class="codeline" id="line-131"><code>	<a href="../../../../pkg/github.com/rivo/uniseg.html#name-vs16" class="ident">vs16</a> = <span class="lit-number">0xfe0f</span> <span class="comment">// Variation Selector-16 (emoji presentation)</span></code></span>
+<span class="codeline" id="line-132"><code>)</code></span>
+<span class="codeline" id="line-133"><code></code></span>
+<span class="codeline" id="line-134"><code><span class="comment">// propertySearch performs a binary search on a property slice and returns the</span></code></span>
+<span class="codeline" id="line-135"><code><span class="comment">// entry whose range (start = first array element, end = second array element)</span></code></span>
+<span class="codeline" id="line-136"><code><span class="comment">// includes r, or an array of 0's if no such entry was found.</span></code></span>
+<span class="codeline" id="line-137"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/rivo/uniseg.html#name-propertySearch" class="ident">propertySearch</a></label>[<label for="r1" class="ident">E</label> <span class="keyword">interface</span>{ [<span class="lit-number">3</span>]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> | [<span class="lit-number">4</span>]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> }](<label for="r2" class="ident">dictionary</label> []<label for="r1" class="ident">E</label>, <label for="r3" class="ident">r</label> <a href="../../../../pkg/builtin.html#name-rune" class="ident">rune</a>) (<label for="r4" class="ident">result</label> <label for="r1" class="ident">E</label>) {</code></span>
+<span class="codeline" id="line-138"><code>	<span class="comment">// Run a binary search.</span></code></span>
+<span class="codeline" id="line-139"><code>	<label for="r5" class="ident">from</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-140"><code>	<label for="r6" class="ident">to</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">dictionary</label>)</code></span>
+<span class="codeline" id="line-141"><code>	<span class="keyword">for</span> <label for="r6" class="ident">to</label> &gt; <label for="r5" class="ident">from</label> {</code></span>
+<span class="codeline" id="line-142"><code>		<label for="r7" class="ident">middle</label> := (<label for="r5" class="ident">from</label> + <label for="r6" class="ident">to</label>) / <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-143"><code>		<label for="r8" class="ident">cpRange</label> := <label for="r2" class="ident">dictionary</label>[<label for="r7" class="ident">middle</label>]</code></span>
+<span class="codeline" id="line-144"><code>		<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r3" class="ident">r</label>) &lt; <label for="r8" class="ident">cpRange</label>[<span class="lit-number">0</span>] {</code></span>
+<span class="codeline" id="line-145"><code>			<label for="r6" class="ident">to</label> = <label for="r7" class="ident">middle</label></code></span>
+<span class="codeline" id="line-146"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-147"><code>		}</code></span>
+<span class="codeline" id="line-148"><code>		<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r3" class="ident">r</label>) &gt; <label for="r8" class="ident">cpRange</label>[<span class="lit-number">1</span>] {</code></span>
+<span class="codeline" id="line-149"><code>			<label for="r5" class="ident">from</label> = <label for="r7" class="ident">middle</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-150"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-151"><code>		}</code></span>
+<span class="codeline" id="line-152"><code>		<span class="keyword">return</span> <label for="r8" class="ident">cpRange</label></code></span>
+<span class="codeline" id="line-153"><code>	}</code></span>
+<span class="codeline" id="line-154"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-155"><code>}</code></span>
+<span class="codeline" id="line-156"><code></code></span>
+<span class="codeline" id="line-157"><code><span class="comment">// property returns the Unicode property value (see constants above) of the</span></code></span>
+<span class="codeline" id="line-158"><code><span class="comment">// given code point.</span></code></span>
+<span class="codeline" id="line-159"><code><span class="keyword">func</span> <label for="r9" class="ident"><a href="../../../../pkg/github.com/rivo/uniseg.html#name-property" class="ident">property</a></label>(<label for="r10" class="ident">dictionary</label> [][<span class="lit-number">3</span>]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r11" class="ident">r</label> <a href="../../../../pkg/builtin.html#name-rune" class="ident">rune</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-160"><code>	<span class="keyword">return</span> <a href="#line-137" class="ident">propertySearch</a>(<label for="r10" class="ident">dictionary</label>, <label for="r11" class="ident">r</label>)[<span class="lit-number">2</span>]</code></span>
+<span class="codeline" id="line-161"><code>}</code></span>
+<span class="codeline" id="line-162"><code></code></span>
+<span class="codeline" id="line-163"><code><span class="comment">// propertyWithGenCat returns the Unicode property value and General Category</span></code></span>
+<span class="codeline" id="line-164"><code><span class="comment">// (see constants above) of the given code point.</span></code></span>
+<span class="codeline" id="line-165"><code><span class="keyword">func</span> <label for="r12" class="ident"><a href="../../../../pkg/github.com/rivo/uniseg.html#name-propertyWithGenCat" class="ident">propertyWithGenCat</a></label>(<label for="r13" class="ident">dictionary</label> [][<span class="lit-number">4</span>]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r14" class="ident">r</label> <a href="../../../../pkg/builtin.html#name-rune" class="ident">rune</a>) (<label for="r15" class="ident">property</label>, <label for="r16" class="ident">generalCategory</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-166"><code>	<label for="r17" class="ident">entry</label> := <a href="#line-137" class="ident">propertySearch</a>(<label for="r13" class="ident">dictionary</label>, <label for="r14" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-167"><code>	<span class="keyword">return</span> <label for="r17" class="ident">entry</label>[<span class="lit-number">2</span>], <label for="r17" class="ident">entry</label>[<span class="lit-number">3</span>]</code></span>
+<span class="codeline" id="line-168"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

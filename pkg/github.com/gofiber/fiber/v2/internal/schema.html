@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/gofiber/fiber/v2/internal/schema</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>schema</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/gofiber/fiber/v2/internal/schema">github.com/gofiber/fiber/v2/internal/schema</a><i> (on <a href="https://pkg.go.dev/github.com/gofiber/fiber/v2/internal/schema" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/gofiber/fiber/v2/internal/schema.html">7 packages</a>, and imported by <a href="../../../../../../dep/github.com/gofiber/fiber/v2/internal/schema.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html">cache.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html">converter.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html">decoder.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-3-fold-content"><label for="file-3-fold-content">   <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/doc.go.html#doc">#d</a> <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/doc.go.html">doc.go</a></label><span id='file-3-fold-content-items' class="fold-items">
+<span class="md-text">		Package gorilla/schema fills a struct with form values.
+		
+		The basic usage is really simple. Given this struct:
+		
+			type Person struct {
+				Name  string
+				Phone string
+			}
+		
+		...we can fill it passing a map to the Decode() function:
+		
+			values := map[string][]string{
+				"Name":  {"John"},
+				"Phone": {"999-999-999"},
+			}
+			person := new(Person)
+			decoder := schema.NewDecoder()
+			decoder.Decode(person, values)
+		
+		This is just a simple example and it doesn't make a lot of sense to create
+		the map manually. Typically it will come from a http.Request object and
+		will be of type url.Values, http.Request.Form, or http.Request.MultipartForm:
+		
+			func MyHandler(w http.ResponseWriter, r *http.Request) {
+				err := r.ParseForm()
+		
+				if err != nil {
+					// Handle error
+				}
+		
+				decoder := schema.NewDecoder()
+				// r.PostForm is a map of our POST form values
+				err := decoder.Decode(person, r.PostForm)
+		
+				if err != nil {
+					// Handle error
+				}
+		
+				// Do something with person.Name or person.Phone
+			}
+		
+		Note: it is a good idea to set a Decoder instance as a package global,
+		because it caches meta-data about structs, and an instance can be shared safely:
+		
+			var decoder = schema.NewDecoder()
+		
+		To define custom names for fields, use a struct tag "schema". To not populate
+		certain fields, use a dash for the name and it will be ignored:
+		
+			type Person struct {
+				Name  string `schema:"name"`  // custom name
+				Phone string `schema:"phone"` // custom name
+				Admin bool   `schema:"-"`     // this field is never set
+			}
+		
+		The supported field types in the destination struct are:
+		
+		  - bool
+		  - float variants (float32, float64)
+		  - int variants (int, int8, int16, int32, int64)
+		  - string
+		  - uint variants (uint, uint8, uint16, uint32, uint64)
+		  - struct
+		  - a pointer to one of the above types
+		  - a slice or a pointer to a slice of one of the above types
+		
+		Non-supported types are simply ignored, however custom types can be registered
+		to be converted.
+		
+		To fill nested structs, keys must use a dotted notation as the "path" for the
+		field. So for example, to fill the struct Person below:
+		
+			type Phone struct {
+				Label  string
+				Number string
+			}
+		
+			type Person struct {
+				Name  string
+				Phone Phone
+			}
+		
+		...the source map must have the keys "Name", "Phone.Label" and "Phone.Number".
+		This means that an HTML form to fill a Person struct must look like this:
+		
+			&lt;form&gt;
+				&lt;input type="text" name="Name"&gt;
+				&lt;input type="text" name="Phone.Label"&gt;
+				&lt;input type="text" name="Phone.Number"&gt;
+			&lt;/form&gt;
+		
+		Single values are filled using the first value for a key from the source map.
+		Slices are filled using all values for a key from the source map. So to fill
+		a Person with multiple Phone values, like:
+		
+			type Person struct {
+				Name   string
+				Phones []Phone
+			}
+		
+		...an HTML form that accepts three Phone values would look like this:
+		
+			&lt;form&gt;
+				&lt;input type="text" name="Name"&gt;
+				&lt;input type="text" name="Phones.0.Label"&gt;
+				&lt;input type="text" name="Phones.0.Number"&gt;
+				&lt;input type="text" name="Phones.1.Label"&gt;
+				&lt;input type="text" name="Phones.1.Number"&gt;
+				&lt;input type="text" name="Phones.2.Label"&gt;
+				&lt;input type="text" name="Phones.2.Number"&gt;
+			&lt;/form&gt;
+		
+		Notice that only for slices of structs the slice index is required.
+		This is needed for disambiguation: if the nested struct also had a slice
+		field, we could not translate multiple values to it if we did not use an
+		index for the parent struct.
+		
+		There's also the possibility to create a custom type that implements the
+		TextUnmarshaler interface, and in this case there's no need to register
+		a converter, like:
+		
+			type Person struct {
+			  Emails []Email
+			}
+		
+			type Email struct {
+			  *mail.Address
+			}
+		
+			func (e *Email) UnmarshalText(text []byte) (err error) {
+				e.Address, err = mail.ParseAddress(string(text))
+				return
+			}
+		
+		...an HTML form that accepts three Email values would look like this:
+		
+			&lt;form&gt;
+				&lt;input type="email" name="Emails.0"&gt;
+				&lt;input type="email" name="Emails.1"&gt;
+				&lt;input type="email" name="Emails.2"&gt;
+			&lt;/form&gt;</span>
+</span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html">encoder.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 15, in which 7 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-ConversionError" data-popularity="100">	<input type='checkbox' class="fold" id="ConversionError-fold-content"><label for="ConversionError-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-464">ConversionError</a> <i>(struct)</i></label><span id='ConversionError-fold-content-docs' class="fold-docs">
+<span class="md-text">		ConversionError stores information about a failed conversion.</span>
+
+		<input type='checkbox' class="fold" id="ConversionError-fold-fields"><label for="ConversionError-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='ConversionError-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="ConversionError-fold-field-Err"><label for="ConversionError-fold-field-Err"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-468">Err</a> <i><a href="../../../../../builtin.html#name-error">error</a></i></label><span id='ConversionError-fold-field-Err-docs' class="fold-docs">
+<span class="md-text">				// low-level error (when it exists)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ConversionError-fold-field-Index"><label for="ConversionError-fold-field-Index"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-467">Index</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></label><span id='ConversionError-fold-field-Index-docs' class="fold-docs">
+<span class="md-text">				// index for multi-value fields; -1 for single-value fields.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ConversionError-fold-field-Key"><label for="ConversionError-fold-field-Key"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-465">Key</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='ConversionError-fold-field-Key-docs' class="fold-docs">
+<span class="md-text">				// key from the source map.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ConversionError-fold-field-Type"><label for="ConversionError-fold-field-Type"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-466">Type</a> <i><a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a></i></label><span id='ConversionError-fold-field-Type-docs' class="fold-docs">
+<span class="md-text">				// expected type of elem</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="ConversionError-fold-methods"><label for="ConversionError-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='ConversionError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( ConversionError) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-471">Error</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="ConversionError-fold-impls"><label for="ConversionError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='ConversionError-fold-impls-items' class="fold-items"><span>
+			 ConversionError : <a href="../../../../../builtin.html#name-error">error</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Converter" data-popularity="35">	<input type='checkbox' class="fold" id="Converter-fold-content"><label for="Converter-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-12">Converter</a> <i>(func)</i></label><span id='Converter-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Converter-fold-params"><label for="Converter-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='Converter-fold-params-items' class="fold-items"><span>
+			func (*<a href="#name-Decoder">Decoder</a>).<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-58">RegisterConverter</a>(value interface{}, converterFunc <b>Converter</b>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-Decoder" data-popularity="475">	<input type='checkbox' class="fold" id="Decoder-fold-content"><label for="Decoder-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-21">Decoder</a> <i>(struct)</i></label><span id='Decoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		Decoder decodes values from a map[string][]string to a struct.</span>
+
+		<input type='checkbox' class="fold" id="Decoder-fold-fields"><label for="Decoder-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='Decoder-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Decoder-showhide-fields"><i><label for="Decoder-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="Decoder-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-22">cache</a> <i>*<a href="#name-cache">cache</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-24">ignoreUnknownKeys</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-23">zeroEmpty</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Decoder-fold-methods"><label for="Decoder-fold-methods">Methods (<i>total 8, in which 5 are exported</i>)</label><span id='Decoder-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-Decode"><label for="Decoder-fold-method-Decode">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-70">Decode</a>(dst interface{}, src map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='Decoder-fold-method-Decode-docs' class="fold-docs">
+<span class="md-text">				Decode decodes a map[string][]string to a struct.
+				
+				The first parameter must be a pointer to a struct.
+				
+				The second parameter is a map, typically url.Values from an HTTP request.
+				Keys are "paths" in dotted notation to the struct fields and nested structs.
+				
+				See the package documentation for a full explanation of the mechanics.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-IgnoreUnknownKeys"><label for="Decoder-fold-method-IgnoreUnknownKeys">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-53">IgnoreUnknownKeys</a>(i <a href="../../../../../builtin.html#name-bool">bool</a>)</label><span id='Decoder-fold-method-IgnoreUnknownKeys-docs' class="fold-docs">
+<span class="md-text">				IgnoreUnknownKeys controls the behaviour when the decoder encounters unknown
+				keys in the map.
+				If i is true and an unknown field is encountered, it is ignored. This is
+				similar to how unknown keys are handled by encoding/json.
+				If i is false then Decode will return an error. Note that any valid keys
+				will still be decoded in to the target struct.
+				
+				To preserve backwards compatibility, the default value is false.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-RegisterConverter"><label for="Decoder-fold-method-RegisterConverter">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-58">RegisterConverter</a>(value interface{}, converterFunc <a href="#name-Converter">Converter</a>)</label><span id='Decoder-fold-method-RegisterConverter-docs' class="fold-docs">
+<span class="md-text">				RegisterConverter registers a converter function for a custom type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-SetAliasTag"><label for="Decoder-fold-method-SetAliasTag">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-29">SetAliasTag</a>(tag <a href="../../../../../builtin.html#name-string">string</a>)</label><span id='Decoder-fold-method-SetAliasTag-docs' class="fold-docs">
+<span class="md-text">				SetAliasTag changes the tag used to locate custom field aliases.
+				The default tag is "schema".</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-ZeroEmpty"><label for="Decoder-fold-method-ZeroEmpty">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-41">ZeroEmpty</a>(z <a href="../../../../../builtin.html#name-bool">bool</a>)</label><span id='Decoder-fold-method-ZeroEmpty-docs' class="fold-docs">
+<span class="md-text">				ZeroEmpty controls the behaviour when the decoder encounters empty values
+				in a map.
+				If z is true and a key in the map has the empty string as a value
+				then the corresponding struct field is set to the zero value.
+				If z is false then empty strings are ignored.
+				
+				The default value is false, that is empty values do not change
+				the value of the struct field.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Decoder-showhide-methods"><i><label for="Decoder-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="Decoder-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-checkRequired"><label for="Decoder-fold-method-checkRequired">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-99">checkRequired</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, src map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="#name-MultiError">MultiError</a></label><span id='Decoder-fold-method-checkRequired-docs' class="fold-docs">
+<span class="md-text">				checkRequired checks whether required fields are empty
+				
+				check type t recursively if t has struct fields.
+				
+				src is the source map for decoding, we use it here to see if those required fields are included in src</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-decode"><label for="Decoder-fold-method-decode">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-195">decode</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>, path <a href="../../../../../builtin.html#name-string">string</a>, parts []<a href="#name-pathPart">pathPart</a>, values []<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='Decoder-fold-method-decode-docs' class="fold-docs">
+<span class="md-text">				decode fills a struct field using a parsed path.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Decoder-fold-method-findRequiredFields"><label for="Decoder-fold-method-findRequiredFields">(*Decoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-115">findRequiredFields</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, canonicalPrefix, searchPrefix <a href="../../../../../builtin.html#name-string">string</a>) (map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="#name-fieldWithPrefix">fieldWithPrefix</a>, <a href="#name-MultiError">MultiError</a>)</label><span id='Decoder-fold-method-findRequiredFields-docs' class="fold-docs">
+<span class="md-text">				findRequiredFields recursively searches the struct type t for required fields.
+				
+				canonicalPrefix and searchPrefix are used to resolve full paths in dotted notation
+				for nested struct fields. canonicalPrefix is a complete path which never omits
+				any embedded struct fields. searchPrefix is a user-friendly path which may omit
+				some embedded struct fields to point promoted fields.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Decoder-fold-results"><label for="Decoder-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Decoder-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewDecoder">NewDecoder</a>() *<b>Decoder</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-EmptyFieldError" data-popularity="100">	<input type='checkbox' class="fold" id="EmptyFieldError-fold-content"><label for="EmptyFieldError-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-498">EmptyFieldError</a> <i>(struct)</i></label><span id='EmptyFieldError-fold-content-docs' class="fold-docs">
+<span class="md-text">		EmptyFieldError stores information about an empty required field.</span>
+
+		<input type='checkbox' class="fold" id="EmptyFieldError-fold-fields"><label for="EmptyFieldError-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='EmptyFieldError-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="EmptyFieldError-fold-field-Key"><label for="EmptyFieldError-fold-field-Key"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-490">Key</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='EmptyFieldError-fold-field-Key-docs' class="fold-docs">
+<span class="md-text">				// key from the source map.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="EmptyFieldError-fold-methods"><label for="EmptyFieldError-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='EmptyFieldError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( EmptyFieldError) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-502">Error</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="EmptyFieldError-fold-impls"><label for="EmptyFieldError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='EmptyFieldError-fold-impls-items' class="fold-items"><span>
+			 EmptyFieldError : <a href="../../../../../builtin.html#name-error">error</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Encoder" data-popularity="275">	<input type='checkbox' class="fold" id="Encoder-fold-content"><label for="Encoder-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-13">Encoder</a> <i>(struct)</i></label><span id='Encoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		Encoder encodes values from a struct into url.Values.</span>
+
+		<input type='checkbox' class="fold" id="Encoder-fold-fields"><label for="Encoder-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='Encoder-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Encoder-showhide-fields"><i><label for="Encoder-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="Encoder-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-14">cache</a> <i>*<a href="#name-cache">cache</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-15">regenc</a> <i>map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]<a href="#name-encoderFunc">encoderFunc</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Encoder-fold-methods"><label for="Encoder-fold-methods">Methods (<i>total 4, in which 3 are exported</i>)</label><span id='Encoder-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Encoder-fold-method-Encode"><label for="Encoder-fold-method-Encode">(*Encoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-26">Encode</a>(src interface{}, dst map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='Encoder-fold-method-Encode-docs' class="fold-docs">
+<span class="md-text">				Encode encodes a struct into map[string][]string.
+				
+				Intended for use with url.Values.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Encoder-fold-method-RegisterEncoder"><label for="Encoder-fold-method-RegisterEncoder">(*Encoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-33">RegisterEncoder</a>(value interface{}, encoder func(<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a>)</label><span id='Encoder-fold-method-RegisterEncoder-docs' class="fold-docs">
+<span class="md-text">				RegisterEncoder registers a converter for encoding a custom type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Encoder-fold-method-SetAliasTag"><label for="Encoder-fold-method-SetAliasTag">(*Encoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-39">SetAliasTag</a>(tag <a href="../../../../../builtin.html#name-string">string</a>)</label><span id='Encoder-fold-method-SetAliasTag-docs' class="fold-docs">
+<span class="md-text">				SetAliasTag changes the tag used to locate custom field aliases.
+				The default tag is "schema".</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Encoder-showhide-methods"><i><label for="Encoder-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="Encoder-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*Encoder) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-78">encode</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>, dst map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="Encoder-fold-results"><label for="Encoder-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Encoder-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewEncoder">NewEncoder</a>() *<b>Encoder</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-MultiError" data-popularity="335">	<input type='checkbox' class="fold" id="MultiError-fold-content"><label for="MultiError-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-509">MultiError</a> <i>(map)</i></label><span id='MultiError-fold-content-docs' class="fold-docs">
+<span class="md-text">		MultiError stores multiple decoding errors.
+		
+		Borrowed from the App Engine SDK.</span>
+
+		<input type='checkbox' class="fold" id="MultiError-fold-methods"><label for="MultiError-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='MultiError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( MultiError) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-511">Error</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' class="showhide" id="MultiError-showhide-methods"><i><label for="MultiError-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="MultiError-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( MultiError) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-528">merge</a>(errors <b>MultiError</b>)</span></i></span></span>
+		<input type='checkbox' class="fold" id="MultiError-fold-impls"><label for="MultiError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='MultiError-fold-impls-items' class="fold-items"><span>
+			 MultiError : <a href="../../../../../builtin.html#name-error">error</a></span></span>
+		<input type='checkbox' class="fold" id="MultiError-fold-results"><label for="MultiError-fold-results">As Outputs Of (<i>at least 2, neither is exported</i>)</label><span id='MultiError-fold-results-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="MultiError-showhide-inputofs"><i><label for="MultiError-showhide-inputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="MultiError-showhide-inputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Decoder">Decoder</a>).<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-99">checkRequired</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, src map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <b>MultiError</b></i></span><span class="hidden"><i>
+			func (*<a href="#name-Decoder">Decoder</a>).<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-115">findRequiredFields</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, canonicalPrefix, searchPrefix <a href="../../../../../builtin.html#name-string">string</a>) (map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="#name-fieldWithPrefix">fieldWithPrefix</a>, <b>MultiError</b>)</i></span></span>
+		<input type='checkbox' class="fold" id="MultiError-fold-params"><label for="MultiError-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='MultiError-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="MultiError-showhide-outputofs"><i><label for="MultiError-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="MultiError-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func MultiError.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-528">merge</a>(errors <b>MultiError</b>)</i></span></span>
+
+</span></div><div class="anchor type-res" id="name-UnknownKeyError" data-popularity="100">	<input type='checkbox' class="fold" id="UnknownKeyError-fold-content"><label for="UnknownKeyError-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-489">UnknownKeyError</a> <i>(struct)</i></label><span id='UnknownKeyError-fold-content-docs' class="fold-docs">
+<span class="md-text">		UnknownKeyError stores information about an unknown key in the source map.</span>
+
+		<input type='checkbox' class="fold" id="UnknownKeyError-fold-fields"><label for="UnknownKeyError-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='UnknownKeyError-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="UnknownKeyError-fold-field-Key"><label for="UnknownKeyError-fold-field-Key"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-490">Key</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='UnknownKeyError-fold-field-Key-docs' class="fold-docs">
+<span class="md-text">				// key from the source map.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="UnknownKeyError-fold-methods"><label for="UnknownKeyError-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='UnknownKeyError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( UnknownKeyError) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-493">Error</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="UnknownKeyError-fold-impls"><label for="UnknownKeyError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='UnknownKeyError-fold-impls-items' class="fold-items"><span>
+			 UnknownKeyError : <a href="../../../../../builtin.html#name-error">error</a></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 8 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 8 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-cache" data-popularity="375">	<input type='checkbox' class="fold" id="cache-fold-content"><label for="cache-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-28">cache</a> <i>(struct)</i></label><span id='cache-fold-content-docs' class="fold-docs">
+<span class="md-text">		cache caches meta-data about a struct.</span>
+
+		<input type='checkbox' class="fold" id="cache-fold-fields"><label for="cache-fold-fields">Fields (<i>total 4, none are exported</i>)</label><span id='cache-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cache-showhide-fields"><i><label for="cache-showhide-fields" class="show-inline">/* 4 unexporteds ... */</label><label for="cache-showhide-fields" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-29">l</a> <i><a href="../../../../../sync.html">sync</a>.<a href="../../../../../sync.html#name-RWMutex">RWMutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-30">m</a> <i>map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]*<a href="#name-structInfo">structInfo</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-31">regconv</a> <i>map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]<a href="#name-Converter">Converter</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-32">tag</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="cache-fold-methods"><label for="cache-fold-methods">Methods (<i>total 6, none are exported</i>)</label><span id='cache-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cache-showhide-methods"><i><label for="cache-showhide-methods" class="show-inline">/* 6 unexporteds ... */</label><label for="cache-showhide-methods" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-converter"><label for="cache-fold-method-converter">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-204">converter</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>) <a href="#name-Converter">Converter</a></label><span id='cache-fold-method-converter-docs' class="fold-docs">
+<span class="md-text">				converter returns the converter for a type.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-create"><label for="cache-fold-method-create">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-129">create</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, parentAlias <a href="../../../../../builtin.html#name-string">string</a>) *<a href="#name-structInfo">structInfo</a></label><span id='cache-fold-method-create-docs' class="fold-docs">
+<span class="md-text">				create creates a structInfo with meta-data about a struct.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-createField"><label for="cache-fold-method-createField">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-154">createField</a>(field <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-StructField">StructField</a>, parentAlias <a href="../../../../../builtin.html#name-string">string</a>) *<a href="#name-fieldInfo">fieldInfo</a></label><span id='cache-fold-method-createField-docs' class="fold-docs">
+<span class="md-text">				createField creates a fieldInfo for the given field.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-get"><label for="cache-fold-method-get">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-115">get</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>) *<a href="#name-structInfo">structInfo</a></label><span id='cache-fold-method-get-docs' class="fold-docs">
+<span class="md-text">				get returns a cached structInfo, creating it if necessary.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-parsePath"><label for="cache-fold-method-parsePath">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-46">parsePath</a>(p <a href="../../../../../builtin.html#name-string">string</a>, t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>) ([]<a href="#name-pathPart">pathPart</a>, <a href="../../../../../builtin.html#name-error">error</a>)</label><span id='cache-fold-method-parsePath-docs' class="fold-docs">
+<span class="md-text">				parsePath parses a path in dotted notation verifying that it is a valid
+				path to a struct field.
+				
+				It returns "path parts" which contain indices to fields to be used by
+				reflect.Value.FieldByString(). Multiple parts are required for slices of
+				structs.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cache-fold-method-registerConverter"><label for="cache-fold-method-registerConverter">(*cache) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-36">registerConverter</a>(value interface{}, converterFunc <a href="#name-Converter">Converter</a>)</label><span id='cache-fold-method-registerConverter-docs' class="fold-docs">
+<span class="md-text">				registerConverter registers a converter function for a custom type.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="cache-fold-results"><label for="cache-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='cache-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cache-showhide-inputofs"><i><label for="cache-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="cache-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-newCache">newCache</a>() *<b>cache</b></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-encoderFunc" data-popularity="110">	<input type='checkbox' class="fold" id="encoderFunc-fold-content"><label for="encoderFunc-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-10">encoderFunc</a> <i>(func)</i></label><span id='encoderFunc-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="encoderFunc-fold-results"><label for="encoderFunc-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='encoderFunc-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="encoderFunc-showhide-inputofs"><i><label for="encoderFunc-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="encoderFunc-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-typeEncoder">typeEncoder</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, reg map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]<b>encoderFunc</b>) <b>encoderFunc</b></i></span></span>
+		<input type='checkbox' class="fold" id="encoderFunc-fold-params"><label for="encoderFunc-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='encoderFunc-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="encoderFunc-showhide-outputofs"><i><label for="encoderFunc-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="encoderFunc-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-typeEncoder">typeEncoder</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, reg map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]<b>encoderFunc</b>) <b>encoderFunc</b></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-fieldInfo" data-popularity="50">	<input type='checkbox' class="fold" id="fieldInfo-fold-content"><label for="fieldInfo-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-232">fieldInfo</a> <i>(struct)</i></label><span id='fieldInfo-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="fieldInfo-fold-fields"><label for="fieldInfo-fold-fields">Fields (<i>total 8, none are exported</i>)</label><span id='fieldInfo-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldInfo-showhide-fields"><i><label for="fieldInfo-showhide-fields" class="show-inline">/* 8 unexporteds ... */</label><label for="fieldInfo-showhide-fields" class="hide-inline">/* 8 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-236">alias</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldInfo-fold-field-canonicalAlias"><label for="fieldInfo-fold-field-canonicalAlias"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-242">canonicalAlias</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='fieldInfo-fold-field-canonicalAlias-docs' class="fold-docs">
+<span class="md-text">				canonicalAlias is almost the same as the alias, but is prefixed with
+				an embedded struct field alias in dotted notation if this field is
+				promoted from the struct.
+				For instance, if the alias is "N" and this field is an embedded field
+				in a struct "X", canonicalAlias will be "X.N".</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldInfo-fold-field-isAnonymous"><label for="fieldInfo-fold-field-isAnonymous"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-249">isAnonymous</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='fieldInfo-fold-field-isAnonymous-docs' class="fold-docs">
+<span class="md-text">				isAnonymous indicates whether the field is embedded in the struct.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-250">isRequired</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldInfo-fold-field-isSliceOfStructs"><label for="fieldInfo-fold-field-isSliceOfStructs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-247">isSliceOfStructs</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='fieldInfo-fold-field-isSliceOfStructs-docs' class="fold-docs">
+<span class="md-text">				isSliceOfStructs indicates if the field type is a slice of structs.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldInfo-fold-field-name"><label for="fieldInfo-fold-field-name"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-235">name</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='fieldInfo-fold-field-name-docs' class="fold-docs">
+<span class="md-text">				name is the field name in the struct.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-233">typ</a> <i><a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldInfo-fold-field-unmarshalerInfo"><label for="fieldInfo-fold-field-unmarshalerInfo"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-245">unmarshalerInfo</a> <i><a href="#name-unmarshaler">unmarshaler</a></i></label><span id='fieldInfo-fold-field-unmarshalerInfo-docs' class="fold-docs">
+<span class="md-text">				unmarshalerInfo contains information regarding the
+				encoding.TextUnmarshaler implementation of the field type.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="fieldInfo-fold-methods"><label for="fieldInfo-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='fieldInfo-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldInfo-showhide-methods"><i><label for="fieldInfo-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="fieldInfo-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*fieldInfo) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-253">paths</a>(prefix <a href="../../../../../builtin.html#name-string">string</a>) []<a href="../../../../../builtin.html#name-string">string</a></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-fieldWithPrefix" data-popularity="160">	<input type='checkbox' class="fold" id="fieldWithPrefix-fold-content"><label for="fieldWithPrefix-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-146">fieldWithPrefix</a> <i>(struct)</i></label><span id='fieldWithPrefix-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="fieldWithPrefix-fold-fields"><label for="fieldWithPrefix-fold-fields">Fields (<i>total 10, none are exported</i>)</label><span id='fieldWithPrefix-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldWithPrefix-showhide-fields"><i><label for="fieldWithPrefix-showhide-fields" class="show-inline">/* 10 unexporteds ... */</label><label for="fieldWithPrefix-showhide-fields" class="hide-inline">/* 10 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147">fieldInfo</a> <i>*<a href="#name-fieldInfo">fieldInfo</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-236">alias</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldWithPrefix-fold-field-canonicalAlias"><label for="fieldWithPrefix-fold-field-canonicalAlias"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-242">canonicalAlias</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='fieldWithPrefix-fold-field-canonicalAlias-docs' class="fold-docs">
+<span class="md-text">				canonicalAlias is almost the same as the alias, but is prefixed with
+				an embedded struct field alias in dotted notation if this field is
+				promoted from the struct.
+				For instance, if the alias is "N" and this field is an embedded field
+				in a struct "X", canonicalAlias will be "X.N".</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldWithPrefix-fold-field-isAnonymous"><label for="fieldWithPrefix-fold-field-isAnonymous"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-249">isAnonymous</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='fieldWithPrefix-fold-field-isAnonymous-docs' class="fold-docs">
+<span class="md-text">				isAnonymous indicates whether the field is embedded in the struct.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-250">isRequired</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldWithPrefix-fold-field-isSliceOfStructs"><label for="fieldWithPrefix-fold-field-isSliceOfStructs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-247">isSliceOfStructs</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='fieldWithPrefix-fold-field-isSliceOfStructs-docs' class="fold-docs">
+<span class="md-text">				isSliceOfStructs indicates if the field type is a slice of structs.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldWithPrefix-fold-field-name"><label for="fieldWithPrefix-fold-field-name"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-235">name</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='fieldWithPrefix-fold-field-name-docs' class="fold-docs">
+<span class="md-text">				name is the field name in the struct.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-233">typ</a> <i><a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="fieldWithPrefix-fold-field-unmarshalerInfo"><label for="fieldWithPrefix-fold-field-unmarshalerInfo"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-147" class="path-duplicate">fieldInfo</a>.<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-245">unmarshalerInfo</a> <i><a href="#name-unmarshaler">unmarshaler</a></i></label><span id='fieldWithPrefix-fold-field-unmarshalerInfo-docs' class="fold-docs">
+<span class="md-text">				unmarshalerInfo contains information regarding the
+				encoding.TextUnmarshaler implementation of the field type.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-148">prefix</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="fieldWithPrefix-fold-methods"><label for="fieldWithPrefix-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='fieldWithPrefix-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldWithPrefix-showhide-methods"><i><label for="fieldWithPrefix-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="fieldWithPrefix-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( fieldWithPrefix) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-253">paths</a>(prefix <a href="../../../../../builtin.html#name-string">string</a>) []<a href="../../../../../builtin.html#name-string">string</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="fieldWithPrefix-fold-results"><label for="fieldWithPrefix-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='fieldWithPrefix-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldWithPrefix-showhide-inputofs"><i><label for="fieldWithPrefix-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="fieldWithPrefix-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Decoder">Decoder</a>).<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-115">findRequiredFields</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, canonicalPrefix, searchPrefix <a href="../../../../../builtin.html#name-string">string</a>) (map[<a href="../../../../../builtin.html#name-string">string</a>][]<b>fieldWithPrefix</b>, <a href="#name-MultiError">MultiError</a>)</i></span></span>
+		<input type='checkbox' class="fold" id="fieldWithPrefix-fold-params"><label for="fieldWithPrefix-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='fieldWithPrefix-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="fieldWithPrefix-showhide-outputofs"><i><label for="fieldWithPrefix-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="fieldWithPrefix-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-isEmptyFields">isEmptyFields</a>(fields []<b>fieldWithPrefix</b>, src map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-pathPart" data-popularity="35">	<input type='checkbox' class="fold" id="pathPart-fold-content"><label for="pathPart-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-260">pathPart</a> <i>(struct)</i></label><span id='pathPart-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="pathPart-fold-fields"><label for="pathPart-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='pathPart-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="pathPart-showhide-fields"><i><label for="pathPart-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="pathPart-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-261">field</a> <i>*<a href="#name-fieldInfo">fieldInfo</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="pathPart-fold-field-index"><label for="pathPart-fold-field-index"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-263">index</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></label><span id='pathPart-fold-field-index-docs' class="fold-docs">
+<span class="md-text">				// struct index in slices of structs.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="pathPart-fold-field-path"><label for="pathPart-fold-field-path"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-262">path</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></label><span id='pathPart-fold-field-path-docs' class="fold-docs">
+<span class="md-text">				// path to the field: walks structs using field names.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="pathPart-fold-params"><label for="pathPart-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='pathPart-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="pathPart-showhide-outputofs"><i><label for="pathPart-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="pathPart-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Decoder">Decoder</a>).<a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-195">decode</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>, path <a href="../../../../../builtin.html#name-string">string</a>, parts []<b>pathPart</b>, values []<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-structInfo" data-popularity="85">	<input type='checkbox' class="fold" id="structInfo-fold-content"><label for="structInfo-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-210">structInfo</a> <i>(struct)</i></label><span id='structInfo-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="structInfo-fold-fields"><label for="structInfo-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='structInfo-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structInfo-showhide-fields"><i><label for="structInfo-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="structInfo-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-211">fields</a> <i>[]*<a href="#name-fieldInfo">fieldInfo</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="structInfo-fold-methods"><label for="structInfo-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='structInfo-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structInfo-showhide-methods"><i><label for="structInfo-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="structInfo-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*structInfo) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-214">get</a>(alias <a href="../../../../../builtin.html#name-string">string</a>) *<a href="#name-fieldInfo">fieldInfo</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="structInfo-fold-params"><label for="structInfo-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='structInfo-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structInfo-showhide-outputofs"><i><label for="structInfo-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="structInfo-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-containsAlias">containsAlias</a>(infos []*<b>structInfo</b>, alias <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-tagOptions" data-popularity="200">	<input type='checkbox' class="fold" id="tagOptions-fold-content"><label for="tagOptions-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-288">tagOptions</a> <i>([])</i></label><span id='tagOptions-fold-content-docs' class="fold-docs">
+<span class="md-text">		tagOptions is the string following a comma in a struct field's tag, or
+		the empty string. It does not include the leading comma.</span>
+
+		<input type='checkbox' class="fold" id="tagOptions-fold-methods"><label for="tagOptions-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='tagOptions-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="tagOptions-fold-method-Contains"><label for="tagOptions-fold-method-Contains">( tagOptions) <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-298">Contains</a>(option <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></label><span id='tagOptions-fold-method-Contains-docs' class="fold-docs">
+<span class="md-text">				Contains checks whether the tagOptions contains the specified option.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="tagOptions-fold-results"><label for="tagOptions-fold-results">As Outputs Of (<i>at least 2, neither is exported</i>)</label><span id='tagOptions-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="tagOptions-showhide-inputofs"><i><label for="tagOptions-showhide-inputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="tagOptions-showhide-inputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-fieldAlias">fieldAlias</a>(field <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-StructField">StructField</a>, tagName <a href="../../../../../builtin.html#name-string">string</a>) (alias <a href="../../../../../builtin.html#name-string">string</a>, options <b>tagOptions</b>)</i></span><span class="hidden"><i>
+			func <a href="#name-parseTag">parseTag</a>(tag <a href="../../../../../builtin.html#name-string">string</a>) (<a href="../../../../../builtin.html#name-string">string</a>, <b>tagOptions</b>)</i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-unmarshaler" data-popularity="75">	<input type='checkbox' class="fold" id="unmarshaler-fold-content"><label for="unmarshaler-fold-content"> type <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-445">unmarshaler</a> <i>(struct)</i></label><span id='unmarshaler-fold-content-docs' class="fold-docs">
+<span class="md-text">		TextUnmarshaler helpers ----------------------------------------------------
+		unmarshaller contains information about a TextUnmarshaler type</span>
+
+		<input type='checkbox' class="fold" id="unmarshaler-fold-fields"><label for="unmarshaler-fold-fields">Fields (<i>total 5, all are exported</i>)</label><span id='unmarshaler-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="unmarshaler-fold-field-IsPtr"><label for="unmarshaler-fold-field-IsPtr"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-452">IsPtr</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='unmarshaler-fold-field-IsPtr-docs' class="fold-docs">
+<span class="md-text">				IsPtr indicates that the resolved type is the pointer of the original
+				type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="unmarshaler-fold-field-IsSliceElement"><label for="unmarshaler-fold-field-IsSliceElement"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-455">IsSliceElement</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='unmarshaler-fold-field-IsSliceElement-docs' class="fold-docs">
+<span class="md-text">				IsSliceElement indicates that the resolved type is a slice element of
+				the original type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="unmarshaler-fold-field-IsSliceElementPtr"><label for="unmarshaler-fold-field-IsSliceElementPtr"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-458">IsSliceElementPtr</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='unmarshaler-fold-field-IsSliceElementPtr-docs' class="fold-docs">
+<span class="md-text">				IsSliceElementPtr indicates that the resolved type is a pointer to a
+				slice element of the original type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="unmarshaler-fold-field-IsValid"><label for="unmarshaler-fold-field-IsValid"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-449">IsValid</a> <i><a href="../../../../../builtin.html#name-bool">bool</a></i></label><span id='unmarshaler-fold-field-IsValid-docs' class="fold-docs">
+<span class="md-text">				IsValid indicates whether the resolved type indicated by the other
+				flags implements the encoding.TextUnmarshaler interface.</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-446">Unmarshaler</a> <i><a href="../../../../../encoding.html">encoding</a>.<a href="../../../../../encoding.html#name-TextUnmarshaler">TextUnmarshaler</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="unmarshaler-fold-results"><label for="unmarshaler-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='unmarshaler-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="unmarshaler-showhide-inputofs"><i><label for="unmarshaler-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="unmarshaler-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-isTextUnmarshaler">isTextUnmarshaler</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <b>unmarshaler</b></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 34, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewDecoder">	<input type='checkbox' class="fold" id="NewDecoder-fold-content"><label for="NewDecoder-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-16">NewDecoder</a>() *<a href="#name-Decoder">Decoder</a></label><span id='NewDecoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewDecoder returns a new Decoder.</span>
+
+</span></div><div class="anchor value-res" id="name-NewEncoder">	<input type='checkbox' class="fold" id="NewEncoder-fold-content"><label for="NewEncoder-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-19">NewEncoder</a>() *<a href="#name-Encoder">Encoder</a></label><span id='NewEncoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewEncoder returns a new Encoder with defaults.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 32 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 32 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-containsAlias"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-223">containsAlias</a>(infos []*<a href="#name-structInfo">structInfo</a>, alias <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-convertBool"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-50">convertBool</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertFloat32"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-59">convertFloat32</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertFloat64"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-66">convertFloat64</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertInt"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-73">convertInt</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertInt16"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-87">convertInt16</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertInt32"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-94">convertInt32</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertInt64"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-101">convertInt64</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertInt8"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-80">convertInt8</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertString"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-108">convertString</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertUint"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-112">convertUint</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertUint16"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-126">convertUint16</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertUint32"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-133">convertUint32</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertUint64"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-140">convertUint64</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-convertUint8"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-119">convertUint8</a>(value <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-encodeBool"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-176">encodeBool</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeFloat"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-188">encodeFloat</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>, bits <a href="../../../../../builtin.html#name-int">int</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeFloat32"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-192">encodeFloat32</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeFloat64"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-196">encodeFloat64</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeInt"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-180">encodeInt</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeString"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-200">encodeString</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-encodeUint"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-184">encodeUint</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-fieldAlias"><i>	<input type='checkbox' class="fold" id="fieldAlias-fold-content"><label for="fieldAlias-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-276">fieldAlias</a>(field <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-StructField">StructField</a>, tagName <a href="../../../../../builtin.html#name-string">string</a>) (alias <a href="../../../../../builtin.html#name-string">string</a>, options <a href="#name-tagOptions">tagOptions</a>)</label><span id='fieldAlias-fold-content-docs' class="fold-docs">
+<span class="md-text">		fieldAlias parses a field tag to get a field alias.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-indirectType"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-268">indirectType</a>(typ <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>) <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a></span></i></div><div class="anchor value-res hidden" id="name-isEmpty"><i>	<input type='checkbox' class="fold" id="isEmpty-fold-content"><label for="isEmpty-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-183">isEmpty</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, value []<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></label><span id='isEmpty-fold-content-docs' class="fold-docs">
+<span class="md-text">		isEmpty returns true if value is empty for specific type</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-isEmptyFields"><i>	<input type='checkbox' class="fold" id="isEmptyFields-fold-content"><label for="isEmptyFields-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-152">isEmptyFields</a>(fields []<a href="#name-fieldWithPrefix">fieldWithPrefix</a>, src map[<a href="../../../../../builtin.html#name-string">string</a>][]<a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-bool">bool</a></label><span id='isEmptyFields-fold-content-docs' class="fold-docs">
+<span class="md-text">		isEmptyFields returns true if all of specified fields are empty.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-isTextUnmarshaler"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/decoder.go.html#line-402">isTextUnmarshaler</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="#name-unmarshaler">unmarshaler</a></span></i></div><div class="anchor value-res hidden" id="name-isValidStructPointer"><i>	<input type='checkbox' class="fold" id="isValidStructPointer-fold-content"><label for="isValidStructPointer-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-44">isValidStructPointer</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-bool">bool</a></label><span id='isValidStructPointer-fold-content-docs' class="fold-docs">
+<span class="md-text">		isValidStructPointer test if input value is a valid struct pointer.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-isZero"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-48">isZero</a>(v <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a>) <a href="../../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-newCache"><i>	<input type='checkbox' class="fold" id="newCache-fold-content"><label for="newCache-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-18">newCache</a>() *<a href="#name-cache">cache</a></label><span id='newCache-fold-content-docs' class="fold-docs">
+<span class="md-text">		newCache returns a new cache.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseTag"><i>	<input type='checkbox' class="fold" id="parseTag-fold-content"><label for="parseTag-fold-content"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-292">parseTag</a>(tag <a href="../../../../../builtin.html#name-string">string</a>) (<a href="../../../../../builtin.html#name-string">string</a>, <a href="#name-tagOptions">tagOptions</a>)</label><span id='parseTag-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseTag splits a struct field's url tag into its name and comma-separated
+		options.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-typeEncoder"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/encoder.go.html#line-145">typeEncoder</a>(t <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>, reg map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Type">Type</a>]<a href="#name-encoderFunc">encoderFunc</a>) <a href="#name-encoderFunc">encoderFunc</a></span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 17, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 17 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 17 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-boolType"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-16">boolType</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-builtinConverters"><i>	<input type='checkbox' class="fold" id="builtinConverters-fold-content"><label for="builtinConverters-fold-content">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-33">builtinConverters</a> map[<a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a>]<a href="#name-Converter">Converter</a></label><span id='builtinConverters-fold-content-docs' class="fold-docs">
+<span class="md-text">		Default converters for basic types.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-errInvalidPath"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/cache.go.html#line-15">errInvalidPath</a> <a href="../../../../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-float32Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-17">float32Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-float64Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-18">float64Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-int16Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-21">int16Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-int32Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-22">int32Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-int64Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-23">int64Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-int8Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-20">int8Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-intType"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-19">intType</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-invalidValue"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-15">invalidValue</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Value">Value</a></span></i></div><div class="anchor value-res hidden" id="name-stringType"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-24">stringType</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-uint16Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-27">uint16Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-uint32Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-28">uint32Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-uint64Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-29">uint64Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-uint8Type"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-26">uint8Type</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div><div class="anchor value-res hidden" id="name-uintType"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/gofiber/fiber/v2/internal/schema/converter.go.html#line-25">uintType</a> <a href="../../../../../reflect.html">reflect</a>.<a href="../../../../../reflect.html#name-Kind">Kind</a></span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

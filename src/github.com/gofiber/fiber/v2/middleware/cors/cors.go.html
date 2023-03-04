@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: cors.go in package github.com/gofiber/fiber/v2/middleware/cors</title>
+<link href="../../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	cors.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2/middleware/cors.html">github.com/gofiber/fiber/v2/middleware/cors</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> cors</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"net/http"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"strconv"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"strings"</span></label></code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i3"><span class="lit-string i3">"github.com/gofiber/fiber/v2"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// Config defines the config for middleware.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2/middleware/cors.html#name-Config" class="ident">Config</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-13"><code>	<span class="comment">// Next defines a function to skip this middleware when returned true.</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	// Optional. Default: nil</span></code></span>
+<span class="codeline" id="line-16"><code>	Next <span class="keyword">func</span>(c *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../ctx.go.html#line-77" class="ident">Ctx</a>) <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code>	<span class="comment">// AllowOrigin defines a list of origins that may access the resource.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	// Optional. Default value "*"</span></code></span>
+<span class="codeline" id="line-21"><code>	AllowOrigins <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	<span class="comment">// AllowMethods defines a list methods allowed when accessing the resource.</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// This is used in response to a preflight request.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">	// Optional. Default value "GET,POST,HEAD,PUT,DELETE,PATCH"</span></code></span>
+<span class="codeline" id="line-27"><code>	AllowMethods <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code>	<span class="comment">// AllowHeaders defines a list of request headers that can be used when</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">	// making the actual request. This is in response to a preflight request.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	// Optional. Default value "".</span></code></span>
+<span class="codeline" id="line-33"><code>	AllowHeaders <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code>	<span class="comment">// AllowCredentials indicates whether or not the response to the request</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">	// can be exposed when the credentials flag is true. When used as part of</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">	// a response to a preflight request, this indicates whether or not the</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">	// actual request can be made using credentials.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">	// Optional. Default value false.</span></code></span>
+<span class="codeline" id="line-41"><code>	AllowCredentials <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">// ExposeHeaders defines a whitelist headers that clients are allowed to</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">	// access.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">	// Optional. Default value "".</span></code></span>
+<span class="codeline" id="line-47"><code>	ExposeHeaders <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code>	<span class="comment">// MaxAge indicates how long (in seconds) the results of a preflight request</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">	// can be cached.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">	// Optional. Default value 0.</span></code></span>
+<span class="codeline" id="line-53"><code>	MaxAge <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-54"><code>}</code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">// ConfigDefault is the default config</span></code></span>
+<span class="codeline" id="line-57"><code><span class="keyword">var</span> <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2/middleware/cors.html#name-ConfigDefault" class="ident">ConfigDefault</a> = <a href="#line-12" class="ident">Config</a>{</code></span>
+<span class="codeline" id="line-58"><code>	<a href="#line-16" class="ident">Next</a>:         <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-59"><code>	<a href="#line-21" class="ident">AllowOrigins</a>: <span class="lit-string">"*"</span>,</code></span>
+<span class="codeline" id="line-60"><code>	<a href="#line-27" class="ident">AllowMethods</a>: <a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-427" class="ident">Join</a>([]<a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a>{</code></span>
+<span class="codeline" id="line-61"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-374" class="ident">MethodGet</a>,</code></span>
+<span class="codeline" id="line-62"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-376" class="ident">MethodPost</a>,</code></span>
+<span class="codeline" id="line-63"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-375" class="ident">MethodHead</a>,</code></span>
+<span class="codeline" id="line-64"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-377" class="ident">MethodPut</a>,</code></span>
+<span class="codeline" id="line-65"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-379" class="ident">MethodDelete</a>,</code></span>
+<span class="codeline" id="line-66"><code>		<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-378" class="ident">MethodPatch</a>,</code></span>
+<span class="codeline" id="line-67"><code>	}, <span class="lit-string">","</span>),</code></span>
+<span class="codeline" id="line-68"><code>	<a href="#line-33" class="ident">AllowHeaders</a>:     <span class="lit-string">""</span>,</code></span>
+<span class="codeline" id="line-69"><code>	<a href="#line-41" class="ident">AllowCredentials</a>: <a href="../../../../../../../pkg/builtin.html#name-false" class="ident">false</a>,</code></span>
+<span class="codeline" id="line-70"><code>	<a href="#line-47" class="ident">ExposeHeaders</a>:    <span class="lit-string">""</span>,</code></span>
+<span class="codeline" id="line-71"><code>	<a href="#line-53" class="ident">MaxAge</a>:           <span class="lit-number">0</span>,</code></span>
+<span class="codeline" id="line-72"><code>}</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// New creates a new middleware handler</span></code></span>
+<span class="codeline" id="line-75"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../../pkg/github.com/gofiber/fiber/v2/middleware/cors.html#name-New" class="ident">New</a></label>(<label for="r1" class="ident">config</label> ...<a href="#line-12" class="ident">Config</a>) <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../app.go.html#line-34" class="ident">Handler</a> {</code></span>
+<span class="codeline" id="line-76"><code>	<span class="comment">// Set default config</span></code></span>
+<span class="codeline" id="line-77"><code>	<label for="r2" class="ident">cfg</label> := <a href="#line-57" class="ident">ConfigDefault</a></code></span>
+<span class="codeline" id="line-78"><code></code></span>
+<span class="codeline" id="line-79"><code>	<span class="comment">// Override config if provided</span></code></span>
+<span class="codeline" id="line-80"><code>	<span class="keyword">if</span> <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">config</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-81"><code>		<label for="r2" class="ident">cfg</label> = <label for="r1" class="ident">config</label>[<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-82"><code></code></span>
+<span class="codeline" id="line-83"><code>		<span class="comment">// Set default values</span></code></span>
+<span class="codeline" id="line-84"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-27" class="ident">AllowMethods</a> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-85"><code>			<label for="r2" class="ident">cfg</label>.<a href="#line-27" class="ident">AllowMethods</a> = <a href="#line-57" class="ident">ConfigDefault</a>.<a href="#line-27" class="ident">AllowMethods</a></code></span>
+<span class="codeline" id="line-86"><code>		}</code></span>
+<span class="codeline" id="line-87"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-21" class="ident">AllowOrigins</a> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-88"><code>			<label for="r2" class="ident">cfg</label>.<a href="#line-21" class="ident">AllowOrigins</a> = <a href="#line-57" class="ident">ConfigDefault</a>.<a href="#line-21" class="ident">AllowOrigins</a></code></span>
+<span class="codeline" id="line-89"><code>		}</code></span>
+<span class="codeline" id="line-90"><code>	}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	<span class="comment">// Convert string to slice</span></code></span>
+<span class="codeline" id="line-93"><code>	<label for="r3" class="ident">allowOrigins</label> := <a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-305" class="ident">Split</a>(<a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-1088" class="ident">ReplaceAll</a>(<label for="r2" class="ident">cfg</label>.<a href="#line-21" class="ident">AllowOrigins</a>, <span class="lit-string">" "</span>, <span class="lit-string">""</span>), <span class="lit-string">","</span>)</code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code>	<span class="comment">// Strip white spaces</span></code></span>
+<span class="codeline" id="line-96"><code>	<label for="r4" class="ident">allowMethods</label> := <a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-1088" class="ident">ReplaceAll</a>(<label for="r2" class="ident">cfg</label>.<a href="#line-27" class="ident">AllowMethods</a>, <span class="lit-string">" "</span>, <span class="lit-string">""</span>)</code></span>
+<span class="codeline" id="line-97"><code>	<label for="r5" class="ident">allowHeaders</label> := <a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-1088" class="ident">ReplaceAll</a>(<label for="r2" class="ident">cfg</label>.<a href="#line-33" class="ident">AllowHeaders</a>, <span class="lit-string">" "</span>, <span class="lit-string">""</span>)</code></span>
+<span class="codeline" id="line-98"><code>	<label for="r6" class="ident">exposeHeaders</label> := <a href="../../../../../../../pkg/strings.html" class="ident i2">strings</a>.<a href="../../../../../../strings/strings.go.html#line-1088" class="ident">ReplaceAll</a>(<label for="r2" class="ident">cfg</label>.<a href="#line-47" class="ident">ExposeHeaders</a>, <span class="lit-string">" "</span>, <span class="lit-string">""</span>)</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code>	<span class="comment">// Convert int to string</span></code></span>
+<span class="codeline" id="line-101"><code>	<label for="r7" class="ident">maxAge</label> := <a href="../../../../../../../pkg/strconv.html" class="ident i1">strconv</a>.<a href="../../../../../../strconv/itoa.go.html#line-34" class="ident">Itoa</a>(<label for="r2" class="ident">cfg</label>.<a href="#line-53" class="ident">MaxAge</a>)</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code>	<span class="comment">// Return new handler</span></code></span>
+<span class="codeline" id="line-104"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r8" class="ident">c</label> *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../ctx.go.html#line-77" class="ident">Ctx</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-105"><code>		<span class="comment">// Don't execute middleware if Next returns true</span></code></span>
+<span class="codeline" id="line-106"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-16" class="ident">Next</a> != <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> &amp;&amp; <label for="r2" class="ident">cfg</label>.<a href="#line-16" class="ident">Next</a>(<label for="r8" class="ident">c</label>) {</code></span>
+<span class="codeline" id="line-107"><code>			<span class="keyword">return</span> <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-936" class="ident">Next</a>()</code></span>
+<span class="codeline" id="line-108"><code>		}</code></span>
+<span class="codeline" id="line-109"><code></code></span>
+<span class="codeline" id="line-110"><code>		<span class="comment">// Get origin header</span></code></span>
+<span class="codeline" id="line-111"><code>		<label for="r9" class="ident">origin</label> := <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-621" class="ident">Get</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-574" class="ident">HeaderOrigin</a>)</code></span>
+<span class="codeline" id="line-112"><code>		<label for="r10" class="ident">allowOrigin</label> := <span class="lit-string">""</span></code></span>
+<span class="codeline" id="line-113"><code></code></span>
+<span class="codeline" id="line-114"><code>		<span class="comment">// Check allowed origins</span></code></span>
+<span class="codeline" id="line-115"><code>		<span class="keyword">for</span> <label for="r11" class="ident">_</label>, <label for="r12" class="ident">o</label> := <span class="keyword">range</span> <label for="r3" class="ident">allowOrigins</label> {</code></span>
+<span class="codeline" id="line-116"><code>			<span class="keyword">if</span> <label for="r12" class="ident">o</label> == <span class="lit-string">"*"</span> &amp;&amp; <label for="r2" class="ident">cfg</label>.<a href="#line-41" class="ident">AllowCredentials</a> {</code></span>
+<span class="codeline" id="line-117"><code>				<label for="r10" class="ident">allowOrigin</label> = <label for="r9" class="ident">origin</label></code></span>
+<span class="codeline" id="line-118"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-119"><code>			}</code></span>
+<span class="codeline" id="line-120"><code>			<span class="keyword">if</span> <label for="r12" class="ident">o</label> == <span class="lit-string">"*"</span> || <label for="r12" class="ident">o</label> == <label for="r9" class="ident">origin</label> {</code></span>
+<span class="codeline" id="line-121"><code>				<label for="r10" class="ident">allowOrigin</label> = <label for="r12" class="ident">o</label></code></span>
+<span class="codeline" id="line-122"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-123"><code>			}</code></span>
+<span class="codeline" id="line-124"><code>			<span class="keyword">if</span> <a href="utils.go.html#line-12" class="ident">matchSubdomain</a>(<label for="r9" class="ident">origin</label>, <label for="r12" class="ident">o</label>) {</code></span>
+<span class="codeline" id="line-125"><code>				<label for="r10" class="ident">allowOrigin</label> = <label for="r9" class="ident">origin</label></code></span>
+<span class="codeline" id="line-126"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-127"><code>			}</code></span>
+<span class="codeline" id="line-128"><code>		}</code></span>
+<span class="codeline" id="line-129"><code></code></span>
+<span class="codeline" id="line-130"><code>		<span class="comment">// Simple request</span></code></span>
+<span class="codeline" id="line-131"><code>		<span class="keyword">if</span> <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-907" class="ident">Method</a>() != <a href="../../../../../../../pkg/net/http.html" class="ident i0">http</a>.<a href="../../../../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> {</code></span>
+<span class="codeline" id="line-132"><code>			<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1688" class="ident">Vary</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-574" class="ident">HeaderOrigin</a>)</code></span>
+<span class="codeline" id="line-133"><code>			<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-569" class="ident">HeaderAccessControlAllowOrigin</a>, <label for="r10" class="ident">allowOrigin</label>)</code></span>
+<span class="codeline" id="line-134"><code></code></span>
+<span class="codeline" id="line-135"><code>			<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-41" class="ident">AllowCredentials</a> {</code></span>
+<span class="codeline" id="line-136"><code>				<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-566" class="ident">HeaderAccessControlAllowCredentials</a>, <span class="lit-string">"true"</span>)</code></span>
+<span class="codeline" id="line-137"><code>			}</code></span>
+<span class="codeline" id="line-138"><code>			<span class="keyword">if</span> <label for="r6" class="ident">exposeHeaders</label> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-139"><code>				<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-570" class="ident">HeaderAccessControlExposeHeaders</a>, <label for="r6" class="ident">exposeHeaders</label>)</code></span>
+<span class="codeline" id="line-140"><code>			}</code></span>
+<span class="codeline" id="line-141"><code>			<span class="keyword">return</span> <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-936" class="ident">Next</a>()</code></span>
+<span class="codeline" id="line-142"><code>		}</code></span>
+<span class="codeline" id="line-143"><code></code></span>
+<span class="codeline" id="line-144"><code>		<span class="comment">// Preflight request</span></code></span>
+<span class="codeline" id="line-145"><code>		<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1688" class="ident">Vary</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-574" class="ident">HeaderOrigin</a>)</code></span>
+<span class="codeline" id="line-146"><code>		<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1688" class="ident">Vary</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-573" class="ident">HeaderAccessControlRequestMethod</a>)</code></span>
+<span class="codeline" id="line-147"><code>		<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1688" class="ident">Vary</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-572" class="ident">HeaderAccessControlRequestHeaders</a>)</code></span>
+<span class="codeline" id="line-148"><code>		<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-569" class="ident">HeaderAccessControlAllowOrigin</a>, <label for="r10" class="ident">allowOrigin</label>)</code></span>
+<span class="codeline" id="line-149"><code>		<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-568" class="ident">HeaderAccessControlAllowMethods</a>, <label for="r4" class="ident">allowMethods</label>)</code></span>
+<span class="codeline" id="line-150"><code></code></span>
+<span class="codeline" id="line-151"><code>		<span class="comment">// Set Allow-Credentials if set to true</span></code></span>
+<span class="codeline" id="line-152"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-41" class="ident">AllowCredentials</a> {</code></span>
+<span class="codeline" id="line-153"><code>			<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-566" class="ident">HeaderAccessControlAllowCredentials</a>, <span class="lit-string">"true"</span>)</code></span>
+<span class="codeline" id="line-154"><code>		}</code></span>
+<span class="codeline" id="line-155"><code></code></span>
+<span class="codeline" id="line-156"><code>		<span class="comment">// Set Allow-Headers if not empty</span></code></span>
+<span class="codeline" id="line-157"><code>		<span class="keyword">if</span> <label for="r5" class="ident">allowHeaders</label> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-158"><code>			<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-567" class="ident">HeaderAccessControlAllowHeaders</a>, <label for="r5" class="ident">allowHeaders</label>)</code></span>
+<span class="codeline" id="line-159"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-160"><code>			<label for="r13" class="ident">h</label> := <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-621" class="ident">Get</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-572" class="ident">HeaderAccessControlRequestHeaders</a>)</code></span>
+<span class="codeline" id="line-161"><code>			<span class="keyword">if</span> <label for="r13" class="ident">h</label> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-162"><code>				<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-567" class="ident">HeaderAccessControlAllowHeaders</a>, <label for="r13" class="ident">h</label>)</code></span>
+<span class="codeline" id="line-163"><code>			}</code></span>
+<span class="codeline" id="line-164"><code>		}</code></span>
+<span class="codeline" id="line-165"><code></code></span>
+<span class="codeline" id="line-166"><code>		<span class="comment">// Set MaxAge is set</span></code></span>
+<span class="codeline" id="line-167"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-53" class="ident">MaxAge</a> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-168"><code>			<label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1625" class="ident">Set</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-571" class="ident">HeaderAccessControlMaxAge</a>, <label for="r7" class="ident">maxAge</label>)</code></span>
+<span class="codeline" id="line-169"><code>		}</code></span>
+<span class="codeline" id="line-170"><code></code></span>
+<span class="codeline" id="line-171"><code>		<span class="comment">// Send 204 No Content</span></code></span>
+<span class="codeline" id="line-172"><code>		<span class="keyword">return</span> <label for="r8" class="ident">c</label>.<a href="../../ctx.go.html#line-1594" class="ident">SendStatus</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i3">fiber</a>.<a href="../../helpers.go.html#line-424" class="ident">StatusNoContent</a>)</code></span>
+<span class="codeline" id="line-173"><code>	}</code></span>
+<span class="codeline" id="line-174"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

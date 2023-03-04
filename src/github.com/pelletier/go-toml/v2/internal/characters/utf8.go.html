@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: utf8.go in package github.com/pelletier/go-toml/v2/internal/characters</title>
+<link href="../../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	utf8.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html">github.com/pelletier/go-toml/v2/internal/characters</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> characters</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"unicode/utf8"</span></label></code></span>
+<span class="codeline" id="line-5"><code>)</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-utf8Err" class="ident">utf8Err</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-8"><code>	Index <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-9"><code>	Size  <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-10"><code>}</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">func</span> (<label for="r0" class="ident">u</label> <a href="#line-7" class="ident">utf8Err</a>) <label for="r1" class="ident">Zero</label>() <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-13"><code>	<span class="keyword">return</span> <label for="r0" class="ident">u</label>.<a href="#line-9" class="ident">Size</a> == <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-14"><code>}</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// Verified that a given string is only made of valid UTF-8 characters allowed</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// by the TOML spec:</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">// Any Unicode character may be used except those that must be escaped:</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">// quotation mark, backslash, and the control characters other than tab (U+0000</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">// to U+0008, U+000A to U+001F, U+007F).</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// It is a copy of the Go 1.17 utf8.Valid implementation, tweaked to exit early</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// when a character is not allowed.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">// The returned utf8Err is Zero() if the string is valid, or contains the byte</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// index and size of the invalid character.</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// quotation mark =&gt; already checked</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// backslash =&gt; already checked</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// 0-0x8 =&gt; invalid</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// 0x9 =&gt; tab, ok</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// 0xA - 0x1F =&gt; invalid</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// 0x7F =&gt; invalid</span></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">func</span> <label for="r2" class="ident"><a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-Utf8TomlValidAlreadyEscaped" class="ident">Utf8TomlValidAlreadyEscaped</a></label>(<label for="r3" class="ident">p</label> []<a href="../../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<label for="r4" class="ident">err</label> <a href="#line-7" class="ident">utf8Err</a>) {</code></span>
+<span class="codeline" id="line-36"><code>	<span class="comment">// Fast path. Check for and skip 8 bytes of ASCII characters per iteration.</span></code></span>
+<span class="codeline" id="line-37"><code>	<label for="r5" class="ident">offset</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-38"><code>	<span class="keyword">for</span> <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r3" class="ident">p</label>) &gt;= <span class="lit-number">8</span> {</code></span>
+<span class="codeline" id="line-39"><code>		<span class="comment">// Combining two 32 bit loads allows the same code to be used</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">		// for 32 and 64 bit platforms.</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">		// The compiler can generate a 32bit load for first32 and second32</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">		// on many platforms. See test/codegen/memcombine.go.</span></code></span>
+<span class="codeline" id="line-43"><code>		<label for="r6" class="ident">first32</label> := <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">0</span>]) | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">1</span>])&lt;&lt;<span class="lit-number">8</span> | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">2</span>])&lt;&lt;<span class="lit-number">16</span> | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">3</span>])&lt;&lt;<span class="lit-number">24</span></code></span>
+<span class="codeline" id="line-44"><code>		<label for="r7" class="ident">second32</label> := <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">4</span>]) | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">5</span>])&lt;&lt;<span class="lit-number">8</span> | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">6</span>])&lt;&lt;<span class="lit-number">16</span> | <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">p</label>[<span class="lit-number">7</span>])&lt;&lt;<span class="lit-number">24</span></code></span>
+<span class="codeline" id="line-45"><code>		<span class="keyword">if</span> (<label for="r6" class="ident">first32</label>|<label for="r7" class="ident">second32</label>)&amp;<span class="lit-number">0x80808080</span> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-46"><code>			<span class="comment">// Found a non ASCII byte (&gt;= RuneSelf).</span></code></span>
+<span class="codeline" id="line-47"><code>			<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-48"><code>		}</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code>		<span class="keyword">for</span> <label for="r8" class="ident">i</label>, <label for="r9" class="ident">b</label> := <span class="keyword">range</span> <label for="r3" class="ident">p</label>[:<span class="lit-number">8</span>] {</code></span>
+<span class="codeline" id="line-51"><code>			<span class="keyword">if</span> <a href="ascii.go.html#line-40" class="ident">InvalidAscii</a>(<label for="r9" class="ident">b</label>) {</code></span>
+<span class="codeline" id="line-52"><code>				<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r8" class="ident">i</label></code></span>
+<span class="codeline" id="line-53"><code>				<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-54"><code>				<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-55"><code>			}</code></span>
+<span class="codeline" id="line-56"><code>		}</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code>		<label for="r3" class="ident">p</label> = <label for="r3" class="ident">p</label>[<span class="lit-number">8</span>:]</code></span>
+<span class="codeline" id="line-59"><code>		<label for="r5" class="ident">offset</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-60"><code>	}</code></span>
+<span class="codeline" id="line-61"><code>	<label for="r10" class="ident">n</label> := <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r3" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-62"><code>	<span class="keyword">for</span> <label for="r11" class="ident">i</label> := <span class="lit-number">0</span>; <label for="r11" class="ident">i</label> &lt; <label for="r10" class="ident">n</label>; {</code></span>
+<span class="codeline" id="line-63"><code>		<label for="r12" class="ident">pi</label> := <label for="r3" class="ident">p</label>[<label for="r11" class="ident">i</label>]</code></span>
+<span class="codeline" id="line-64"><code>		<span class="keyword">if</span> <label for="r12" class="ident">pi</label> &lt; <a href="../../../../../../../pkg/unicode/utf8.html" class="ident i0">utf8</a>.<a href="../../../../../../unicode/utf8/utf8.go.html#line-17" class="ident">RuneSelf</a> {</code></span>
+<span class="codeline" id="line-65"><code>			<span class="keyword">if</span> <a href="ascii.go.html#line-40" class="ident">InvalidAscii</a>(<label for="r12" class="ident">pi</label>) {</code></span>
+<span class="codeline" id="line-66"><code>				<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-67"><code>				<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-68"><code>				<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-69"><code>			}</code></span>
+<span class="codeline" id="line-70"><code>			<label for="r11" class="ident">i</label>++</code></span>
+<span class="codeline" id="line-71"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-72"><code>		}</code></span>
+<span class="codeline" id="line-73"><code>		<label for="r13" class="ident">x</label> := <a href="#line-160" class="ident">first</a>[<label for="r12" class="ident">pi</label>]</code></span>
+<span class="codeline" id="line-74"><code>		<span class="keyword">if</span> <label for="r13" class="ident">x</label> == <a href="#line-190" class="ident">xx</a> {</code></span>
+<span class="codeline" id="line-75"><code>			<span class="comment">// Illegal starter byte.</span></code></span>
+<span class="codeline" id="line-76"><code>			<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-77"><code>			<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-78"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-79"><code>		}</code></span>
+<span class="codeline" id="line-80"><code>		<label for="r14" class="ident">size</label> := <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r13" class="ident">x</label> &amp; <span class="lit-number">7</span>)</code></span>
+<span class="codeline" id="line-81"><code>		<span class="keyword">if</span> <label for="r11" class="ident">i</label>+<label for="r14" class="ident">size</label> &gt; <label for="r10" class="ident">n</label> {</code></span>
+<span class="codeline" id="line-82"><code>			<span class="comment">// Short or invalid.</span></code></span>
+<span class="codeline" id="line-83"><code>			<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-84"><code>			<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <label for="r10" class="ident">n</label> - <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-85"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-86"><code>		}</code></span>
+<span class="codeline" id="line-87"><code>		<label for="r15" class="ident">accept</label> := <a href="#line-151" class="ident">acceptRanges</a>[<label for="r13" class="ident">x</label>&gt;&gt;<span class="lit-number">4</span>]</code></span>
+<span class="codeline" id="line-88"><code>		<span class="keyword">if</span> <label for="r16" class="ident">c</label> := <label for="r3" class="ident">p</label>[<label for="r11" class="ident">i</label>+<span class="lit-number">1</span>]; <label for="r16" class="ident">c</label> &lt; <label for="r15" class="ident">accept</label>.<a href="#line-146" class="ident">lo</a> || <label for="r15" class="ident">accept</label>.<a href="#line-147" class="ident">hi</a> &lt; <label for="r16" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-89"><code>			<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-90"><code>			<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-91"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-92"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r14" class="ident">size</label> == <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-93"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r17" class="ident">c</label> := <label for="r3" class="ident">p</label>[<label for="r11" class="ident">i</label>+<span class="lit-number">2</span>]; <label for="r17" class="ident">c</label> &lt; <a href="#line-183" class="ident">locb</a> || <a href="#line-184" class="ident">hicb</a> &lt; <label for="r17" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-94"><code>			<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-95"><code>			<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-96"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-97"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r14" class="ident">size</label> == <span class="lit-number">3</span> {</code></span>
+<span class="codeline" id="line-98"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r18" class="ident">c</label> := <label for="r3" class="ident">p</label>[<label for="r11" class="ident">i</label>+<span class="lit-number">3</span>]; <label for="r18" class="ident">c</label> &lt; <a href="#line-183" class="ident">locb</a> || <a href="#line-184" class="ident">hicb</a> &lt; <label for="r18" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-99"><code>			<label for="r4" class="ident">err</label>.<a href="#line-8" class="ident">Index</a> = <label for="r5" class="ident">offset</label> + <label for="r11" class="ident">i</label></code></span>
+<span class="codeline" id="line-100"><code>			<label for="r4" class="ident">err</label>.<a href="#line-9" class="ident">Size</a> = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-101"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-102"><code>		}</code></span>
+<span class="codeline" id="line-103"><code>		<label for="r11" class="ident">i</label> += <label for="r14" class="ident">size</label></code></span>
+<span class="codeline" id="line-104"><code>	}</code></span>
+<span class="codeline" id="line-105"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-106"><code>}</code></span>
+<span class="codeline" id="line-107"><code></code></span>
+<span class="codeline" id="line-108"><code><span class="comment">// Return the size of the next rune if valid, 0 otherwise.</span></code></span>
+<span class="codeline" id="line-109"><code><span class="keyword">func</span> <label for="r19" class="ident"><a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-Utf8ValidNext" class="ident">Utf8ValidNext</a></label>(<label for="r20" class="ident">p</label> []<a href="../../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-110"><code>	<label for="r21" class="ident">c</label> := <label for="r20" class="ident">p</label>[<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code>	<span class="keyword">if</span> <label for="r21" class="ident">c</label> &lt; <a href="../../../../../../../pkg/unicode/utf8.html" class="ident i0">utf8</a>.<a href="../../../../../../unicode/utf8/utf8.go.html#line-17" class="ident">RuneSelf</a> {</code></span>
+<span class="codeline" id="line-113"><code>		<span class="keyword">if</span> <a href="ascii.go.html#line-40" class="ident">InvalidAscii</a>(<label for="r21" class="ident">c</label>) {</code></span>
+<span class="codeline" id="line-114"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-115"><code>		}</code></span>
+<span class="codeline" id="line-116"><code>		<span class="keyword">return</span> <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-117"><code>	}</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code>	<label for="r22" class="ident">x</label> := <a href="#line-160" class="ident">first</a>[<label for="r21" class="ident">c</label>]</code></span>
+<span class="codeline" id="line-120"><code>	<span class="keyword">if</span> <label for="r22" class="ident">x</label> == <a href="#line-190" class="ident">xx</a> {</code></span>
+<span class="codeline" id="line-121"><code>		<span class="comment">// Illegal starter byte.</span></code></span>
+<span class="codeline" id="line-122"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-123"><code>	}</code></span>
+<span class="codeline" id="line-124"><code>	<label for="r23" class="ident">size</label> := <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r22" class="ident">x</label> &amp; <span class="lit-number">7</span>)</code></span>
+<span class="codeline" id="line-125"><code>	<span class="keyword">if</span> <label for="r23" class="ident">size</label> &gt; <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r20" class="ident">p</label>) {</code></span>
+<span class="codeline" id="line-126"><code>		<span class="comment">// Short or invalid.</span></code></span>
+<span class="codeline" id="line-127"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-128"><code>	}</code></span>
+<span class="codeline" id="line-129"><code>	<label for="r24" class="ident">accept</label> := <a href="#line-151" class="ident">acceptRanges</a>[<label for="r22" class="ident">x</label>&gt;&gt;<span class="lit-number">4</span>]</code></span>
+<span class="codeline" id="line-130"><code>	<span class="keyword">if</span> <label for="r25" class="ident">c</label> := <label for="r20" class="ident">p</label>[<span class="lit-number">1</span>]; <label for="r25" class="ident">c</label> &lt; <label for="r24" class="ident">accept</label>.<a href="#line-146" class="ident">lo</a> || <label for="r24" class="ident">accept</label>.<a href="#line-147" class="ident">hi</a> &lt; <label for="r25" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-131"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-132"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r23" class="ident">size</label> == <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-133"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r26" class="ident">c</label> := <label for="r20" class="ident">p</label>[<span class="lit-number">2</span>]; <label for="r26" class="ident">c</label> &lt; <a href="#line-183" class="ident">locb</a> || <a href="#line-184" class="ident">hicb</a> &lt; <label for="r26" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-134"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-135"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r23" class="ident">size</label> == <span class="lit-number">3</span> {</code></span>
+<span class="codeline" id="line-136"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r27" class="ident">c</label> := <label for="r20" class="ident">p</label>[<span class="lit-number">3</span>]; <label for="r27" class="ident">c</label> &lt; <a href="#line-183" class="ident">locb</a> || <a href="#line-184" class="ident">hicb</a> &lt; <label for="r27" class="ident">c</label> {</code></span>
+<span class="codeline" id="line-137"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-138"><code>	}</code></span>
+<span class="codeline" id="line-139"><code></code></span>
+<span class="codeline" id="line-140"><code>	<span class="keyword">return</span> <label for="r23" class="ident">size</label></code></span>
+<span class="codeline" id="line-141"><code>}</code></span>
+<span class="codeline" id="line-142"><code></code></span>
+<span class="codeline" id="line-143"><code><span class="comment">// acceptRange gives the range of valid values for the second byte in a UTF-8</span></code></span>
+<span class="codeline" id="line-144"><code><span class="comment">// sequence.</span></code></span>
+<span class="codeline" id="line-145"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-acceptRange" class="ident">acceptRange</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-146"><code>	lo <a href="../../../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a> <span class="comment">// lowest value for second byte.</span></code></span>
+<span class="codeline" id="line-147"><code>	hi <a href="../../../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a> <span class="comment">// highest value for second byte.</span></code></span>
+<span class="codeline" id="line-148"><code>}</code></span>
+<span class="codeline" id="line-149"><code></code></span>
+<span class="codeline" id="line-150"><code><span class="comment">// acceptRanges has size 16 to avoid bounds checks in the code that uses it.</span></code></span>
+<span class="codeline" id="line-151"><code><span class="keyword">var</span> <a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-acceptRanges" class="ident">acceptRanges</a> = [<span class="lit-number">16</span>]<a href="#line-145" class="ident">acceptRange</a>{</code></span>
+<span class="codeline" id="line-152"><code>	<span class="lit-number">0</span>: {<a href="#line-183" class="ident">locb</a>, <a href="#line-184" class="ident">hicb</a>},</code></span>
+<span class="codeline" id="line-153"><code>	<span class="lit-number">1</span>: {<span class="lit-number">0xA0</span>, <a href="#line-184" class="ident">hicb</a>},</code></span>
+<span class="codeline" id="line-154"><code>	<span class="lit-number">2</span>: {<a href="#line-183" class="ident">locb</a>, <span class="lit-number">0x9F</span>},</code></span>
+<span class="codeline" id="line-155"><code>	<span class="lit-number">3</span>: {<span class="lit-number">0x90</span>, <a href="#line-184" class="ident">hicb</a>},</code></span>
+<span class="codeline" id="line-156"><code>	<span class="lit-number">4</span>: {<a href="#line-183" class="ident">locb</a>, <span class="lit-number">0x8F</span>},</code></span>
+<span class="codeline" id="line-157"><code>}</code></span>
+<span class="codeline" id="line-158"><code></code></span>
+<span class="codeline" id="line-159"><code><span class="comment">// first is information about the first byte in a UTF-8 sequence.</span></code></span>
+<span class="codeline" id="line-160"><code><span class="keyword">var</span> <a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-first" class="ident">first</a> = [<span class="lit-number">256</span>]<a href="../../../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>{</code></span>
+<span class="codeline" id="line-161"><code>	<span class="comment">//   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F</span></code></span>
+<span class="codeline" id="line-162"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x00-0x0F</span></code></span>
+<span class="codeline" id="line-163"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x10-0x1F</span></code></span>
+<span class="codeline" id="line-164"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x20-0x2F</span></code></span>
+<span class="codeline" id="line-165"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x30-0x3F</span></code></span>
+<span class="codeline" id="line-166"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x40-0x4F</span></code></span>
+<span class="codeline" id="line-167"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x50-0x5F</span></code></span>
+<span class="codeline" id="line-168"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x60-0x6F</span></code></span>
+<span class="codeline" id="line-169"><code>	<a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <a href="#line-191" class="ident">as</a>, <span class="comment">// 0x70-0x7F</span></code></span>
+<span class="codeline" id="line-170"><code>	<span class="comment">//   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F</span></code></span>
+<span class="codeline" id="line-171"><code>	<a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <span class="comment">// 0x80-0x8F</span></code></span>
+<span class="codeline" id="line-172"><code>	<a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <span class="comment">// 0x90-0x9F</span></code></span>
+<span class="codeline" id="line-173"><code>	<a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <span class="comment">// 0xA0-0xAF</span></code></span>
+<span class="codeline" id="line-174"><code>	<a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <span class="comment">// 0xB0-0xBF</span></code></span>
+<span class="codeline" id="line-175"><code>	<a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <span class="comment">// 0xC0-0xCF</span></code></span>
+<span class="codeline" id="line-176"><code>	<a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <a href="#line-192" class="ident">s1</a>, <span class="comment">// 0xD0-0xDF</span></code></span>
+<span class="codeline" id="line-177"><code>	<a href="#line-193" class="ident">s2</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-195" class="ident">s4</a>, <a href="#line-194" class="ident">s3</a>, <a href="#line-194" class="ident">s3</a>, <span class="comment">// 0xE0-0xEF</span></code></span>
+<span class="codeline" id="line-178"><code>	<a href="#line-196" class="ident">s5</a>, <a href="#line-197" class="ident">s6</a>, <a href="#line-197" class="ident">s6</a>, <a href="#line-197" class="ident">s6</a>, <a href="#line-198" class="ident">s7</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <a href="#line-190" class="ident">xx</a>, <span class="comment">// 0xF0-0xFF</span></code></span>
+<span class="codeline" id="line-179"><code>}</code></span>
+<span class="codeline" id="line-180"><code></code></span>
+<span class="codeline" id="line-181"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-182"><code>	<span class="comment">// The default lowest and highest continuation byte.</span></code></span>
+<span class="codeline" id="line-183"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-locb" class="ident">locb</a> = <span class="lit-number">0b10000000</span></code></span>
+<span class="codeline" id="line-184"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-hicb" class="ident">hicb</a> = <span class="lit-number">0b10111111</span></code></span>
+<span class="codeline" id="line-185"><code></code></span>
+<span class="codeline" id="line-186"><code>	<span class="comment">// These names of these constants are chosen to give nice alignment in the</span></code></span>
+<span class="codeline" id="line-187"><code><span class="comment">	// table below. The first nibble is an index into acceptRanges or F for</span></code></span>
+<span class="codeline" id="line-188"><code><span class="comment">	// special one-byte cases. The second nibble is the Rune length or the</span></code></span>
+<span class="codeline" id="line-189"><code><span class="comment">	// Status for the special one-byte case.</span></code></span>
+<span class="codeline" id="line-190"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-xx" class="ident">xx</a> = <span class="lit-number">0xF1</span> <span class="comment">// invalid: size 1</span></code></span>
+<span class="codeline" id="line-191"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-as" class="ident">as</a> = <span class="lit-number">0xF0</span> <span class="comment">// ASCII: size 1</span></code></span>
+<span class="codeline" id="line-192"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s1" class="ident">s1</a> = <span class="lit-number">0x02</span> <span class="comment">// accept 0, size 2</span></code></span>
+<span class="codeline" id="line-193"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s2" class="ident">s2</a> = <span class="lit-number">0x13</span> <span class="comment">// accept 1, size 3</span></code></span>
+<span class="codeline" id="line-194"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s3" class="ident">s3</a> = <span class="lit-number">0x03</span> <span class="comment">// accept 0, size 3</span></code></span>
+<span class="codeline" id="line-195"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s4" class="ident">s4</a> = <span class="lit-number">0x23</span> <span class="comment">// accept 2, size 3</span></code></span>
+<span class="codeline" id="line-196"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s5" class="ident">s5</a> = <span class="lit-number">0x34</span> <span class="comment">// accept 3, size 4</span></code></span>
+<span class="codeline" id="line-197"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s6" class="ident">s6</a> = <span class="lit-number">0x04</span> <span class="comment">// accept 0, size 4</span></code></span>
+<span class="codeline" id="line-198"><code>	<a href="../../../../../../../pkg/github.com/pelletier/go-toml/v2/internal/characters.html#name-s7" class="ident">s7</a> = <span class="lit-number">0x44</span> <span class="comment">// accept 4, size 4</span></code></span>
+<span class="codeline" id="line-199"><code>)</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

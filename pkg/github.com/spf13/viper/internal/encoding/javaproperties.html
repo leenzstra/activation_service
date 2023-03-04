@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/spf13/viper/internal/encoding/javaproperties</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>javaproperties</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/spf13/viper/internal/encoding/javaproperties">github.com/spf13/viper/internal/encoding/javaproperties</a><i> (on <a href="https://pkg.go.dev/github.com/spf13/viper/internal/encoding/javaproperties" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/spf13/viper/internal/encoding/javaproperties.html">5 packages</a>, and imported by <a href="../../../../../../dep/github.com/spf13/viper/internal/encoding/javaproperties.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html">codec.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/map_utils.go.html">map_utils.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Codec" data-popularity="250">	<input type='checkbox' class="fold" id="Codec-fold-content"><label for="Codec-fold-content"> type <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-13">Codec</a> <i>(struct)</i></label><span id='Codec-fold-content-docs' class="fold-docs">
+<span class="md-text">		Codec implements the encoding.Encoder and encoding.Decoder interfaces for Java properties encoding.</span>
+
+		<input type='checkbox' class="fold" id="Codec-fold-fields"><label for="Codec-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='Codec-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-14">KeyDelimiter</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="Codec-fold-field-Properties"><label for="Codec-fold-field-Properties"><a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-20">Properties</a> <i>*<a href="../../../../magiconair/properties.html">properties</a>.<a href="../../../../magiconair/properties.html#name-Properties">Properties</a></i></label><span id='Codec-fold-field-Properties-docs' class="fold-docs">
+<span class="md-text">				Store read properties on the object so that we can write back in order with comments.
+				This will only be used if the configuration read is a properties file.
+				TODO: drop this feature in v2
+				TODO: make use of the global properties object optional</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Codec-fold-methods"><label for="Codec-fold-methods">Methods (<i>total 3, in which 2 are exported</i>)</label><span id='Codec-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*Codec) <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-57">Decode</a>(b []<a href="../../../../../builtin.html#name-byte">byte</a>, v map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}) <a href="../../../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*Codec) <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-23">Encode</a>(v map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}) ([]<a href="../../../../../builtin.html#name-byte">byte</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></span>
+			<input type='checkbox' class="showhide" id="Codec-showhide-methods"><i><label for="Codec-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="Codec-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( Codec) <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/codec.go.html#line-80">keyDelimiter</a>() <a href="../../../../../builtin.html#name-string">string</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="Codec-fold-impls"><label for="Codec-fold-impls">Implements (<i>at least 2, both are exported</i>)</label><span id='Codec-fold-impls-items' class="fold-items"><span>
+			*Codec : github.com/spf13/viper/internal/encoding.<a href="../encoding.html#name-Decoder">Decoder</a></span><span>
+			*Codec : github.com/spf13/viper/internal/encoding.<a href="../encoding.html#name-Encoder">Encoder</a></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 2, neither is exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-deepSearch"><i>	<input type='checkbox' class="fold" id="deepSearch-fold-content"><label for="deepSearch-fold-content"> func <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/map_utils.go.html#line-18">deepSearch</a>(m map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}, path []<a href="../../../../../builtin.html#name-string">string</a>) map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}</label><span id='deepSearch-fold-content-docs' class="fold-docs">
+<span class="md-text">		THIS CODE IS COPIED HERE: IT SHOULD NOT BE MODIFIED
+		AT SOME POINT IT WILL BE MOVED TO A COMMON PLACE
+		deepSearch scans deep maps, following the key indexes listed in the
+		sequence "path".
+		The last value is expected to be another map, and is returned.
+		
+		In case intermediate keys do not exist, or map to a non-map value,
+		a new map is created and inserted, and the search continues from there:
+		the initial map "m" may be modified!</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-flattenAndMergeMap"><i>	<input type='checkbox' class="fold" id="flattenAndMergeMap-fold-content"><label for="flattenAndMergeMap-fold-content"> func <a href="../../../../../../src/github.com/spf13/viper/internal/encoding/javaproperties/map_utils.go.html#line-45">flattenAndMergeMap</a>(shadow map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}, m map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}, prefix <a href="../../../../../builtin.html#name-string">string</a>, delimiter <a href="../../../../../builtin.html#name-string">string</a>) map[<a href="../../../../../builtin.html#name-string">string</a>]interface{}</label><span id='flattenAndMergeMap-fold-content-docs' class="fold-docs">
+<span class="md-text">		flattenAndMergeMap recursively flattens the given map into a new map
+		Code is based on the function with the same name in tha main package.
+		TODO: move it to a common place</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

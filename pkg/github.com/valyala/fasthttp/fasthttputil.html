@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/valyala/fasthttp/fasthttputil</title>
+<link href="../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>fasthttputil</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/valyala/fasthttp/fasthttputil">github.com/valyala/fasthttp/fasthttputil</a><i> (on <a href="https://pkg.go.dev/github.com/valyala/fasthttp/fasthttputil" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/valyala/fasthttp/fasthttputil.html">5 packages</a>, and imported by <a href="../../../../dep/github.com/valyala/fasthttp/fasthttputil.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">   <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/doc.go.html#doc">#d</a> <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/doc.go.html">doc.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package fasthttputil provides utility functions for fasthttp.</span>
+</span>
+	<span class="nodocs">      <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html">inmemory_listener.go</a></span>
+	<span class="nodocs">      <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html">pipeconns.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 8, in which 2 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-InmemoryListener" data-popularity="475">	<input type='checkbox' class="fold" id="InmemoryListener-fold-content"><label for="InmemoryListener-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-16">InmemoryListener</a> <i>(struct)</i></label><span id='InmemoryListener-fold-content-docs' class="fold-docs">
+<span class="md-text">		InmemoryListener provides in-memory dialer&lt;-&gt;net.Listener implementation.
+		
+		It may be used either for fast in-process client&lt;-&gt;server communications
+		without network stack overhead or for client&lt;-&gt;server tests.</span>
+
+		<input type='checkbox' class="fold" id="InmemoryListener-fold-fields"><label for="InmemoryListener-fold-fields">Fields (<i>total 5, none are exported</i>)</label><span id='InmemoryListener-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="InmemoryListener-showhide-fields"><i><label for="InmemoryListener-showhide-fields" class="show-inline">/* 5 unexporteds ... */</label><label for="InmemoryListener-showhide-fields" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-21">addrLock</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-RWMutex">RWMutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-18">closed</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-19">conns</a> <i>chan <a href="#name-acceptConn">acceptConn</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-20">listenerAddr</a> <i><a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-17">lock</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Mutex">Mutex</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="InmemoryListener-fold-methods"><label for="InmemoryListener-fold-methods">Methods (<i>total 6, all are exported</i>)</label><span id='InmemoryListener-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-Accept"><label for="InmemoryListener-fold-method-Accept">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-49">Accept</a>() (<a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='InmemoryListener-fold-method-Accept-docs' class="fold-docs">
+<span class="md-text">				Accept implements net.Listener's Accept.
+				
+				It is safe calling Accept from concurrently running goroutines.
+				
+				Accept returns new connection per each Dial call.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-Addr"><label for="InmemoryListener-fold-method-Addr">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-84">Addr</a>() <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></label><span id='InmemoryListener-fold-method-Addr-docs' class="fold-docs">
+<span class="md-text">				Addr implements net.Listener's Addr.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-Close"><label for="InmemoryListener-fold-method-Close">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-59">Close</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='InmemoryListener-fold-method-Close-docs' class="fold-docs">
+<span class="md-text">				Close implements net.Listener's Close.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-Dial"><label for="InmemoryListener-fold-method-Dial">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-100">Dial</a>() (<a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='InmemoryListener-fold-method-Dial-docs' class="fold-docs">
+<span class="md-text">				Dial creates new client&lt;-&gt;server connection.
+				Just like a real Dial it only returns once the server
+				has accepted the connection.
+				
+				It is safe calling Dial from concurrently running goroutines.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-DialWithLocalAddr"><label for="InmemoryListener-fold-method-DialWithLocalAddr">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-110">DialWithLocalAddr</a>(local <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a>) (<a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='InmemoryListener-fold-method-DialWithLocalAddr-docs' class="fold-docs">
+<span class="md-text">				DialWithLocalAddr creates new client&lt;-&gt;server connection.
+				Just like a real Dial it only returns once the server
+				has accepted the connection. The local address of the
+				client connection can be set with local.
+				
+				It is safe calling Dial from concurrently running goroutines.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InmemoryListener-fold-method-SetLocalAddr"><label for="InmemoryListener-fold-method-SetLocalAddr">(*InmemoryListener) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-37">SetLocalAddr</a>(localAddr <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a>)</label><span id='InmemoryListener-fold-method-SetLocalAddr-docs' class="fold-docs">
+<span class="md-text">				SetLocalAddr sets the (simulated) local address for the listener.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="InmemoryListener-fold-impls"><label for="InmemoryListener-fold-impls">Implements (<i>at least 2, both are exported</i>)</label><span id='InmemoryListener-fold-impls-items' class="fold-items"><span>
+			*InmemoryListener : io.<a href="../../../io.html#name-Closer">Closer</a></span><span>
+			*InmemoryListener : net.<a href="../../../net.html#name-Listener">Listener</a></span></span>
+		<input type='checkbox' class="fold" id="InmemoryListener-fold-results"><label for="InmemoryListener-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='InmemoryListener-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewInmemoryListener">NewInmemoryListener</a>() *<b>InmemoryListener</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-PipeConns" data-popularity="325">	<input type='checkbox' class="fold" id="PipeConns-fold-content"><label for="PipeConns-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-44">PipeConns</a> <i>(struct)</i></label><span id='PipeConns-fold-content-docs' class="fold-docs">
+<span class="md-text">		PipeConns provides bi-directional connection pipe,
+		which use in-process memory as a transport.
+		
+		PipeConns must be created by calling NewPipeConns.
+		
+		PipeConns has the following additional features comparing to connections
+		returned from net.Pipe():
+		
+		  - It is faster.
+		  - It buffers Write calls, so there is no need to have concurrent goroutine
+		    calling Read in order to unblock each Write call.
+		  - It supports read and write deadlines.
+		
+		PipeConns is NOT safe for concurrent use by multiple goroutines!</span>
+
+		<input type='checkbox' class="fold" id="PipeConns-fold-fields"><label for="PipeConns-fold-fields">Fields (<i>total 4, none are exported</i>)</label><span id='PipeConns-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="PipeConns-showhide-fields"><i><label for="PipeConns-showhide-fields" class="show-inline">/* 4 unexporteds ... */</label><label for="PipeConns-showhide-fields" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-45">c1</a> <i><a href="#name-pipeConn">pipeConn</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-46">c2</a> <i><a href="#name-pipeConn">pipeConn</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-47">stopCh</a> <i>chan struct{}</i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-48">stopChLock</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Mutex">Mutex</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="PipeConns-fold-methods"><label for="PipeConns-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='PipeConns-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="PipeConns-fold-method-Close"><label for="PipeConns-fold-method-Close">(*PipeConns) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-83">Close</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='PipeConns-fold-method-Close-docs' class="fold-docs">
+<span class="md-text">				Close closes pipe connections.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PipeConns-fold-method-Conn1"><label for="PipeConns-fold-method-Conn1">(*PipeConns) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-70">Conn1</a>() <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a></label><span id='PipeConns-fold-method-Conn1-docs' class="fold-docs">
+<span class="md-text">				Conn1 returns the first end of bi-directional pipe.
+				
+				Data written to Conn1 may be read from Conn2.
+				Data written to Conn2 may be read from Conn1.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PipeConns-fold-method-Conn2"><label for="PipeConns-fold-method-Conn2">(*PipeConns) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-78">Conn2</a>() <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a></label><span id='PipeConns-fold-method-Conn2-docs' class="fold-docs">
+<span class="md-text">				Conn2 returns the second end of bi-directional pipe.
+				
+				Data written to Conn2 may be read from Conn1.
+				Data written to Conn1 may be read from Conn2.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PipeConns-fold-method-SetAddresses"><label for="PipeConns-fold-method-SetAddresses">(*PipeConns) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-52">SetAddresses</a>(localAddr1, remoteAddr1, localAddr2, remoteAddr2 <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a>)</label><span id='PipeConns-fold-method-SetAddresses-docs' class="fold-docs">
+<span class="md-text">				SetAddresses sets the local and remote addresses for the connection.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="PipeConns-fold-impls"><label for="PipeConns-fold-impls">Implements (<i>at least one exported</i>)</label><span id='PipeConns-fold-impls-items' class="fold-items"><span>
+			*PipeConns : io.<a href="../../../io.html#name-Closer">Closer</a></span></span>
+		<input type='checkbox' class="fold" id="PipeConns-fold-results"><label for="PipeConns-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='PipeConns-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewPipeConns">NewPipeConns</a>() *<b>PipeConns</b></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 6 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 6 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-acceptConn" data-popularity="0">	<input type='checkbox' class="fold" id="acceptConn-fold-content"><label for="acceptConn-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-24">acceptConn</a> <i>(struct)</i></label><span id='acceptConn-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="acceptConn-fold-fields"><label for="acceptConn-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='acceptConn-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="acceptConn-showhide-fields"><i><label for="acceptConn-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="acceptConn-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-26">accepted</a> <i>chan struct{}</i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-25">conn</a> <i><a href="../../../net.html">net</a>.<a href="../../../net.html#name-Conn">Conn</a></i></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-byteBuffer" data-popularity="110">	<input type='checkbox' class="fold" id="byteBuffer-fold-content"><label for="byteBuffer-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-326">byteBuffer</a> <i>(struct)</i></label><span id='byteBuffer-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="byteBuffer-fold-fields"><label for="byteBuffer-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='byteBuffer-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="byteBuffer-showhide-fields"><i><label for="byteBuffer-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="byteBuffer-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-327">b</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="byteBuffer-fold-results"><label for="byteBuffer-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='byteBuffer-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="byteBuffer-showhide-inputofs"><i><label for="byteBuffer-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="byteBuffer-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-acquireByteBuffer">acquireByteBuffer</a>() *<b>byteBuffer</b></i></span></span>
+		<input type='checkbox' class="fold" id="byteBuffer-fold-params"><label for="byteBuffer-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='byteBuffer-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="byteBuffer-showhide-outputofs"><i><label for="byteBuffer-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="byteBuffer-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-releaseByteBuffer">releaseByteBuffer</a>(b *<b>byteBuffer</b>)</i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-inmemoryAddr" data-popularity="300">	<input type='checkbox' class="fold" id="inmemoryAddr-fold-content"><label for="inmemoryAddr-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-73">inmemoryAddr</a> <a href="../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='inmemoryAddr-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="inmemoryAddr-fold-methods"><label for="inmemoryAddr-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='inmemoryAddr-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( inmemoryAddr) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-75">Network</a>() <a href="../../../builtin.html#name-string">string</a></span></span><span>
+			<span class="nodocs">( inmemoryAddr) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-79">String</a>() <a href="../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="inmemoryAddr-fold-impls"><label for="inmemoryAddr-fold-impls">Implements (<i>at least 4, in which 2 are exported</i>)</label><span id='inmemoryAddr-fold-impls-items' class="fold-items"><span>
+			 inmemoryAddr : fmt.<a href="../../../fmt.html#name-Stringer">Stringer</a></span><span>
+			 inmemoryAddr : net.<a href="../../../net.html#name-Addr">Addr</a></span>
+			<input type='checkbox' checked class="showhide" id="inmemoryAddr-showhide-impls"><i><label for="inmemoryAddr-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="inmemoryAddr-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			 inmemoryAddr : context.<a href="../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 inmemoryAddr : runtime.<a href="../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-pipeAddr" data-popularity="300">	<input type='checkbox' class="fold" id="pipeAddr-fold-content"><label for="pipeAddr-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-316">pipeAddr</a> <a href="../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='pipeAddr-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="pipeAddr-fold-methods"><label for="pipeAddr-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='pipeAddr-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( pipeAddr) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-318">Network</a>() <a href="../../../builtin.html#name-string">string</a></span></span><span>
+			<span class="nodocs">( pipeAddr) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-322">String</a>() <a href="../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="pipeAddr-fold-impls"><label for="pipeAddr-fold-impls">Implements (<i>at least 4, in which 2 are exported</i>)</label><span id='pipeAddr-fold-impls-items' class="fold-items"><span>
+			 pipeAddr : fmt.<a href="../../../fmt.html#name-Stringer">Stringer</a></span><span>
+			 pipeAddr : net.<a href="../../../net.html#name-Addr">Addr</a></span>
+			<input type='checkbox' checked class="showhide" id="pipeAddr-showhide-impls"><i><label for="pipeAddr-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="pipeAddr-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			 pipeAddr : context.<a href="../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 pipeAddr : runtime.<a href="../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-pipeConn" data-popularity="950">	<input type='checkbox' class="fold" id="pipeConn-fold-content"><label for="pipeConn-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-95">pipeConn</a> <i>(struct)</i></label><span id='pipeConn-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="pipeConn-fold-fields"><label for="pipeConn-fold-fields">Fields (<i>total 13, none are exported</i>)</label><span id='pipeConn-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="pipeConn-showhide-fields"><i><label for="pipeConn-showhide-fields" class="show-inline">/* 13 unexporteds ... */</label><label for="pipeConn-showhide-fields" class="hide-inline">/* 13 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-113">addrLock</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-RWMutex">RWMutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-96">b</a> <i>*<a href="#name-byteBuffer">byteBuffer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-97">bb</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-111">localAddr</a> <i><a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-101">pc</a> <i>*<a href="#name-PipeConns">PipeConns</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-99">rCh</a> <i>chan *<a href="#name-byteBuffer">byteBuffer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-106">readDeadlineCh</a> <i>&lt;-chan <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-109">readDeadlineChLock</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-103">readDeadlineTimer</a> <i>*<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Timer">Timer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-112">remoteAddr</a> <i><a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-100">wCh</a> <i>chan *<a href="#name-byteBuffer">byteBuffer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-107">writeDeadlineCh</a> <i>&lt;-chan <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-104">writeDeadlineTimer</a> <i>*<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Timer">Timer</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="pipeConn-fold-methods"><label for="pipeConn-fold-methods">Methods (<i>total 10, in which 8 are exported</i>)</label><span id='pipeConn-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-241">Close</a>() <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-245">LocalAddr</a>() <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-144">Read</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-256">RemoteAddr</a>() <a href="../../../net.html">net</a>.<a href="../../../net.html#name-Addr">Addr</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-267">SetDeadline</a>(deadline <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a>) <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-273">SetReadDeadline</a>(deadline <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a>) <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-284">SetWriteDeadline</a>(deadline <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a>) <a href="../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-116">Write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span>
+			<input type='checkbox' checked class="showhide" id="pipeConn-showhide-methods"><i><label for="pipeConn-showhide-methods" class="show-inline">/* 2 unexporteds ... */</label><label for="pipeConn-showhide-methods" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-163">read</a>(p []<a href="../../../builtin.html#name-byte">byte</a>, mayBlock <a href="../../../builtin.html#name-bool">bool</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*pipeConn) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-175">readNextByteBuffer</a>(mayBlock <a href="../../../builtin.html#name-bool">bool</a>) <a href="../../../builtin.html#name-error">error</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="pipeConn-fold-impls"><label for="pipeConn-fold-impls">Implements (<i>at least 9, in which 8 are exported</i>)</label><span id='pipeConn-fold-impls-items' class="fold-items"><span>
+			*pipeConn : io.<a href="../../../io.html#name-Closer">Closer</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-ReadCloser">ReadCloser</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-Reader">Reader</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-ReadWriteCloser">ReadWriteCloser</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-ReadWriter">ReadWriter</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-WriteCloser">WriteCloser</a></span><span>
+			*pipeConn : io.<a href="../../../io.html#name-Writer">Writer</a></span><span>
+			*pipeConn : net.<a href="../../../net.html#name-Conn">Conn</a></span>
+			<input type='checkbox' checked class="showhide" id="pipeConn-showhide-impls"><i><label for="pipeConn-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="pipeConn-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			*pipeConn : crypto/tls.<a href="../../../crypto/tls.html#name-transcriptHash">transcriptHash</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-timeoutError" data-popularity="255">	<input type='checkbox' class="fold" id="timeoutError-fold-content"><label for="timeoutError-fold-content"> type <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-221">timeoutError</a> <i>(struct)</i></label><span id='timeoutError-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="timeoutError-fold-methods"><label for="timeoutError-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='timeoutError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*timeoutError) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-224">Error</a>() <a href="../../../builtin.html#name-string">string</a></span></span><span>
+			<input type='checkbox' class="fold" id="timeoutError-fold-method-Timeout"><label for="timeoutError-fold-method-Timeout">(*timeoutError) <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-232">Timeout</a>() <a href="../../../builtin.html#name-bool">bool</a></label><span id='timeoutError-fold-method-Timeout-docs' class="fold-docs">
+<span class="md-text">				Only implement the Timeout() function of the net.Error interface.
+				This allows for checks like:
+				
+					if x, ok := err.(interface{ Timeout() bool }); ok &amp;&amp; x.Timeout() {</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="timeoutError-fold-impls"><label for="timeoutError-fold-impls">Implements (<i>at least 3, in which 1 is exported</i>)</label><span id='timeoutError-fold-impls-items' class="fold-items"><span>
+			*timeoutError : <a href="../../../builtin.html#name-error">error</a></span>
+			<input type='checkbox' checked class="showhide" id="timeoutError-showhide-impls"><i><label for="timeoutError-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="timeoutError-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			*timeoutError : net.<a href="../../../net.html#name-timeout">timeout</a></i></span><span class="hidden"><i>
+			*timeoutError : os.<a href="../../../os.html#name-timeout">timeout</a></i></span></span>
+		<input type='checkbox' class="fold" id="timeoutError-fold-values"><label for="timeoutError-fold-values">As Types Of (<i>only one, which is exported</i>)</label><span id='timeoutError-fold-values-items' class="fold-items"><span>
+			  var <a href="#name-ErrTimeout">ErrTimeout</a> *timeoutError</span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 5, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewInmemoryListener">	<input type='checkbox' class="fold" id="NewInmemoryListener-fold-content"><label for="NewInmemoryListener-fold-content"> func <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-30">NewInmemoryListener</a>() *<a href="#name-InmemoryListener">InmemoryListener</a></label><span id='NewInmemoryListener-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewInmemoryListener returns new in-memory dialer&lt;-&gt;net.Listener.</span>
+
+</span></div><div class="anchor value-res" id="name-NewPipeConns">	<input type='checkbox' class="fold" id="NewPipeConns-fold-content"><label for="NewPipeConns-fold-content"> func <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-14">NewPipeConns</a>() *<a href="#name-PipeConns">PipeConns</a></label><span id='NewPipeConns-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewPipeConns returns new bi-directional connection pipe.
+		
+		PipeConns is NOT safe for concurrent use by multiple goroutines!</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-acquireByteBuffer"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-330">acquireByteBuffer</a>() *<a href="#name-byteBuffer">byteBuffer</a></span></i></div><div class="anchor value-res hidden" id="name-releaseByteBuffer"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-334">releaseByteBuffer</a>(b *<a href="#name-byteBuffer">byteBuffer</a>)</span></i></div><div class="anchor value-res hidden" id="name-updateTimer"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-292">updateTimer</a>(t *<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Timer">Timer</a>, deadline <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a>) &lt;-chan <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a></span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 6, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ErrInmemoryListenerClosed">	<input type='checkbox' class="fold" id="ErrInmemoryListenerClosed-fold-content"><label for="ErrInmemoryListenerClosed-fold-content">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/inmemory_listener.go.html#line-10">ErrInmemoryListenerClosed</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrInmemoryListenerClosed-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInmemoryListenerClosed indicates that the InmemoryListener is already closed.</span>
+
+</span></div><div class="anchor value-res" id="name-ErrTimeout">	<input type='checkbox' class="fold" id="ErrTimeout-fold-content"><label for="ErrTimeout-fold-content">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-238">ErrTimeout</a> *<a href="#name-timeoutError">timeoutError</a></label><span id='ErrTimeout-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrTimeout is returned from Read() or Write() on timeout.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-byteBufferPool"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-340">byteBufferPool</a> *<a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Pool">Pool</a></span></i></div><div class="anchor value-res hidden" id="name-closedDeadlineCh"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-310">closedDeadlineCh</a> &lt;-chan <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Time">Time</a></span></i></div><div class="anchor value-res hidden" id="name-errConnectionClosed"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-218">errConnectionClosed</a> <a href="../../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-errWouldBlock"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/valyala/fasthttp/fasthttputil/pipeconns.go.html#line-217">errWouldBlock</a> <a href="../../../builtin.html#name-error">error</a></span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: godebug.go in package internal/godebug</title>
+<link href="../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	godebug.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/internal/godebug.html">internal/godebug</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2021 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-5"><code><span class="comment">// Package godebug makes the settings in the $GODEBUG environment variable</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// available to other packages. These settings are often used for compatibility</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// tweaks, when we need to change a default behavior but want to let users</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// opt back in to the original. For example GODEBUG=http2server=0 disables</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// HTTP/2 support in the net/http server.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// In typical usage, code should declare a Setting as a global</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// and then call Value each time the current setting value is needed:</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">//	var http2server = godebug.New("http2server")</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">//	func ServeConn(c net.Conn) {</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">//		if http2server.Value() == "0" {</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">//			disallow HTTP/2</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">//			...</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">//		}</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">//		...</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">//	}</span></code></span></div><span class="codeline" id="line-23"><code><span class="keyword">package</span> godebug</code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-26"><code>	<label for="i0"><span class="lit-string i0">"sync"</span></label></code></span>
+<span class="codeline" id="line-27"><code>	<label for="i1"><span class="lit-string i1">"sync/atomic"</span></label></code></span>
+<span class="codeline" id="line-28"><code>	<a href="../../../pkg/unsafe.html" class="ident i2">_</a> <label for="i2"><span class="lit-string i2">"unsafe"</span></label> <span class="comment">// go:linkname</span></code></span>
+<span class="codeline" id="line-29"><code>)</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// A Setting is a single setting in the $GODEBUG environment variable.</span></code></span>
+<span class="codeline" id="line-32"><code><span class="keyword">type</span> <a href="../../../pkg/internal/godebug.html#name-Setting" class="ident">Setting</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-33"><code>	name  <a href="../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-34"><code>	once  <a href="../../../pkg/sync.html" class="ident i0">sync</a>.<a href="../../sync/once.go.html#line-18" class="ident">Once</a></code></span>
+<span class="codeline" id="line-35"><code>	value *<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>]</code></span>
+<span class="codeline" id="line-36"><code>}</code></span>
+<span class="codeline" id="line-37"><code></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">// New returns a new Setting for the $GODEBUG setting with the given name.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../pkg/internal/godebug.html#name-New" class="ident">New</a></label>(<label for="r1" class="ident">name</label> <a href="../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="#line-32" class="ident">Setting</a> {</code></span>
+<span class="codeline" id="line-40"><code>	<span class="keyword">return</span> &amp;<a href="#line-32" class="ident">Setting</a>{<a href="#line-33" class="ident">name</a>: <label for="r1" class="ident">name</label>}</code></span>
+<span class="codeline" id="line-41"><code>}</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// Name returns the name of the setting.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="keyword">func</span> (<label for="r2" class="ident">s</label> *<a href="#line-32" class="ident">Setting</a>) <label for="r3" class="ident">Name</label>() <a href="../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-45"><code>	<span class="keyword">return</span> <label for="r2" class="ident">s</label>.<a href="#line-33" class="ident">name</a></code></span>
+<span class="codeline" id="line-46"><code>}</code></span>
+<span class="codeline" id="line-47"><code></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// String returns a printable form for the setting: name=value.</span></code></span>
+<span class="codeline" id="line-49"><code><span class="keyword">func</span> (<label for="r4" class="ident">s</label> *<a href="#line-32" class="ident">Setting</a>) <label for="r5" class="ident"><a href="../../../imp/internal/godebug.Setting.html#name-.String" class="ident">String</a></label>() <a href="../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-50"><code>	<span class="keyword">return</span> <label for="r4" class="ident">s</label>.<a href="#line-33" class="ident">name</a> + <span class="lit-string">"="</span> + <label for="r4" class="ident">s</label>.<a href="#line-77" class="ident">Value</a>()</code></span>
+<span class="codeline" id="line-51"><code>}</code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">// cache is a cache of all the GODEBUG settings,</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">// a locked map[string]*atomic.Pointer[string].</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">// All Settings with the same name share a single</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">// *atomic.Pointer[string], so that when GODEBUG</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// changes only that single atomic string pointer</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">// needs to be updated.</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">// A name appears in the values map either if it is the</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">// name of a Setting for which Value has been called</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">// at least once, or if the name has ever appeared in</span></code></span>
+<span class="codeline" id="line-64"><code><span class="comment">// a name=value pair in the $GODEBUG environment variable.</span></code></span>
+<span class="codeline" id="line-65"><code><span class="comment">// Once entered into the map, the name is never removed.</span></code></span>
+<span class="codeline" id="line-66"><code><span class="keyword">var</span> <a href="../../../pkg/internal/godebug.html#name-cache" class="ident">cache</a> <a href="../../../pkg/sync.html" class="ident i0">sync</a>.<a href="../../sync/map.go.html#line-35" class="ident">Map</a> <span class="comment">// name string -&gt; value *atomic.Pointer[string]</span></code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code><span class="keyword">var</span> <a href="../../../pkg/internal/godebug.html#name-empty" class="ident">empty</a> <a href="../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-69"><code></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">// Value returns the current value for the GODEBUG setting s.</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">// Value maintains an internal cache that is synchronized</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">// with changes to the $GODEBUG environment variable,</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// making Value efficient to call as frequently as needed.</span></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">// Clients should therefore typically not attempt their own</span></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">// caching of Value's result.</span></code></span>
+<span class="codeline" id="line-77"><code><span class="keyword">func</span> (<label for="r6" class="ident">s</label> *<a href="#line-32" class="ident">Setting</a>) <label for="r7" class="ident">Value</label>() <a href="../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-78"><code>	<label for="r6" class="ident">s</label>.<a href="#line-34" class="ident">once</a>.<a href="../../sync/once.go.html#line-48" class="ident">Do</a>(<span class="keyword">func</span>() {</code></span>
+<span class="codeline" id="line-79"><code>		<label for="r8" class="ident">v</label>, <label for="r9" class="ident">ok</label> := <a href="#line-66" class="ident">cache</a>.<a href="../../sync/map.go.html#line-120" class="ident">Load</a>(<label for="r6" class="ident">s</label>.<a href="#line-33" class="ident">name</a>)</code></span>
+<span class="codeline" id="line-80"><code>		<span class="keyword">if</span> !<label for="r9" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-81"><code>			<label for="r10" class="ident">p</label> := <a href="../../../pkg/builtin.html#name-new" class="ident">new</a>(<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>])</code></span>
+<span class="codeline" id="line-82"><code>			<label for="r10" class="ident">p</label>.<a href="../../sync/atomic/type.go.html#line-57" class="ident">Store</a>(&amp;<a href="#line-68" class="ident">empty</a>)</code></span>
+<span class="codeline" id="line-83"><code>			<label for="r8" class="ident">v</label>, _ = <a href="#line-66" class="ident">cache</a>.<a href="../../sync/map.go.html#line-203" class="ident">LoadOrStore</a>(<label for="r6" class="ident">s</label>.<a href="#line-33" class="ident">name</a>, <label for="r10" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-84"><code>		}</code></span>
+<span class="codeline" id="line-85"><code>		<label for="r6" class="ident">s</label>.<a href="#line-35" class="ident">value</a> = <label for="r8" class="ident">v</label>.(*<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>])</code></span>
+<span class="codeline" id="line-86"><code>	})</code></span>
+<span class="codeline" id="line-87"><code>	<span class="keyword">return</span> *<label for="r6" class="ident">s</label>.<a href="#line-35" class="ident">value</a>.<a href="../../sync/atomic/type.go.html#line-54" class="ident">Load</a>()</code></span>
+<span class="codeline" id="line-88"><code>}</code></span>
+<span class="codeline" id="line-89"><code></code></span>
+<span class="codeline" id="line-90"><code><span class="comment">// setUpdate is provided by package runtime.</span></code></span>
+<span class="codeline" id="line-91"><code><span class="comment">// It calls update(def, env), where def is the default GODEBUG setting</span></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// and env is the current value of the $GODEBUG environment variable.</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// After that first call, the runtime calls update(def, env)</span></code></span>
+<span class="codeline" id="line-94"><code><span class="comment">// again each time the environment variable changes</span></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">// (due to use of os.Setenv, for example).</span></code></span>
+<span class="codeline" id="line-96"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">//go:linkname setUpdate</span></code></span>
+<span class="codeline" id="line-98"><code><span class="keyword">func</span> <label for="r11" class="ident"><a href="../../../pkg/internal/godebug.html#name-setUpdate" class="ident">setUpdate</a></label>(<label for="r12" class="ident">update</label> <span class="keyword">func</span>(<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../pkg/builtin.html#name-string" class="ident">string</a>))</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code><span class="keyword">func</span> <label for="r13" class="ident"><a href="../../../pkg/internal/godebug.html#name-init" class="ident">init</a></label>() {</code></span>
+<span class="codeline" id="line-101"><code>	<a href="#line-98" class="ident">setUpdate</a>(<a href="#line-109" class="ident">update</a>)</code></span>
+<span class="codeline" id="line-102"><code>}</code></span>
+<span class="codeline" id="line-103"><code></code></span>
+<span class="codeline" id="line-104"><code><span class="keyword">var</span> <a href="../../../pkg/internal/godebug.html#name-updateMu" class="ident">updateMu</a> <a href="../../../pkg/sync.html" class="ident i0">sync</a>.<a href="../../sync/mutex.go.html#line-34" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-105"><code></code></span>
+<span class="codeline" id="line-106"><code><span class="comment">// update records an updated GODEBUG setting.</span></code></span>
+<span class="codeline" id="line-107"><code><span class="comment">// def is the default GODEBUG setting for the running binary,</span></code></span>
+<span class="codeline" id="line-108"><code><span class="comment">// and env is the current value of the $GODEBUG environment variable.</span></code></span>
+<span class="codeline" id="line-109"><code><span class="keyword">func</span> <label for="r14" class="ident"><a href="../../../pkg/internal/godebug.html#name-update" class="ident">update</a></label>(<label for="r15" class="ident">def</label>, <label for="r16" class="ident">env</label> <a href="../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-110"><code>	<a href="#line-104" class="ident">updateMu</a>.<a href="../../sync/mutex.go.html#line-81" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-111"><code>	<span class="keyword">defer</span> <a href="#line-104" class="ident">updateMu</a>.<a href="../../sync/mutex.go.html#line-212" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code>	<span class="comment">// Update all the cached values, creating new ones as needed.</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">	// We parse the environment variable first, so that any settings it has</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">	// are already locked in place (did[name] = true) before we consider</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">	// the defaults.</span></code></span>
+<span class="codeline" id="line-117"><code>	<label for="r17" class="ident">did</label> := <a href="../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../pkg/builtin.html#name-bool" class="ident">bool</a>)</code></span>
+<span class="codeline" id="line-118"><code>	<a href="#line-135" class="ident">parse</a>(<label for="r17" class="ident">did</label>, <label for="r16" class="ident">env</label>)</code></span>
+<span class="codeline" id="line-119"><code>	<a href="#line-135" class="ident">parse</a>(<label for="r17" class="ident">did</label>, <label for="r15" class="ident">def</label>)</code></span>
+<span class="codeline" id="line-120"><code></code></span>
+<span class="codeline" id="line-121"><code>	<span class="comment">// Clear any cached values that are no longer present.</span></code></span>
+<span class="codeline" id="line-122"><code>	<a href="#line-66" class="ident">cache</a>.<a href="../../sync/map.go.html#line-449" class="ident">Range</a>(<span class="keyword">func</span>(<label for="r18" class="ident">name</label>, <label for="r19" class="ident">v</label> <a href="../../../pkg/builtin.html#name-any" class="ident">any</a>) <a href="../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-123"><code>		<span class="keyword">if</span> !<label for="r17" class="ident">did</label>[<label for="r18" class="ident">name</label>.(<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>)] {</code></span>
+<span class="codeline" id="line-124"><code>			<label for="r19" class="ident">v</label>.(*<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>]).<a href="../../sync/atomic/type.go.html#line-57" class="ident">Store</a>(&amp;<a href="#line-68" class="ident">empty</a>)</code></span>
+<span class="codeline" id="line-125"><code>		}</code></span>
+<span class="codeline" id="line-126"><code>		<span class="keyword">return</span> <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-127"><code>	})</code></span>
+<span class="codeline" id="line-128"><code>}</code></span>
+<span class="codeline" id="line-129"><code></code></span>
+<span class="codeline" id="line-130"><code><span class="comment">// parse parses the GODEBUG setting string s,</span></code></span>
+<span class="codeline" id="line-131"><code><span class="comment">// which has the form k=v,k2=v2,k3=v3.</span></code></span>
+<span class="codeline" id="line-132"><code><span class="comment">// Later settings override earlier ones.</span></code></span>
+<span class="codeline" id="line-133"><code><span class="comment">// Parse only updates settings k=v for which did[k] = false.</span></code></span>
+<span class="codeline" id="line-134"><code><span class="comment">// It also sets did[k] = true for settings that it updates.</span></code></span>
+<span class="codeline" id="line-135"><code><span class="keyword">func</span> <label for="r20" class="ident"><a href="../../../pkg/internal/godebug.html#name-parse" class="ident">parse</a></label>(<label for="r21" class="ident">did</label> <span class="keyword">map</span>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../pkg/builtin.html#name-bool" class="ident">bool</a>, <label for="r22" class="ident">s</label> <a href="../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-136"><code>	<span class="comment">// Scan the string backward so that later settings are used</span></code></span>
+<span class="codeline" id="line-137"><code><span class="comment">	// and earlier settings are ignored.</span></code></span>
+<span class="codeline" id="line-138"><code><span class="comment">	// Note that a forward scan would cause cached values</span></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">	// to temporarily use the ignored value before being</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">	// updated to the "correct" one.</span></code></span>
+<span class="codeline" id="line-141"><code>	<label for="r23" class="ident">end</label> := <a href="../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r22" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-142"><code>	<label for="r24" class="ident">eq</label> := -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-143"><code>	<span class="keyword">for</span> <label for="r25" class="ident">i</label> := <label for="r23" class="ident">end</label> - <span class="lit-number">1</span>; <label for="r25" class="ident">i</label> &gt;= -<span class="lit-number">1</span>; <label for="r25" class="ident">i</label>-- {</code></span>
+<span class="codeline" id="line-144"><code>		<span class="keyword">if</span> <label for="r25" class="ident">i</label> == -<span class="lit-number">1</span> || <label for="r22" class="ident">s</label>[<label for="r25" class="ident">i</label>] == <span class="lit-number">','</span> {</code></span>
+<span class="codeline" id="line-145"><code>			<span class="keyword">if</span> <label for="r24" class="ident">eq</label> &gt;= <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-146"><code>				<label for="r26" class="ident">name</label>, <label for="r27" class="ident">value</label> := <label for="r22" class="ident">s</label>[<label for="r25" class="ident">i</label>+<span class="lit-number">1</span>:<label for="r24" class="ident">eq</label>], <label for="r22" class="ident">s</label>[<label for="r24" class="ident">eq</label>+<span class="lit-number">1</span>:<label for="r23" class="ident">end</label>]</code></span>
+<span class="codeline" id="line-147"><code>				<span class="keyword">if</span> !<label for="r21" class="ident">did</label>[<label for="r26" class="ident">name</label>] {</code></span>
+<span class="codeline" id="line-148"><code>					<label for="r21" class="ident">did</label>[<label for="r26" class="ident">name</label>] = <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-149"><code>					<label for="r28" class="ident">v</label>, <label for="r29" class="ident">ok</label> := <a href="#line-66" class="ident">cache</a>.<a href="../../sync/map.go.html#line-120" class="ident">Load</a>(<label for="r26" class="ident">name</label>)</code></span>
+<span class="codeline" id="line-150"><code>					<span class="keyword">if</span> !<label for="r29" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-151"><code>						<label for="r30" class="ident">p</label> := <a href="../../../pkg/builtin.html#name-new" class="ident">new</a>(<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>])</code></span>
+<span class="codeline" id="line-152"><code>						<label for="r30" class="ident">p</label>.<a href="../../sync/atomic/type.go.html#line-57" class="ident">Store</a>(&amp;<a href="#line-68" class="ident">empty</a>)</code></span>
+<span class="codeline" id="line-153"><code>						<label for="r28" class="ident">v</label>, _ = <a href="#line-66" class="ident">cache</a>.<a href="../../sync/map.go.html#line-203" class="ident">LoadOrStore</a>(<label for="r26" class="ident">name</label>, <label for="r30" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-154"><code>					}</code></span>
+<span class="codeline" id="line-155"><code>					<label for="r28" class="ident">v</label>.(*<a href="../../../pkg/sync/atomic.html" class="ident i1">atomic</a>.<a href="../../sync/atomic/type.go.html#line-43" class="ident">Pointer</a>[<a href="../../../pkg/builtin.html#name-string" class="ident">string</a>]).<a href="../../sync/atomic/type.go.html#line-57" class="ident">Store</a>(&amp;<label for="r27" class="ident">value</label>)</code></span>
+<span class="codeline" id="line-156"><code>				}</code></span>
+<span class="codeline" id="line-157"><code>			}</code></span>
+<span class="codeline" id="line-158"><code>			<label for="r24" class="ident">eq</label> = -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-159"><code>			<label for="r23" class="ident">end</label> = <label for="r25" class="ident">i</label></code></span>
+<span class="codeline" id="line-160"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r22" class="ident">s</label>[<label for="r25" class="ident">i</label>] == <span class="lit-number">'='</span> {</code></span>
+<span class="codeline" id="line-161"><code>			<label for="r24" class="ident">eq</label> = <label for="r25" class="ident">i</label></code></span>
+<span class="codeline" id="line-162"><code>		}</code></span>
+<span class="codeline" id="line-163"><code>	}</code></span>
+<span class="codeline" id="line-164"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: access_middleware.go in package github.com/leenzstra/activation_service/internal/middlewares/access</title>
+<link href="../../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	access_middleware.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/leenzstra/activation_service/internal/middlewares/access.html">github.com/leenzstra/activation_service/internal/middlewares/access</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> access</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"log"</span></label></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i1"><span class="lit-string i1">"github.com/gofiber/fiber/v2"</span></label></code></span>
+<span class="codeline" id="line-7"><code>)</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/leenzstra/activation_service/internal/middlewares/access.html#name-Config" class="ident">Config</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-11"><code>	Filter       <span class="keyword">func</span>(c *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-77" class="ident">Ctx</a>) <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> <span class="comment">// Required</span></code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code>	Unauthorized <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/app.go.html#line-34" class="ident">Handler</a>           <span class="comment">// middleware specfic</span></code></span>
+<span class="codeline" id="line-14"><code>	Validator    <span class="keyword">func</span>(*<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-77" class="ident">Ctx</a>) (<a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-15"><code>	SuccessHandler <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/app.go.html#line-34" class="ident">Handler</a></code></span>
+<span class="codeline" id="line-16"><code>	ErrorHandler <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/app.go.html#line-77" class="ident">ErrorHandler</a> </code></span>
+<span class="codeline" id="line-17"><code>}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../../pkg/github.com/leenzstra/activation_service/internal/middlewares/access.html#name-New" class="ident">New</a></label>(<label for="r1" class="ident">config</label> ...<a href="#line-10" class="ident">Config</a>) <a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/app.go.html#line-34" class="ident">Handler</a> {</code></span>
+<span class="codeline" id="line-21"><code>	<span class="keyword">var</span> <label for="r2" class="ident">cfg</label> <a href="#line-10" class="ident">Config</a></code></span>
+<span class="codeline" id="line-22"><code>	<span class="keyword">if</span> <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">config</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-23"><code>		<label for="r2" class="ident">cfg</label> = <label for="r1" class="ident">config</label>[<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-24"><code>	}</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-15" class="ident">SuccessHandler</a> == <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-27"><code>		<label for="r2" class="ident">cfg</label>.<a href="#line-15" class="ident">SuccessHandler</a> = <span class="keyword">func</span>(<label for="r3" class="ident">c</label> *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-77" class="ident">Ctx</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-28"><code>			<a href="../../../../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../../../../log/log.go.html#line-355" class="ident">Println</a>(<span class="lit-string">"ACCESS GRANTED"</span>)</code></span>
+<span class="codeline" id="line-29"><code>			<span class="keyword">return</span> <label for="r3" class="ident">c</label>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-936" class="ident">Next</a>()</code></span>
+<span class="codeline" id="line-30"><code>		}</code></span>
+<span class="codeline" id="line-31"><code>	}</code></span>
+<span class="codeline" id="line-32"><code>	<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-16" class="ident">ErrorHandler</a> == <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-33"><code>		<label for="r2" class="ident">cfg</label>.<a href="#line-16" class="ident">ErrorHandler</a> = <span class="keyword">func</span>(<label for="r4" class="ident">c</label> *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-77" class="ident">Ctx</a>, <label for="r5" class="ident">err</label> <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-34"><code>			<span class="keyword">return</span> <label for="r4" class="ident">c</label>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-1657" class="ident">Status</a>(<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/helpers.go.html#line-442" class="ident">StatusUnauthorized</a>).<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-1607" class="ident">SendString</a>(<span class="lit-string">"Access denied"</span>)</code></span>
+<span class="codeline" id="line-35"><code>		}</code></span>
+<span class="codeline" id="line-36"><code>	}</code></span>
+<span class="codeline" id="line-37"><code>	<span class="comment">// Return middleware handler</span></code></span>
+<span class="codeline" id="line-38"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r6" class="ident">c</label> *<a href="../../../../../../../pkg/github.com/gofiber/fiber/v2.html" class="ident i1">fiber</a>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-77" class="ident">Ctx</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-39"><code>		<span class="comment">// Filter request to skip middleware</span></code></span>
+<span class="codeline" id="line-40"><code>		<span class="keyword">if</span> <label for="r2" class="ident">cfg</label>.<a href="#line-11" class="ident">Filter</a> != <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> &amp;&amp; <label for="r2" class="ident">cfg</label>.<a href="#line-11" class="ident">Filter</a>(<label for="r6" class="ident">c</label>) {</code></span>
+<span class="codeline" id="line-41"><code>			<span class="keyword">return</span> <label for="r6" class="ident">c</label>.<a href="../../../../../gofiber/fiber/v2/ctx.go.html#line-936" class="ident">Next</a>()</code></span>
+<span class="codeline" id="line-42"><code>		}</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code>		<label for="r7" class="ident">valid</label>, <label for="r8" class="ident">err</label> := <label for="r2" class="ident">cfg</label>.<a href="#line-14" class="ident">Validator</a>(<label for="r6" class="ident">c</label>)</code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>		<span class="keyword">if</span> <label for="r8" class="ident">err</label> == <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> &amp;&amp; <label for="r7" class="ident">valid</label> {</code></span>
+<span class="codeline" id="line-47"><code>			<span class="keyword">return</span> <label for="r2" class="ident">cfg</label>.<a href="#line-15" class="ident">SuccessHandler</a>(<label for="r6" class="ident">c</label>)</code></span>
+<span class="codeline" id="line-48"><code>		}</code></span>
+<span class="codeline" id="line-49"><code>		<span class="keyword">return</span> <label for="r2" class="ident">cfg</label>.<a href="#line-16" class="ident">ErrorHandler</a>(<label for="r6" class="ident">c</label>, <label for="r8" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-50"><code>	}</code></span>
+<span class="codeline" id="line-51"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

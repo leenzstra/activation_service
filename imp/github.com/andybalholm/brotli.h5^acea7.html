@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method Implmentations: github.com/andybalholm/brotli.h5</title>
+<link href="../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+<pre><code><span style="font-size:x-large;">type <a href="../../../pkg/github.com/andybalholm/brotli.html">github.com/andybalholm/brotli</a>.<b><a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-34">h5</a></b></span><span style="font-size:large;"> <i>(struct)</i></span>
+
+<code><span class="title">Method Implmentations<span class="title-stat"><i></i></span></span>
+
+<div class="anchor" id="name-Common">	<a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-15">Common</a>() *<a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherCommon">hasherCommon</a>
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-20">Common</a></b></div>
+<div class="anchor" id="name-FindLongestMatch">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-114">FindLongestMatch</a>(dictionary *<a href="../../../pkg/github.com/andybalholm/brotli.html#name-encoderDictionary">encoderDictionary</a>, data []<a href="../../../pkg/builtin.html#name-byte">byte</a>, ring_buffer_mask <a href="../../../pkg/builtin.html#name-uint">uint</a>, distance_cache []<a href="../../../pkg/builtin.html#name-int">int</a>, cur_ix <a href="../../../pkg/builtin.html#name-uint">uint</a>, max_length <a href="../../../pkg/builtin.html#name-uint">uint</a>, max_backward <a href="../../../pkg/builtin.html#name-uint">uint</a>, gap <a href="../../../pkg/builtin.html#name-uint">uint</a>, max_distance <a href="../../../pkg/builtin.html#name-uint">uint</a>, out *<a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherSearchResult">hasherSearchResult</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-27">FindLongestMatch</a></b></div>
+<div class="anchor" id="name-HashTypeLength">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-17">HashTypeLength</a>() <a href="../../../pkg/builtin.html#name-uint">uint</a>
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-24">HashTypeLength</a></b></div>
+<div class="anchor" id="name-Initialize">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-44">Initialize</a>(params *<a href="../../../pkg/github.com/andybalholm/brotli.html#name-encoderParams">encoderParams</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-21">Initialize</a></b></div>
+<div class="anchor" id="name-Prepare">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-53">Prepare</a>(one_shot <a href="../../../pkg/builtin.html#name-bool">bool</a>, input_size <a href="../../../pkg/builtin.html#name-uint">uint</a>, data []<a href="../../../pkg/builtin.html#name-byte">byte</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-22">Prepare</a></b></div>
+<div class="anchor" id="name-PrepareDistanceCache">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-99">PrepareDistanceCache</a>(distance_cache []<a href="../../../pkg/builtin.html#name-int">int</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-26">PrepareDistanceCache</a></b></div>
+<div class="anchor" id="name-StitchToPreviousBlock">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-88">StitchToPreviousBlock</a>(num_bytes <a href="../../../pkg/builtin.html#name-uint">uint</a>, position <a href="../../../pkg/builtin.html#name-uint">uint</a>, ringbuffer []<a href="../../../pkg/builtin.html#name-byte">byte</a>, ringbuffer_mask <a href="../../../pkg/builtin.html#name-uint">uint</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-23">StitchToPreviousBlock</a></b></div>
+<div class="anchor" id="name-Store">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-72">Store</a>(data []<a href="../../../pkg/builtin.html#name-byte">byte</a>, mask <a href="../../../pkg/builtin.html#name-uint">uint</a>, ix <a href="../../../pkg/builtin.html#name-uint">uint</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-29">Store</a></b></div>
+<div class="anchor" id="name-StoreLookahead">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-21">StoreLookahead</a>() <a href="../../../pkg/builtin.html#name-uint">uint</a>
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-25">StoreLookahead</a></b></div>
+<div class="anchor" id="name-StoreRange">	<a href="../../../src/github.com/andybalholm/brotli/h5.go.html#line-81">StoreRange</a>(data []<a href="../../../pkg/builtin.html#name-byte">byte</a>, mask <a href="../../../pkg/builtin.html#name-uint">uint</a>, ix_start <a href="../../../pkg/builtin.html#name-uint">uint</a>, ix_end <a href="../../../pkg/builtin.html#name-uint">uint</a>)
+		*h5.M : <a href="../../../pkg/github.com/andybalholm/brotli.html#name-hasherHandle">hasherHandle</a>.<b><a href="../../../src/github.com/andybalholm/brotli/hash.go.html#line-28">StoreRange</a></b></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

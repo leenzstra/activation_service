@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/rivo/uniseg</title>
+<link href="../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>uniseg</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../index.html#pkg-github.com/rivo/uniseg">github.com/rivo/uniseg</a><i> (on <a href="https://pkg.go.dev/github.com/rivo/uniseg" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../dep/github.com/rivo/uniseg.html">one package</a>, and imported by <a href="../../../dep/github.com/rivo/uniseg.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">   <a href="../../../src/github.com/rivo/uniseg/doc.go.html#doc">#d</a> <a href="../../../src/github.com/rivo/uniseg/doc.go.html">doc.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package uniseg implements Unicode Text Segmentation, Unicode Line Breaking, and
+		string width calculation for monospace fonts. Unicode Text Segmentation conforms
+		to Unicode Standard Annex #29 (https://unicode.org/reports/tr29/) and Unicode
+		Line Breaking conforms to Unicode Standard Annex #14
+		(https://unicode.org/reports/tr14/).
+		
+		In short, using this package, you can split a string into grapheme clusters
+		(what people would usually refer to as a "character"), into words, and into
+		sentences. Or, in its simplest case, this package allows you to count the number
+		of characters in a string, especially when it contains complex characters such
+		as emojis, combining characters, or characters from Asian, Arabic, Hebrew, or
+		other languages. Additionally, you can use it to implement line breaking (or
+		"word wrapping"), that is, to determine where text can be broken over to the
+		next line when the width of the line is not big enough to fit the entire text.
+		Finally, you can use it to calculate the display width of a string for monospace
+		fonts.
+		
+		# Getting Started
+		
+		If you just want to count the number of characters in a string, you can use
+		[GraphemeClusterCount]. If you want to determine the display width of a string,
+		you can use [StringWidth]. If you want to iterate over a string, you can use
+		[Step], [StepString], or the [Graphemes] class (more convenient but less
+		performant). This will provide you with all information: grapheme clusters,
+		word boundaries, sentence boundaries, line breaks, and monospace character
+		widths. The specialized functions [FirstGraphemeCluster],
+		[FirstGraphemeClusterInString], [FirstWord], [FirstWordInString],
+		[FirstSentence], and [FirstSentenceInString] can be used if only one type of
+		information is needed.
+		
+		# Grapheme Clusters
+		
+		Consider the rainbow flag emoji: 🏳️‍🌈. On most modern systems, it appears as one
+		character. But its string representation actually has 14 bytes, so counting
+		bytes (or using len("🏳️‍🌈")) will not work as expected. Counting runes won't,
+		either: The flag has 4 Unicode code points, thus 4 runes. The stdlib function
+		utf8.RuneCountInString("🏳️‍🌈") and len([]rune("🏳️‍🌈")) will both return 4.
+		
+		The [GraphemeClusterCount] function will return 1 for the rainbow flag emoji.
+		The Graphemes class and a variety of functions in this package will allow you to
+		split strings into its grapheme clusters.
+		
+		# Word Boundaries
+		
+		Word boundaries are used in a number of different contexts. The most familiar
+		ones are selection (double-click mouse selection), cursor movement ("move to
+		next word" control-arrow keys), and the dialog option "Whole Word Search" for
+		search and replace. This package provides methods for determining word
+		boundaries.
+		
+		# Sentence Boundaries
+		
+		Sentence boundaries are often used for triple-click or some other method of
+		selecting or iterating through blocks of text that are larger than single words.
+		They are also used to determine whether words occur within the same sentence in
+		database queries. This package provides methods for determining sentence
+		boundaries.
+		
+		# Line Breaking
+		
+		Line breaking, also known as word wrapping, is the process of breaking a section
+		of text into lines such that it will fit in the available width of a page,
+		window or other display area. This package provides methods to determine the
+		positions in a string where a line must be broken, may be broken, or must not be
+		broken.
+		
+		# Monospace Width
+		
+		Monospace width, as referred to in this package, is the width of a string in a
+		monospace font. This is commonly used in terminal user interfaces or text
+		displays or editors that don't support proportional fonts. A width of 1
+		corresponds to a single character cell. The C function [wcswidth()] and its
+		implementation in other programming languages is in widespread use for the same
+		purpose. However, there is no standard for the calculation of such widths, and
+		this package differs from wcswidth() in a number of ways, presumably to generate
+		more visually pleasing results.
+		
+		To start, we assume that every code point has a width of 1, with the following
+		exceptions:
+		
+		  - Code points with grapheme cluster break properties Control, CR, LF, Extend,
+		    and ZWJ have a width of 0.
+		  - U+2E3A, Two-Em Dash, has a width of 3.
+		  - U+2E3B, Three-Em Dash, has a width of 4.
+		  - Characters with the East-Asian Width properties "Fullwidth" (F) and "Wide"
+		    (W) have a width of 2. (Properties "Ambiguous" (A) and "Neutral" (N) both
+		    have a width of 1.)
+		  - Code points with grapheme cluster break property Regional Indicator have a
+		    width of 2.
+		  - Code points with grapheme cluster break property Extended Pictographic have
+		    a width of 2, unless their Emoji Presentation flag is "No", in which case
+		    the width is 1.
+		
+		For Hangul grapheme clusters composed of conjoining Jamo and for Regional
+		Indicators (flags), all code points except the first one have a width of 0. For
+		grapheme clusters starting with an Extended Pictographic, any additional code
+		point will force a total width of 2, except if the Variation Selector-15
+		(U+FE0E) is included, in which case the total width is always 1. Grapheme
+		clusters ending with Variation Selector-16 (U+FE0F) have a width of 2.
+		
+		Note that whether these widths appear correct depends on your application's
+		render engine, to which extent it conforms to the Unicode Standard, and its
+		choice of font.
+		
+		[wcswidth()]: https://man7.org/linux/man-pages/man3/wcswidth.3.html</span>
+</span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/eastasianwidth.go.html">eastasianwidth.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/emojipresentation.go.html">emojipresentation.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html">grapheme.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/graphemeproperties.go.html">graphemeproperties.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html">graphemerules.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/line.go.html">line.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/lineproperties.go.html">lineproperties.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/linerules.go.html">linerules.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/properties.go.html">properties.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/sentence.go.html">sentence.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/sentenceproperties.go.html">sentenceproperties.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html">sentencerules.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/step.go.html">step.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/width.go.html">width.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/word.go.html">word.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/wordproperties.go.html">wordproperties.go</a></span>
+	<span class="nodocs">      <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html">wordrules.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Graphemes" data-popularity="575">	<input type='checkbox' class="fold" id="Graphemes-fold-content"><label for="Graphemes-fold-content"> type <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-19">Graphemes</a> <i>(struct)</i></label><span id='Graphemes-fold-content-docs' class="fold-docs">
+<span class="md-text">		Graphemes implements an iterator over Unicode grapheme clusters, or
+		user-perceived characters. While iterating, it also provides information
+		about word boundaries, sentence boundaries, line breaks, and monospace
+		character widths.
+		
+		After constructing the class via [NewGraphemes] for a given string "str",
+		[Graphemes.Next] is called for every grapheme cluster in a loop until it
+		returns false. Inside the loop, information about the grapheme cluster as
+		well as boundary information and character width is available via the various
+		methods (see examples below).
+		
+		Using this class to iterate over a string is convenient but it is much slower
+		than using this package's [Step] or [StepString] functions or any of the
+		other specialized functions starting with "First".</span>
+
+		<input type='checkbox' class="fold" id="Graphemes-fold-fields"><label for="Graphemes-fold-fields">Fields (<i>total 6, none are exported</i>)</label><span id='Graphemes-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Graphemes-showhide-fields"><i><label for="Graphemes-showhide-fields" class="show-inline">/* 6 unexporteds ... */</label><label for="Graphemes-showhide-fields" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-boundaries"><label for="Graphemes-fold-field-boundaries"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-34">boundaries</a> <i><a href="../../builtin.html#name-int">int</a></i></label><span id='Graphemes-fold-field-boundaries-docs' class="fold-docs">
+<span class="md-text">				The current boundary information of the [Step] parser.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-cluster"><label for="Graphemes-fold-field-cluster"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-27">cluster</a> <i><a href="../../builtin.html#name-string">string</a></i></label><span id='Graphemes-fold-field-cluster-docs' class="fold-docs">
+<span class="md-text">				The current grapheme cluster.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-offset"><label for="Graphemes-fold-field-offset"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-31">offset</a> <i><a href="../../builtin.html#name-int">int</a></i></label><span id='Graphemes-fold-field-offset-docs' class="fold-docs">
+<span class="md-text">				The byte offset of the current grapheme cluster relative to the original
+				string.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-original"><label for="Graphemes-fold-field-original"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-21">original</a> <i><a href="../../builtin.html#name-string">string</a></i></label><span id='Graphemes-fold-field-original-docs' class="fold-docs">
+<span class="md-text">				The original string.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-remaining"><label for="Graphemes-fold-field-remaining"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-24">remaining</a> <i><a href="../../builtin.html#name-string">string</a></i></label><span id='Graphemes-fold-field-remaining-docs' class="fold-docs">
+<span class="md-text">				The remaining string to be parsed.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Graphemes-fold-field-state"><label for="Graphemes-fold-field-state"><a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-37">state</a> <i><a href="../../builtin.html#name-int">int</a></i></label><span id='Graphemes-fold-field-state-docs' class="fold-docs">
+<span class="md-text">				The current state of the [Step] parser.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Graphemes-fold-methods"><label for="Graphemes-fold-methods">Methods (<i>total 10, all are exported</i>)</label><span id='Graphemes-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Bytes"><label for="Graphemes-fold-method-Bytes">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-84">Bytes</a>() []<a href="../../builtin.html#name-byte">byte</a></label><span id='Graphemes-fold-method-Bytes-docs' class="fold-docs">
+<span class="md-text">				Bytes returns a byte slice which corresponds to the current grapheme cluster.
+				If the iterator is already past the end or [Graphemes.Next] has not yet been
+				called, nil is returned.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-IsSentenceBoundary"><label for="Graphemes-fold-method-IsSentenceBoundary">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-117">IsSentenceBoundary</a>() <a href="../../builtin.html#name-bool">bool</a></label><span id='Graphemes-fold-method-IsSentenceBoundary-docs' class="fold-docs">
+<span class="md-text">				IsSentenceBoundary returns true if a sentence ends after the current
+				grapheme cluster.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-IsWordBoundary"><label for="Graphemes-fold-method-IsWordBoundary">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-108">IsWordBoundary</a>() <a href="../../builtin.html#name-bool">bool</a></label><span id='Graphemes-fold-method-IsWordBoundary-docs' class="fold-docs">
+<span class="md-text">				IsWordBoundary returns true if a word ends after the current grapheme
+				cluster.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-LineBreak"><label for="Graphemes-fold-method-LineBreak">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-128">LineBreak</a>() <a href="../../builtin.html#name-int">int</a></label><span id='Graphemes-fold-method-LineBreak-docs' class="fold-docs">
+<span class="md-text">				LineBreak returns whether the line can be broken after the current grapheme
+				cluster. A value of [LineDontBreak] means the line may not be broken, a value
+				of [LineMustBreak] means the line must be broken, and a value of
+				[LineCanBreak] means the line may or may not be broken.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Next"><label for="Graphemes-fold-method-Next">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-52">Next</a>() <a href="../../builtin.html#name-bool">bool</a></label><span id='Graphemes-fold-method-Next-docs' class="fold-docs">
+<span class="md-text">				Next advances the iterator by one grapheme cluster and returns false if no
+				clusters are left. This function must be called before the first cluster is
+				accessed.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Positions"><label for="Graphemes-fold-method-Positions">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-97">Positions</a>() (<a href="../../builtin.html#name-int">int</a>, <a href="../../builtin.html#name-int">int</a>)</label><span id='Graphemes-fold-method-Positions-docs' class="fold-docs">
+<span class="md-text">				Positions returns the interval of the current grapheme cluster as byte
+				positions into the original string. The first returned value "from" indexes
+				the first byte and the second returned value "to" indexes the first byte that
+				is not included anymore, i.e. str[from:to] is the current grapheme cluster of
+				the original string "str". If [Graphemes.Next] has not yet been called, both
+				values are 0. If the iterator is already past the end, both values are 1.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Reset"><label for="Graphemes-fold-method-Reset">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-148">Reset</a>()</label><span id='Graphemes-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset puts the iterator into its initial state such that the next call to
+				[Graphemes.Next] sets it to the first grapheme cluster again.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Runes"><label for="Graphemes-fold-method-Runes">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-67">Runes</a>() []<a href="../../builtin.html#name-rune">rune</a></label><span id='Graphemes-fold-method-Runes-docs' class="fold-docs">
+<span class="md-text">				Runes returns a slice of runes (code points) which corresponds to the current
+				grapheme cluster. If the iterator is already past the end or [Graphemes.Next]
+				has not yet been called, nil is returned.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Str"><label for="Graphemes-fold-method-Str">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-77">Str</a>() <a href="../../builtin.html#name-string">string</a></label><span id='Graphemes-fold-method-Str-docs' class="fold-docs">
+<span class="md-text">				Str returns a substring of the original string which corresponds to the
+				current grapheme cluster. If the iterator is already past the end or
+				[Graphemes.Next] has not yet been called, an empty string is returned.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Graphemes-fold-method-Width"><label for="Graphemes-fold-method-Width">(*Graphemes) <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-139">Width</a>() <a href="../../builtin.html#name-int">int</a></label><span id='Graphemes-fold-method-Width-docs' class="fold-docs">
+<span class="md-text">				Width returns the monospace width of the current grapheme cluster.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Graphemes-fold-results"><label for="Graphemes-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Graphemes-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewGraphemes">NewGraphemes</a>(str <a href="../../builtin.html#name-string">string</a>) *<b>Graphemes</b></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 24, in which 16 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-FirstGraphemeCluster">	<input type='checkbox' class="fold" id="FirstGraphemeCluster-fold-content"><label for="FirstGraphemeCluster-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-212">FirstGraphemeCluster</a>(b []<a href="../../builtin.html#name-byte">byte</a>, state <a href="../../builtin.html#name-int">int</a>) (cluster, rest []<a href="../../builtin.html#name-byte">byte</a>, width, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstGraphemeCluster-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstGraphemeCluster returns the first grapheme cluster found in the given
+		byte slice according to the rules of Unicode Standard Annex #29, Grapheme
+		Cluster Boundaries. This function can be called continuously to extract all
+		grapheme clusters from a byte slice, as illustrated in the example below.
+		
+		If you don't know the current state, for example when calling the function
+		for the first time, you must pass -1. For consecutive calls, pass the state
+		and rest slice returned by the previous call.
+		
+		The "rest" slice is the sub-slice of the original byte slice "b" starting
+		after the last byte of the identified grapheme cluster. If the length of the
+		"rest" slice is 0, the entire byte slice "b" has been processed. The
+		"cluster" byte slice is the sub-slice of the input slice containing the
+		identified grapheme cluster.
+		
+		The returned width is the width of the grapheme cluster for most monospace
+		fonts where a value of 1 represents one character cell.
+		
+		Given an empty byte slice "b", the function returns nil values.
+		
+		While slightly less convenient than using the Graphemes class, this function
+		has much better performance and makes no allocations. It lends itself well to
+		large byte slices.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstGraphemeClusterInString">	<input type='checkbox' class="fold" id="FirstGraphemeClusterInString-fold-content"><label for="FirstGraphemeClusterInString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-274">FirstGraphemeClusterInString</a>(str <a href="../../builtin.html#name-string">string</a>, state <a href="../../builtin.html#name-int">int</a>) (cluster, rest <a href="../../builtin.html#name-string">string</a>, width, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstGraphemeClusterInString-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstGraphemeClusterInString is like [FirstGraphemeCluster] but its input and
+		outputs are strings.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstLineSegment">	<input type='checkbox' class="fold" id="FirstLineSegment-fold-content"><label for="FirstLineSegment-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/line.go.html#line-46">FirstLineSegment</a>(b []<a href="../../builtin.html#name-byte">byte</a>, state <a href="../../builtin.html#name-int">int</a>) (segment, rest []<a href="../../builtin.html#name-byte">byte</a>, mustBreak <a href="../../builtin.html#name-bool">bool</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstLineSegment-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstLineSegment returns the prefix of the given byte slice after which a
+		decision to break the string over to the next line can or must be made,
+		according to the rules of Unicode Standard Annex #14. This is used to
+		implement line breaking.
+		
+		Line breaking, also known as word wrapping, is the process of breaking a
+		section of text into lines such that it will fit in the available width of a
+		page, window or other display area.
+		
+		The returned "segment" may not be broken into smaller parts, unless no other
+		breaking opportunities present themselves, in which case you may break by
+		grapheme clusters (using the [FirstGraphemeCluster] function to determine the
+		grapheme clusters).
+		
+		The "mustBreak" flag indicates whether you MUST break the line after the
+		given segment (true), for example after newline characters, or you MAY break
+		the line after the given segment (false).
+		
+		This function can be called continuously to extract all non-breaking sub-sets
+		from a byte slice, as illustrated in the example below.
+		
+		If you don't know the current state, for example when calling the function
+		for the first time, you must pass -1. For consecutive calls, pass the state
+		and rest slice returned by the previous call.
+		
+		The "rest" slice is the sub-slice of the original byte slice "b" starting
+		after the last byte of the identified line segment. If the length of the
+		"rest" slice is 0, the entire byte slice "b" has been processed. The
+		"segment" byte slice is the sub-slice of the input slice containing the
+		identified line segment.
+		
+		Given an empty byte slice "b", the function returns nil values.
+		
+		Note that in accordance with UAX #14 LB3, the final segment will end with
+		"mustBreak" set to true. You can choose to ignore this by checking if the
+		length of the "rest" slice is 0 and calling [HasTrailingLineBreak] or
+		[HasTrailingLineBreakInString] on the last rune.
+		
+		Note also that this algorithm may break within grapheme clusters. This is
+		addressed in Section 8.2 Example 6 of UAX #14. To avoid this, you can use
+		the [Step] function instead.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstLineSegmentInString">	<input type='checkbox' class="fold" id="FirstLineSegmentInString-fold-content"><label for="FirstLineSegmentInString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/line.go.html#line-82">FirstLineSegmentInString</a>(str <a href="../../builtin.html#name-string">string</a>, state <a href="../../builtin.html#name-int">int</a>) (segment, rest <a href="../../builtin.html#name-string">string</a>, mustBreak <a href="../../builtin.html#name-bool">bool</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstLineSegmentInString-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstLineSegmentInString is like FirstLineSegment() but its input and outputs
+		are strings.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstSentence">	<input type='checkbox' class="fold" id="FirstSentence-fold-content"><label for="FirstSentence-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/sentence.go.html#line-20">FirstSentence</a>(b []<a href="../../builtin.html#name-byte">byte</a>, state <a href="../../builtin.html#name-int">int</a>) (sentence, rest []<a href="../../builtin.html#name-byte">byte</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstSentence-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstSentence returns the first sentence found in the given byte slice
+		according to the rules of Unicode Standard Annex #29, Sentence Boundaries.
+		This function can be called continuously to extract all sentences from a byte
+		slice, as illustrated in the example below.
+		
+		If you don't know the current state, for example when calling the function
+		for the first time, you must pass -1. For consecutive calls, pass the state
+		and rest slice returned by the previous call.
+		
+		The "rest" slice is the sub-slice of the original byte slice "b" starting
+		after the last byte of the identified sentence. If the length of the "rest"
+		slice is 0, the entire byte slice "b" has been processed. The "sentence" byte
+		slice is the sub-slice of the input slice containing the identified sentence.
+		
+		Given an empty byte slice "b", the function returns nil values.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstSentenceInString">	<input type='checkbox' class="fold" id="FirstSentenceInString-fold-content"><label for="FirstSentenceInString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/sentence.go.html#line-56">FirstSentenceInString</a>(str <a href="../../builtin.html#name-string">string</a>, state <a href="../../builtin.html#name-int">int</a>) (sentence, rest <a href="../../builtin.html#name-string">string</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstSentenceInString-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstSentenceInString is like [FirstSentence] but its input and outputs are
+		strings.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstWord">	<input type='checkbox' class="fold" id="FirstWord-fold-content"><label for="FirstWord-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/word.go.html#line-20">FirstWord</a>(b []<a href="../../builtin.html#name-byte">byte</a>, state <a href="../../builtin.html#name-int">int</a>) (word, rest []<a href="../../builtin.html#name-byte">byte</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstWord-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstWord returns the first word found in the given byte slice according to
+		the rules of Unicode Standard Annex #29, Word Boundaries. This function can
+		be called continuously to extract all words from a byte slice, as illustrated
+		in the example below.
+		
+		If you don't know the current state, for example when calling the function
+		for the first time, you must pass -1. For consecutive calls, pass the state
+		and rest slice returned by the previous call.
+		
+		The "rest" slice is the sub-slice of the original byte slice "b" starting
+		after the last byte of the identified word. If the length of the "rest" slice
+		is 0, the entire byte slice "b" has been processed. The "word" byte slice is
+		the sub-slice of the input slice containing the identified word.
+		
+		Given an empty byte slice "b", the function returns nil values.</span>
+
+</span></div><div class="anchor value-res" id="name-FirstWordInString">	<input type='checkbox' class="fold" id="FirstWordInString-fold-content"><label for="FirstWordInString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/word.go.html#line-55">FirstWordInString</a>(str <a href="../../builtin.html#name-string">string</a>, state <a href="../../builtin.html#name-int">int</a>) (word, rest <a href="../../builtin.html#name-string">string</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='FirstWordInString-fold-content-docs' class="fold-docs">
+<span class="md-text">		FirstWordInString is like [FirstWord] but its input and outputs are strings.</span>
+
+</span></div><div class="anchor value-res" id="name-GraphemeClusterCount">	<input type='checkbox' class="fold" id="GraphemeClusterCount-fold-content"><label for="GraphemeClusterCount-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-157">GraphemeClusterCount</a>(s <a href="../../builtin.html#name-string">string</a>) (n <a href="../../builtin.html#name-int">int</a>)</label><span id='GraphemeClusterCount-fold-content-docs' class="fold-docs">
+<span class="md-text">		GraphemeClusterCount returns the number of user-perceived characters
+		(grapheme clusters) for the given string.</span>
+
+</span></div><div class="anchor value-res" id="name-HasTrailingLineBreak">	<input type='checkbox' class="fold" id="HasTrailingLineBreak-fold-content"><label for="HasTrailingLineBreak-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/line.go.html#line-120">HasTrailingLineBreak</a>(b []<a href="../../builtin.html#name-byte">byte</a>) <a href="../../builtin.html#name-bool">bool</a></label><span id='HasTrailingLineBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		HasTrailingLineBreak returns true if the last rune in the given byte slice is
+		one of the hard line break code points defined in LB4 and LB5 of [UAX #14].
+		
+		[UAX #14]: https://www.unicode.org/reports/tr14/#Algorithm</span>
+
+</span></div><div class="anchor value-res" id="name-HasTrailingLineBreakInString">	<input type='checkbox' class="fold" id="HasTrailingLineBreakInString-fold-content"><label for="HasTrailingLineBreakInString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/line.go.html#line-127">HasTrailingLineBreakInString</a>(str <a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-bool">bool</a></label><span id='HasTrailingLineBreakInString-fold-content-docs' class="fold-docs">
+<span class="md-text">		HasTrailingLineBreakInString is like [HasTrailingLineBreak] but for a string.</span>
+
+</span></div><div class="anchor value-res" id="name-NewGraphemes">	<input type='checkbox' class="fold" id="NewGraphemes-fold-content"><label for="NewGraphemes-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-41">NewGraphemes</a>(str <a href="../../builtin.html#name-string">string</a>) *<a href="#name-Graphemes">Graphemes</a></label><span id='NewGraphemes-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewGraphemes returns a new grapheme cluster iterator.</span>
+
+</span></div><div class="anchor value-res" id="name-ReverseString">	<input type='checkbox' class="fold" id="ReverseString-fold-content"><label for="ReverseString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-168">ReverseString</a>(s <a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-string">string</a></label><span id='ReverseString-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReverseString reverses the given string while observing grapheme cluster
+		boundaries.</span>
+
+</span></div><div class="anchor value-res" id="name-Step">	<input type='checkbox' class="fold" id="Step-fold-content"><label for="Step-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-90">Step</a>(b []<a href="../../builtin.html#name-byte">byte</a>, state <a href="../../builtin.html#name-int">int</a>) (cluster, rest []<a href="../../builtin.html#name-byte">byte</a>, boundaries <a href="../../builtin.html#name-int">int</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='Step-fold-content-docs' class="fold-docs">
+<span class="md-text">		Step returns the first grapheme cluster (user-perceived character) found in
+		the given byte slice. It also returns information about the boundary between
+		that grapheme cluster and the one following it as well as the monospace width
+		of the grapheme cluster. There are three types of boundary information: word
+		boundaries, sentence boundaries, and line breaks. This function is therefore
+		a combination of [FirstGraphemeCluster], [FirstWord], [FirstSentence], and
+		[FirstLineSegment].
+		
+		The "boundaries" return value can be evaluated as follows:
+		
+		  - boundaries&amp;MaskWord != 0: The boundary is a word boundary.
+		  - boundaries&amp;MaskWord == 0: The boundary is not a word boundary.
+		  - boundaries&amp;MaskSentence != 0: The boundary is a sentence boundary.
+		  - boundaries&amp;MaskSentence == 0: The boundary is not a sentence boundary.
+		  - boundaries&amp;MaskLine == LineDontBreak: You must not break the line at the
+		    boundary.
+		  - boundaries&amp;MaskLine == LineMustBreak: You must break the line at the
+		    boundary.
+		  - boundaries&amp;MaskLine == LineCanBreak: You may or may not break the line at
+		    the boundary.
+		  - boundaries &gt;&gt; ShiftWidth: The width of the grapheme cluster for most
+		    monospace fonts where a value of 1 represents one character cell.
+		
+		This function can be called continuously to extract all grapheme clusters
+		from a byte slice, as illustrated in the examples below.
+		
+		If you don't know which state to pass, for example when calling the function
+		for the first time, you must pass -1. For consecutive calls, pass the state
+		and rest slice returned by the previous call.
+		
+		The "rest" slice is the sub-slice of the original byte slice "b" starting
+		after the last byte of the identified grapheme cluster. If the length of the
+		"rest" slice is 0, the entire byte slice "b" has been processed. The
+		"cluster" byte slice is the sub-slice of the input slice containing the
+		first identified grapheme cluster.
+		
+		Given an empty byte slice "b", the function returns nil values.
+		
+		While slightly less convenient than using the Graphemes class, this function
+		has much better performance and makes no allocations. It lends itself well to
+		large byte slices.
+		
+		Note that in accordance with UAX #14 LB3, the final segment will end with
+		a mandatory line break (boundaries&amp;MaskLine == LineMustBreak). You can choose
+		to ignore this by checking if the length of the "rest" slice is 0 and calling
+		[HasTrailingLineBreak] or [HasTrailingLineBreakInString] on the last rune.</span>
+
+</span></div><div class="anchor value-res" id="name-StepString">	<input type='checkbox' class="fold" id="StepString-fold-content"><label for="StepString-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-171">StepString</a>(str <a href="../../builtin.html#name-string">string</a>, state <a href="../../builtin.html#name-int">int</a>) (cluster, rest <a href="../../builtin.html#name-string">string</a>, boundaries <a href="../../builtin.html#name-int">int</a>, newState <a href="../../builtin.html#name-int">int</a>)</label><span id='StepString-fold-content-docs' class="fold-docs">
+<span class="md-text">		StepString is like [Step] but its input and outputs are strings.</span>
+
+</span></div><div class="anchor value-res" id="name-StringWidth">	<input type='checkbox' class="fold" id="StringWidth-fold-content"><label for="StringWidth-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/width.go.html#line-46">StringWidth</a>(s <a href="../../builtin.html#name-string">string</a>) (width <a href="../../builtin.html#name-int">int</a>)</label><span id='StringWidth-fold-content-docs' class="fold-docs">
+<span class="md-text">		StringWidth returns the monospace width for the given string, that is, the
+		number of same-size cells to be occupied by the string.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 8 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 8 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-property"><i>	<input type='checkbox' class="fold" id="property-fold-content"><label for="property-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-159">property</a>(dictionary [][3]<a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>) <a href="../../builtin.html#name-int">int</a></label><span id='property-fold-content-docs' class="fold-docs">
+<span class="md-text">		property returns the Unicode property value (see constants above) of the
+		given code point.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-propertySearch"><i>	<input type='checkbox' class="fold" id="propertySearch-fold-content"><label for="propertySearch-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-137">propertySearch</a>[E](dictionary []E, r <a href="../../builtin.html#name-rune">rune</a>) (result E)</label><span id='propertySearch-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			E: interface{[3]<a href="../../builtin.html#name-int">int</a> | [4]<a href="../../builtin.html#name-int">int</a>}
+
+<span class="md-text">		propertySearch performs a binary search on a property slice and returns the
+		entry whose range (start = first array element, end = second array element)
+		includes r, or an array of 0's if no such entry was found.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-propertyWithGenCat"><i>	<input type='checkbox' class="fold" id="propertyWithGenCat-fold-content"><label for="propertyWithGenCat-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-165">propertyWithGenCat</a>(dictionary [][4]<a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>) (property, generalCategory <a href="../../builtin.html#name-int">int</a>)</label><span id='propertyWithGenCat-fold-content-docs' class="fold-docs">
+<span class="md-text">		propertyWithGenCat returns the Unicode property value and General Category
+		(see constants above) of the given code point.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-runeWidth"><i>	<input type='checkbox' class="fold" id="runeWidth-fold-content"><label for="runeWidth-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/width.go.html#line-16">runeWidth</a>(r <a href="../../builtin.html#name-rune">rune</a>, graphemeProperty <a href="../../builtin.html#name-int">int</a>) <a href="../../builtin.html#name-int">int</a></label><span id='runeWidth-fold-content-docs' class="fold-docs">
+<span class="md-text">		runeWidth returns the monospace width for the given rune. The provided
+		grapheme property is a value mapped by the [graphemeCodePoints] table.
+		
+		Every rune has a width of 1, except for runes with the following properties
+		(evaluated in this order):
+		
+		  - Control, CR, LF, Extend, ZWJ: Width of 0
+		  - \u2e3a, TWO-EM DASH: Width of 3
+		  - \u2e3b, THREE-EM DASH: Width of 4
+		  - East-Asian width Fullwidth and Wide: Width of 2 (Ambiguous and Neutral
+		    have a width of 1)
+		  - Regional Indicator: Width of 2
+		  - Extended Pictographic: Width of 2, unless Emoji Presentation is "No".</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-transitionGraphemeState"><i>	<input type='checkbox' class="fold" id="transitionGraphemeState-fold-content"><label for="transitionGraphemeState-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-98">transitionGraphemeState</a>(state <a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>) (newState, prop <a href="../../builtin.html#name-int">int</a>, boundary <a href="../../builtin.html#name-bool">bool</a>)</label><span id='transitionGraphemeState-fold-content-docs' class="fold-docs">
+<span class="md-text">		transitionGraphemeState determines the new state of the grapheme cluster
+		parser given the current state and the next code point. It also returns the
+		code point's grapheme property (the value mapped by the [graphemeCodePoints]
+		table) and whether a cluster boundary was detected.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-transitionLineBreakState"><i>	<input type='checkbox' class="fold" id="transitionLineBreakState-fold-content"><label for="transitionLineBreakState-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-291">transitionLineBreakState</a>(state <a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>, b []<a href="../../builtin.html#name-byte">byte</a>, str <a href="../../builtin.html#name-string">string</a>) (newState <a href="../../builtin.html#name-int">int</a>, lineBreak <a href="../../builtin.html#name-int">int</a>)</label><span id='transitionLineBreakState-fold-content-docs' class="fold-docs">
+<span class="md-text">		transitionLineBreakState determines the new state of the line break parser
+		given the current state and the next code point. It also returns the type of
+		line break: LineDontBreak, LineCanBreak, or LineMustBreak. If more than one
+		code point is needed to determine the new state, the byte slice or the string
+		starting after rune "r" can be used (whichever is not nil or empty) for
+		further lookups.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-transitionSentenceBreakState"><i>	<input type='checkbox' class="fold" id="transitionSentenceBreakState-fold-content"><label for="transitionSentenceBreakState-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-127">transitionSentenceBreakState</a>(state <a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>, b []<a href="../../builtin.html#name-byte">byte</a>, str <a href="../../builtin.html#name-string">string</a>) (newState <a href="../../builtin.html#name-int">int</a>, sentenceBreak <a href="../../builtin.html#name-bool">bool</a>)</label><span id='transitionSentenceBreakState-fold-content-docs' class="fold-docs">
+<span class="md-text">		transitionSentenceBreakState determines the new state of the sentence break
+		parser given the current state and the next code point. It also returns
+		whether a sentence boundary was detected. If more than one code point is
+		needed to determine the new state, the byte slice or the string starting
+		after rune "r" can be used (whichever is not nil or empty) for further
+		lookups.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-transitionWordBreakState"><i>	<input type='checkbox' class="fold" id="transitionWordBreakState-fold-content"><label for="transitionWordBreakState-fold-content"> func <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-108">transitionWordBreakState</a>(state <a href="../../builtin.html#name-int">int</a>, r <a href="../../builtin.html#name-rune">rune</a>, b []<a href="../../builtin.html#name-byte">byte</a>, str <a href="../../builtin.html#name-string">string</a>) (newState <a href="../../builtin.html#name-int">int</a>, wordBreak <a href="../../builtin.html#name-bool">bool</a>)</label><span id='transitionWordBreakState-fold-content-docs' class="fold-docs">
+<span class="md-text">		transitionWordBreakState determines the new state of the word break parser
+		given the current state and the next code point. It also returns whether a
+		word boundary was detected. If more than one code point is needed to
+		determine the new state, the byte slice or the string starting after rune "r"
+		can be used (whichever is not nil or empty) for further lookups.</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 10, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 10 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 10 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-eastAsianWidth"><i>	<input type='checkbox' class="fold" id="eastAsianWidth-fold-content"><label for="eastAsianWidth-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/eastasianwidth.go.html#line-12">eastAsianWidth</a> [][3]<a href="../../builtin.html#name-int">int</a></label><span id='eastAsianWidth-fold-content-docs' class="fold-docs">
+<span class="md-text">		eastAsianWidth are taken from
+		https://www.unicode.org/Public/14.0.0/ucd/EastAsianWidth.txt
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emojiPresentation"><i>	<input type='checkbox' class="fold" id="emojiPresentation-fold-content"><label for="emojiPresentation-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/emojipresentation.go.html#line-12">emojiPresentation</a> [][3]<a href="../../builtin.html#name-int">int</a></label><span id='emojiPresentation-fold-content-docs' class="fold-docs">
+<span class="md-text">		emojiPresentation are taken from
+		
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-graphemeCodePoints"><i>	<input type='checkbox' class="fold" id="graphemeCodePoints-fold-content"><label for="graphemeCodePoints-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/graphemeproperties.go.html#line-12">graphemeCodePoints</a> [][3]<a href="../../builtin.html#name-int">int</a></label><span id='graphemeCodePoints-fold-content-docs' class="fold-docs">
+<span class="md-text">		graphemeCodePoints are taken from
+		https://www.unicode.org/Public/14.0.0/ucd/auxiliary/GraphemeBreakProperty.txt
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grTransitions"><i>	<input type='checkbox' class="fold" id="grTransitions-fold-content"><label for="grTransitions-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-40">grTransitions</a> map[[2]<a href="../../builtin.html#name-int">int</a>][3]<a href="../../builtin.html#name-int">int</a></label><span id='grTransitions-fold-content-docs' class="fold-docs">
+<span class="md-text">		The grapheme cluster parser's state transitions. Maps (state, property) to
+		(new state, breaking instruction, rule number). The breaking instruction
+		always refers to the boundary between the last and next code point.
+		
+		This map is queried as follows:
+		
+		 1. Find specific state + specific property. Stop if found.
+		 2. Find specific state + any property.
+		 3. Find any state + specific property.
+		 4. If only (2) or (3) (but not both) was found, stop.
+		 5. If both (2) and (3) were found, use state from (3) and breaking instruction
+		    from the transition with the lower rule number, prefer (3) if rule numbers
+		    are equal. Stop.
+		 6. Assume grAny and grBoundary.
+		
+		Unicode version 14.0.0.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbTransitions"><i>	<input type='checkbox' class="fold" id="lbTransitions-fold-content"><label for="lbTransitions-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-69">lbTransitions</a> map[[2]<a href="../../builtin.html#name-int">int</a>][3]<a href="../../builtin.html#name-int">int</a></label><span id='lbTransitions-fold-content-docs' class="fold-docs">
+<span class="md-text">		The line break parser's state transitions. It's anologous to grTransitions,
+		see comments there for details. Unicode version 14.0.0.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lineBreakCodePoints"><i>	<input type='checkbox' class="fold" id="lineBreakCodePoints-fold-content"><label for="lineBreakCodePoints-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/lineproperties.go.html#line-12">lineBreakCodePoints</a> [][4]<a href="../../builtin.html#name-int">int</a></label><span id='lineBreakCodePoints-fold-content-docs' class="fold-docs">
+<span class="md-text">		lineBreakCodePoints are taken from
+		https://www.unicode.org/Public/14.0.0/ucd/LineBreak.txt
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbTransitions"><i>	<input type='checkbox' class="fold" id="sbTransitions-fold-content"><label for="sbTransitions-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-29">sbTransitions</a> map[[2]<a href="../../builtin.html#name-int">int</a>][3]<a href="../../builtin.html#name-int">int</a></label><span id='sbTransitions-fold-content-docs' class="fold-docs">
+<span class="md-text">		The sentence break parser's state transitions. It's anologous to
+		grTransitions, see comments there for details. Unicode version 14.0.0.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sentenceBreakCodePoints"><i>	<input type='checkbox' class="fold" id="sentenceBreakCodePoints-fold-content"><label for="sentenceBreakCodePoints-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/sentenceproperties.go.html#line-12">sentenceBreakCodePoints</a> [][3]<a href="../../builtin.html#name-int">int</a></label><span id='sentenceBreakCodePoints-fold-content-docs' class="fold-docs">
+<span class="md-text">		sentenceBreakCodePoints are taken from
+		https://www.unicode.org/Public/14.0.0/ucd/auxiliary/SentenceBreakProperty.txt
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbTransitions"><i>	<input type='checkbox' class="fold" id="wbTransitions-fold-content"><label for="wbTransitions-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-33">wbTransitions</a> map[[2]<a href="../../builtin.html#name-int">int</a>][3]<a href="../../builtin.html#name-int">int</a></label><span id='wbTransitions-fold-content-docs' class="fold-docs">
+<span class="md-text">		The word break parser's state transitions. It's anologous to grTransitions,
+		see comments there for details. Unicode version 14.0.0.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-workBreakCodePoints"><i>	<input type='checkbox' class="fold" id="workBreakCodePoints-fold-content"><label for="workBreakCodePoints-fold-content">  var <a href="../../../src/github.com/rivo/uniseg/wordproperties.go.html#line-12">workBreakCodePoints</a> [][3]<a href="../../builtin.html#name-int">int</a></label><span id='workBreakCodePoints-fold-content-docs' class="fold-docs">
+<span class="md-text">		workBreakCodePoints are taken from
+		https://www.unicode.org/Public/14.0.0/ucd/auxiliary/WordBreakProperty.txt
+		and
+		https://unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+		("Extended_Pictographic" only)
+		on September 10, 2022. See https://www.unicode.org/license.html for the Unicode
+		license agreement.</span>
+
+</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 228, in which 7 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-LineCanBreak">	<input type='checkbox' class="fold" id="LineCanBreak-fold-content"><label for="LineCanBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-63">LineCanBreak</a> = 1 // <span class="md-text">You may or may not break the line here.</span></label><span id='LineCanBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define whether a given text may be broken into the next line.
+		If the break is optional (LineCanBreak), you may choose to break or not based
+		on your own criteria, for example, if the text has reached the available
+		width.</span>
+
+</span></div><div class="anchor value-res" id="name-LineDontBreak">	<input type='checkbox' class="fold" id="LineDontBreak-fold-content"><label for="LineDontBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-62">LineDontBreak</a> = 0 // <span class="md-text">You may not break the line here.</span></label><span id='LineDontBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define whether a given text may be broken into the next line.
+		If the break is optional (LineCanBreak), you may choose to break or not based
+		on your own criteria, for example, if the text has reached the available
+		width.</span>
+
+</span></div><div class="anchor value-res" id="name-LineMustBreak">	<input type='checkbox' class="fold" id="LineMustBreak-fold-content"><label for="LineMustBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-64">LineMustBreak</a> = 2 // <span class="md-text">You must break the line here.</span></label><span id='LineMustBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define whether a given text may be broken into the next line.
+		If the break is optional (LineCanBreak), you may choose to break or not based
+		on your own criteria, for example, if the text has reached the available
+		width.</span>
+
+</span></div><div class="anchor value-res" id="name-MaskLine">	<input type='checkbox' class="fold" id="MaskLine-fold-content"><label for="MaskLine-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-7">MaskLine</a> = 3</label><span id='MaskLine-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit masks used to extract boundary information returned by [Step].</span>
+
+</span></div><div class="anchor value-res" id="name-MaskSentence">	<input type='checkbox' class="fold" id="MaskSentence-fold-content"><label for="MaskSentence-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-9">MaskSentence</a> = 8</label><span id='MaskSentence-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit masks used to extract boundary information returned by [Step].</span>
+
+</span></div><div class="anchor value-res" id="name-MaskWord">	<input type='checkbox' class="fold" id="MaskWord-fold-content"><label for="MaskWord-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-8">MaskWord</a> = 4</label><span id='MaskWord-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit masks used to extract boundary information returned by [Step].</span>
+
+</span></div><div class="anchor value-res" id="name-ShiftWidth">	<input type='checkbox' class="fold" id="ShiftWidth-fold-content"><label for="ShiftWidth-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-14">ShiftWidth</a> = 4</label><span id='ShiftWidth-fold-content-docs' class="fold-docs">
+<span class="md-text">		The number of bits to shift the boundary information returned by [Step] to
+		obtain the monospace width of the grapheme cluster.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 221 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 221 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-gcCc"><i>	<input type='checkbox' class="fold" id="gcCc-fold-content"><label for="gcCc-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-96">gcCc</a> = 1</label><span id='gcCc-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcCf"><i>	<input type='checkbox' class="fold" id="gcCf-fold-content"><label for="gcCf-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-112">gcCf</a> = 17</label><span id='gcCf-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcCn"><i>	<input type='checkbox' class="fold" id="gcCn-fold-content"><label for="gcCn-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-123">gcCn</a> = 28</label><span id='gcCn-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcCo"><i>	<input type='checkbox' class="fold" id="gcCo-fold-content"><label for="gcCo-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-125">gcCo</a> = 30</label><span id='gcCo-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcCs"><i>	<input type='checkbox' class="fold" id="gcCs-fold-content"><label for="gcCs-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-124">gcCs</a> = 29</label><span id='gcCs-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcLC"><i>	<input type='checkbox' class="fold" id="gcLC-fold-content"><label for="gcLC-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-115">gcLC</a> = 20</label><span id='gcLC-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcLl"><i>	<input type='checkbox' class="fold" id="gcLl-fold-content"><label for="gcLl-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-108">gcLl</a> = 13</label><span id='gcLl-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcLm"><i>	<input type='checkbox' class="fold" id="gcLm-fold-content"><label for="gcLm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-116">gcLm</a> = 21</label><span id='gcLm-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcLo"><i>	<input type='checkbox' class="fold" id="gcLo-fold-content"><label for="gcLo-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-110">gcLo</a> = 15</label><span id='gcLo-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcLu"><i>	<input type='checkbox' class="fold" id="gcLu-fold-content"><label for="gcLu-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-105">gcLu</a> = 10</label><span id='gcLu-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcMc"><i>	<input type='checkbox' class="fold" id="gcMc-fold-content"><label for="gcMc-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-119">gcMc</a> = 24</label><span id='gcMc-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcMe"><i>	<input type='checkbox' class="fold" id="gcMe-fold-content"><label for="gcMe-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-118">gcMe</a> = 23</label><span id='gcMe-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcMn"><i>	<input type='checkbox' class="fold" id="gcMn-fold-content"><label for="gcMn-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-117">gcMn</a> = 22</label><span id='gcMn-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcNd"><i>	<input type='checkbox' class="fold" id="gcNd-fold-content"><label for="gcNd-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-104">gcNd</a> = 9</label><span id='gcNd-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcNl"><i>	<input type='checkbox' class="fold" id="gcNl-fold-content"><label for="gcNl-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-120">gcNl</a> = 25</label><span id='gcNl-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcNo"><i>	<input type='checkbox' class="fold" id="gcNo-fold-content"><label for="gcNo-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-113">gcNo</a> = 18</label><span id='gcNo-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcNone"><i>	<input type='checkbox' class="fold" id="gcNone-fold-content"><label for="gcNone-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-95">gcNone</a> = 0 // <span class="md-text">gcNone must be 0.</span></label><span id='gcNone-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPc"><i>	<input type='checkbox' class="fold" id="gcPc-fold-content"><label for="gcPc-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-107">gcPc</a> = 12</label><span id='gcPc-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPd"><i>	<input type='checkbox' class="fold" id="gcPd-fold-content"><label for="gcPd-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-103">gcPd</a> = 8</label><span id='gcPd-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPe"><i>	<input type='checkbox' class="fold" id="gcPe-fold-content"><label for="gcPe-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-101">gcPe</a> = 6</label><span id='gcPe-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPf"><i>	<input type='checkbox' class="fold" id="gcPf-fold-content"><label for="gcPf-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-114">gcPf</a> = 19</label><span id='gcPf-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPi"><i>	<input type='checkbox' class="fold" id="gcPi-fold-content"><label for="gcPi-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-111">gcPi</a> = 16</label><span id='gcPi-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPo"><i>	<input type='checkbox' class="fold" id="gcPo-fold-content"><label for="gcPo-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-98">gcPo</a> = 3</label><span id='gcPo-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcPs"><i>	<input type='checkbox' class="fold" id="gcPs-fold-content"><label for="gcPs-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-100">gcPs</a> = 5</label><span id='gcPs-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcSc"><i>	<input type='checkbox' class="fold" id="gcSc-fold-content"><label for="gcSc-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-99">gcSc</a> = 4</label><span id='gcSc-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcSk"><i>	<input type='checkbox' class="fold" id="gcSk-fold-content"><label for="gcSk-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-106">gcSk</a> = 11</label><span id='gcSk-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcSm"><i>	<input type='checkbox' class="fold" id="gcSm-fold-content"><label for="gcSm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-102">gcSm</a> = 7</label><span id='gcSm-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcSo"><i>	<input type='checkbox' class="fold" id="gcSo-fold-content"><label for="gcSo-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-109">gcSo</a> = 14</label><span id='gcSo-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcZl"><i>	<input type='checkbox' class="fold" id="gcZl-fold-content"><label for="gcZl-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-121">gcZl</a> = 26</label><span id='gcZl-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcZp"><i>	<input type='checkbox' class="fold" id="gcZp-fold-content"><label for="gcZp-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-122">gcZp</a> = 27</label><span id='gcZp-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-gcZs"><i>	<input type='checkbox' class="fold" id="gcZs-fold-content"><label for="gcZs-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-97">gcZs</a> = 2</label><span id='gcZs-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unicode General Categories. Only the ones needed in the context of this
+		package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grAny"><i>	<input type='checkbox' class="fold" id="grAny-fold-content"><label for="grAny-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-5">grAny</a> = 0</label><span id='grAny-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grBoundary"><i>	<input type='checkbox' class="fold" id="grBoundary-fold-content"><label for="grBoundary-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-21">grBoundary</a> = 1</label><span id='grBoundary-fold-content-docs' class="fold-docs">
+<span class="md-text">		The grapheme cluster parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grControlLF"><i>	<input type='checkbox' class="fold" id="grControlLF-fold-content"><label for="grControlLF-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-7">grControlLF</a> = 2</label><span id='grControlLF-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grCR"><i>	<input type='checkbox' class="fold" id="grCR-fold-content"><label for="grCR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-6">grCR</a> = 1</label><span id='grCR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grExtendedPictographic"><i>	<input type='checkbox' class="fold" id="grExtendedPictographic-fold-content"><label for="grExtendedPictographic-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-12">grExtendedPictographic</a> = 7</label><span id='grExtendedPictographic-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grExtendedPictographicZWJ"><i>	<input type='checkbox' class="fold" id="grExtendedPictographicZWJ-fold-content"><label for="grExtendedPictographicZWJ-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-13">grExtendedPictographicZWJ</a> = 8</label><span id='grExtendedPictographicZWJ-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grL"><i>	<input type='checkbox' class="fold" id="grL-fold-content"><label for="grL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-8">grL</a> = 3</label><span id='grL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grLVTT"><i>	<input type='checkbox' class="fold" id="grLVTT-fold-content"><label for="grLVTT-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-10">grLVTT</a> = 5</label><span id='grLVTT-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grLVV"><i>	<input type='checkbox' class="fold" id="grLVV-fold-content"><label for="grLVV-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-9">grLVV</a> = 4</label><span id='grLVV-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grNoBoundary"><i>	<input type='checkbox' class="fold" id="grNoBoundary-fold-content"><label for="grNoBoundary-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-20">grNoBoundary</a> = 0</label><span id='grNoBoundary-fold-content-docs' class="fold-docs">
+<span class="md-text">		The grapheme cluster parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grPrepend"><i>	<input type='checkbox' class="fold" id="grPrepend-fold-content"><label for="grPrepend-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-11">grPrepend</a> = 6</label><span id='grPrepend-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grRIEven"><i>	<input type='checkbox' class="fold" id="grRIEven-fold-content"><label for="grRIEven-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-15">grRIEven</a> = 10</label><span id='grRIEven-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-grRIOdd"><i>	<input type='checkbox' class="fold" id="grRIOdd-fold-content"><label for="grRIOdd-fold-content">const <a href="../../../src/github.com/rivo/uniseg/graphemerules.go.html#line-14">grRIOdd</a> = 9</label><span id='grRIOdd-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the grapheme cluster parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbAL"><i>	<input type='checkbox' class="fold" id="lbAL-fold-content"><label for="lbAL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-34">lbAL</a> = 27</label><span id='lbAL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbAny"><i>	<input type='checkbox' class="fold" id="lbAny-fold-content"><label for="lbAny-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-7">lbAny</a> = 0</label><span id='lbAny-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbB2"><i>	<input type='checkbox' class="fold" id="lbB2-fold-content"><label for="lbB2-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-28">lbB2</a> = 21</label><span id='lbB2-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbB2SP"><i>	<input type='checkbox' class="fold" id="lbB2SP-fold-content"><label for="lbB2SP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-29">lbB2SP</a> = 22</label><span id='lbB2SP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbBA"><i>	<input type='checkbox' class="fold" id="lbBA-fold-content"><label for="lbBA-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-16">lbBA</a> = 9</label><span id='lbBA-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbBB"><i>	<input type='checkbox' class="fold" id="lbBB-fold-content"><label for="lbBB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-31">lbBB</a> = 24</label><span id='lbBB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbBK"><i>	<input type='checkbox' class="fold" id="lbBK-fold-content"><label for="lbBK-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-8">lbBK</a> = 1</label><span id='lbBK-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCB"><i>	<input type='checkbox' class="fold" id="lbCB-fold-content"><label for="lbCB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-30">lbCB</a> = 23</label><span id='lbCB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCL"><i>	<input type='checkbox' class="fold" id="lbCL-fold-content"><label for="lbCL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-18">lbCL</a> = 11</label><span id='lbCL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCLCPSP"><i>	<input type='checkbox' class="fold" id="lbCLCPSP-fold-content"><label for="lbCLCPSP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-27">lbCLCPSP</a> = 20</label><span id='lbCLCPSP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCP"><i>	<input type='checkbox' class="fold" id="lbCP-fold-content"><label for="lbCP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-19">lbCP</a> = 12</label><span id='lbCP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCPeaFWHBit"><i>	<input type='checkbox' class="fold" id="lbCPeaFWHBit-fold-content"><label for="lbCPeaFWHBit-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-54">lbCPeaFWHBit</a> = 128</label><span id='lbCPeaFWHBit-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbCR"><i>	<input type='checkbox' class="fold" id="lbCR-fold-content"><label for="lbCR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-9">lbCR</a> = 2</label><span id='lbCR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbEB"><i>	<input type='checkbox' class="fold" id="lbEB-fold-content"><label for="lbEB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-37">lbEB</a> = 30</label><span id='lbEB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbEvenRI"><i>	<input type='checkbox' class="fold" id="lbEvenRI-fold-content"><label for="lbEvenRI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-51">lbEvenRI</a> = 44</label><span id='lbEvenRI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbEX"><i>	<input type='checkbox' class="fold" id="lbEX-fold-content"><label for="lbEX-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-20">lbEX</a> = 13</label><span id='lbEX-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbExtPicCn"><i>	<input type='checkbox' class="fold" id="lbExtPicCn-fold-content"><label for="lbExtPicCn-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-52">lbExtPicCn</a> = 45</label><span id='lbExtPicCn-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbGL"><i>	<input type='checkbox' class="fold" id="lbGL-fold-content"><label for="lbGL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-15">lbGL</a> = 8</label><span id='lbGL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbH2"><i>	<input type='checkbox' class="fold" id="lbH2-fold-content"><label for="lbH2-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-48">lbH2</a> = 41</label><span id='lbH2-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbH3"><i>	<input type='checkbox' class="fold" id="lbH3-fold-content"><label for="lbH3-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-49">lbH3</a> = 42</label><span id='lbH3-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbHL"><i>	<input type='checkbox' class="fold" id="lbHL-fold-content"><label for="lbHL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-33">lbHL</a> = 26</label><span id='lbHL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbHY"><i>	<input type='checkbox' class="fold" id="lbHY-fold-content"><label for="lbHY-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-17">lbHY</a> = 10</label><span id='lbHY-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbIDEM"><i>	<input type='checkbox' class="fold" id="lbIDEM-fold-content"><label for="lbIDEM-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-38">lbIDEM</a> = 31</label><span id='lbIDEM-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbIS"><i>	<input type='checkbox' class="fold" id="lbIS-fold-content"><label for="lbIS-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-21">lbIS</a> = 14</label><span id='lbIS-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbJL"><i>	<input type='checkbox' class="fold" id="lbJL-fold-content"><label for="lbJL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-45">lbJL</a> = 38</label><span id='lbJL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbJT"><i>	<input type='checkbox' class="fold" id="lbJT-fold-content"><label for="lbJT-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-47">lbJT</a> = 40</label><span id='lbJT-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbJV"><i>	<input type='checkbox' class="fold" id="lbJV-fold-content"><label for="lbJV-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-46">lbJV</a> = 39</label><span id='lbJV-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbLB21a"><i>	<input type='checkbox' class="fold" id="lbLB21a-fold-content"><label for="lbLB21a-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-32">lbLB21a</a> = 25</label><span id='lbLB21a-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbLF"><i>	<input type='checkbox' class="fold" id="lbLF-fold-content"><label for="lbLF-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-10">lbLF</a> = 3</label><span id='lbLF-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNL"><i>	<input type='checkbox' class="fold" id="lbNL-fold-content"><label for="lbNL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-11">lbNL</a> = 4</label><span id='lbNL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNS"><i>	<input type='checkbox' class="fold" id="lbNS-fold-content"><label for="lbNS-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-26">lbNS</a> = 19</label><span id='lbNS-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNU"><i>	<input type='checkbox' class="fold" id="lbNU-fold-content"><label for="lbNU-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-35">lbNU</a> = 28</label><span id='lbNU-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNUCL"><i>	<input type='checkbox' class="fold" id="lbNUCL-fold-content"><label for="lbNUCL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-42">lbNUCL</a> = 35</label><span id='lbNUCL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNUCP"><i>	<input type='checkbox' class="fold" id="lbNUCP-fold-content"><label for="lbNUCP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-43">lbNUCP</a> = 36</label><span id='lbNUCP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNUIS"><i>	<input type='checkbox' class="fold" id="lbNUIS-fold-content"><label for="lbNUIS-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-41">lbNUIS</a> = 34</label><span id='lbNUIS-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNUNU"><i>	<input type='checkbox' class="fold" id="lbNUNU-fold-content"><label for="lbNUNU-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-39">lbNUNU</a> = 32</label><span id='lbNUNU-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbNUSY"><i>	<input type='checkbox' class="fold" id="lbNUSY-fold-content"><label for="lbNUSY-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-40">lbNUSY</a> = 33</label><span id='lbNUSY-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbOddRI"><i>	<input type='checkbox' class="fold" id="lbOddRI-fold-content"><label for="lbOddRI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-50">lbOddRI</a> = 43</label><span id='lbOddRI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbOP"><i>	<input type='checkbox' class="fold" id="lbOP-fold-content"><label for="lbOP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-23">lbOP</a> = 16</label><span id='lbOP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbPO"><i>	<input type='checkbox' class="fold" id="lbPO-fold-content"><label for="lbPO-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-44">lbPO</a> = 37</label><span id='lbPO-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbPR"><i>	<input type='checkbox' class="fold" id="lbPR-fold-content"><label for="lbPR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-36">lbPR</a> = 29</label><span id='lbPR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbQU"><i>	<input type='checkbox' class="fold" id="lbQU-fold-content"><label for="lbQU-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-24">lbQU</a> = 17</label><span id='lbQU-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbQUSP"><i>	<input type='checkbox' class="fold" id="lbQUSP-fold-content"><label for="lbQUSP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-25">lbQUSP</a> = 18</label><span id='lbQUSP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbSP"><i>	<input type='checkbox' class="fold" id="lbSP-fold-content"><label for="lbSP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-12">lbSP</a> = 5</label><span id='lbSP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbSY"><i>	<input type='checkbox' class="fold" id="lbSY-fold-content"><label for="lbSY-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-22">lbSY</a> = 15</label><span id='lbSY-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbWJ"><i>	<input type='checkbox' class="fold" id="lbWJ-fold-content"><label for="lbWJ-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-14">lbWJ</a> = 7</label><span id='lbWJ-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbZW"><i>	<input type='checkbox' class="fold" id="lbZW-fold-content"><label for="lbZW-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-13">lbZW</a> = 6</label><span id='lbZW-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-lbZWJBit"><i>	<input type='checkbox' class="fold" id="lbZWJBit-fold-content"><label for="lbZWJBit-fold-content">const <a href="../../../src/github.com/rivo/uniseg/linerules.go.html#line-53">lbZWJBit</a> = 64</label><span id='lbZWJBit-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the line break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maskGraphemeState"><i>	<input type='checkbox' class="fold" id="maskGraphemeState-fold-content"><label for="maskGraphemeState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-38">maskGraphemeState</a> = 15</label><span id='maskGraphemeState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit mask used to extract the state returned by the [Step] function, after
+		shifting. These values must correspond to the shift constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maskLineState"><i>	<input type='checkbox' class="fold" id="maskLineState-fold-content"><label for="maskLineState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-41">maskLineState</a> = 255</label><span id='maskLineState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit mask used to extract the state returned by the [Step] function, after
+		shifting. These values must correspond to the shift constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maskSentenceState"><i>	<input type='checkbox' class="fold" id="maskSentenceState-fold-content"><label for="maskSentenceState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-40">maskSentenceState</a> = 15</label><span id='maskSentenceState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit mask used to extract the state returned by the [Step] function, after
+		shifting. These values must correspond to the shift constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maskWordState"><i>	<input type='checkbox' class="fold" id="maskWordState-fold-content"><label for="maskWordState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-39">maskWordState</a> = 31</label><span id='maskWordState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit mask used to extract the state returned by the [Step] function, after
+		shifting. These values must correspond to the shift constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prA"><i>	<input type='checkbox' class="fold" id="prA-fold-content"><label for="prA-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-85">prA</a> = 79</label><span id='prA-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prAI"><i>	<input type='checkbox' class="fold" id="prAI-fold-content"><label for="prAI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-62">prAI</a> = 56</label><span id='prAI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prAL"><i>	<input type='checkbox' class="fold" id="prAL-fold-content"><label for="prAL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-50">prAL</a> = 44</label><span id='prAL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prALetter"><i>	<input type='checkbox' class="fold" id="prALetter-fold-content"><label for="prALetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-31">prALetter</a> = 25</label><span id='prALetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prAny"><i>	<input type='checkbox' class="fold" id="prAny-fold-content"><label for="prAny-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-7">prAny</a> = 1 // <span class="md-text">prAny must be 0.</span></label><span id='prAny-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prATerm"><i>	<input type='checkbox' class="fold" id="prATerm-fold-content"><label for="prATerm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-39">prATerm</a> = 33</label><span id='prATerm-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prB2"><i>	<input type='checkbox' class="fold" id="prB2-fold-content"><label for="prB2-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-71">prB2</a> = 65</label><span id='prB2-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prBA"><i>	<input type='checkbox' class="fold" id="prBA-fold-content"><label for="prBA-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-45">prBA</a> = 39</label><span id='prBA-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prBB"><i>	<input type='checkbox' class="fold" id="prBB-fold-content"><label for="prBB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-63">prBB</a> = 57</label><span id='prBB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prBK"><i>	<input type='checkbox' class="fold" id="prBK-fold-content"><label for="prBK-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-46">prBK</a> = 40</label><span id='prBK-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCB"><i>	<input type='checkbox' class="fold" id="prCB-fold-content"><label for="prCB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-80">prCB</a> = 74</label><span id='prCB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCJ"><i>	<input type='checkbox' class="fold" id="prCJ-fold-content"><label for="prCJ-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-76">prCJ</a> = 70</label><span id='prCJ-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCL"><i>	<input type='checkbox' class="fold" id="prCL-fold-content"><label for="prCL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-59">prCL</a> = 53</label><span id='prCL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prClose"><i>	<input type='checkbox' class="fold" id="prClose-fold-content"><label for="prClose-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-37">prClose</a> = 31</label><span id='prClose-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCM"><i>	<input type='checkbox' class="fold" id="prCM-fold-content"><label for="prCM-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-44">prCM</a> = 38</label><span id='prCM-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prControl"><i>	<input type='checkbox' class="fold" id="prControl-fold-content"><label for="prControl-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-11">prControl</a> = 5</label><span id='prControl-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCP"><i>	<input type='checkbox' class="fold" id="prCP-fold-content"><label for="prCP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-54">prCP</a> = 48</label><span id='prCP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prCR"><i>	<input type='checkbox' class="fold" id="prCR-fold-content"><label for="prCR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-9">prCR</a> = 3</label><span id='prCR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prDoubleQuote"><i>	<input type='checkbox' class="fold" id="prDoubleQuote-fold-content"><label for="prDoubleQuote-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-24">prDoubleQuote</a> = 18</label><span id='prDoubleQuote-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prEB"><i>	<input type='checkbox' class="fold" id="prEB-fold-content"><label for="prEB-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-75">prEB</a> = 69</label><span id='prEB-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prEM"><i>	<input type='checkbox' class="fold" id="prEM-fold-content"><label for="prEM-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-82">prEM</a> = 76</label><span id='prEM-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prEmojiPresentation"><i>	<input type='checkbox' class="fold" id="prEmojiPresentation-fold-content"><label for="prEmojiPresentation-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-89">prEmojiPresentation</a> = 83</label><span id='prEmojiPresentation-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prEX"><i>	<input type='checkbox' class="fold" id="prEX-fold-content"><label for="prEX-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-48">prEX</a> = 42</label><span id='prEX-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prExtend"><i>	<input type='checkbox' class="fold" id="prExtend-fold-content"><label for="prExtend-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-12">prExtend</a> = 6</label><span id='prExtend-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prExtendedPictographic"><i>	<input type='checkbox' class="fold" id="prExtendedPictographic-fold-content"><label for="prExtendedPictographic-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-21">prExtendedPictographic</a> = 15</label><span id='prExtendedPictographic-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prExtendNumLet"><i>	<input type='checkbox' class="fold" id="prExtendNumLet-fold-content"><label for="prExtendNumLet-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-30">prExtendNumLet</a> = 24</label><span id='prExtendNumLet-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prF"><i>	<input type='checkbox' class="fold" id="prF-fold-content"><label for="prF-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-88">prF</a> = 82</label><span id='prF-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prFormat"><i>	<input type='checkbox' class="fold" id="prFormat-fold-content"><label for="prFormat-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-32">prFormat</a> = 26</label><span id='prFormat-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prGL"><i>	<input type='checkbox' class="fold" id="prGL-fold-content"><label for="prGL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-61">prGL</a> = 55</label><span id='prGL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prH"><i>	<input type='checkbox' class="fold" id="prH-fold-content"><label for="prH-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-87">prH</a> = 81</label><span id='prH-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prH2"><i>	<input type='checkbox' class="fold" id="prH2-fold-content"><label for="prH2-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-77">prH2</a> = 71</label><span id='prH2-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prH3"><i>	<input type='checkbox' class="fold" id="prH3-fold-content"><label for="prH3-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-78">prH3</a> = 72</label><span id='prH3-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prHebrewLetter"><i>	<input type='checkbox' class="fold" id="prHebrewLetter-fold-content"><label for="prHebrewLetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-33">prHebrewLetter</a> = 27</label><span id='prHebrewLetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prHL"><i>	<input type='checkbox' class="fold" id="prHL-fold-content"><label for="prHL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-64">prHL</a> = 58</label><span id='prHL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prHY"><i>	<input type='checkbox' class="fold" id="prHY-fold-content"><label for="prHY-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-56">prHY</a> = 50</label><span id='prHY-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prID"><i>	<input type='checkbox' class="fold" id="prID-fold-content"><label for="prID-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-74">prID</a> = 68</label><span id='prID-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prIN"><i>	<input type='checkbox' class="fold" id="prIN-fold-content"><label for="prIN-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-72">prIN</a> = 66</label><span id='prIN-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prIS"><i>	<input type='checkbox' class="fold" id="prIS-fold-content"><label for="prIS-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-55">prIS</a> = 49</label><span id='prIS-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prJL"><i>	<input type='checkbox' class="fold" id="prJL-fold-content"><label for="prJL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-66">prJL</a> = 60</label><span id='prJL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prJT"><i>	<input type='checkbox' class="fold" id="prJT-fold-content"><label for="prJT-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-68">prJT</a> = 62</label><span id='prJT-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prJV"><i>	<input type='checkbox' class="fold" id="prJV-fold-content"><label for="prJV-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-67">prJV</a> = 61</label><span id='prJV-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prKatakana"><i>	<input type='checkbox' class="fold" id="prKatakana-fold-content"><label for="prKatakana-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-34">prKatakana</a> = 28</label><span id='prKatakana-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prL"><i>	<input type='checkbox' class="fold" id="prL-fold-content"><label for="prL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-15">prL</a> = 9</label><span id='prL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prLF"><i>	<input type='checkbox' class="fold" id="prLF-fold-content"><label for="prLF-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-10">prLF</a> = 4</label><span id='prLF-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prLower"><i>	<input type='checkbox' class="fold" id="prLower-fold-content"><label for="prLower-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-41">prLower</a> = 35</label><span id='prLower-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prLV"><i>	<input type='checkbox' class="fold" id="prLV-fold-content"><label for="prLV-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-18">prLV</a> = 12</label><span id='prLV-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prLVT"><i>	<input type='checkbox' class="fold" id="prLVT-fold-content"><label for="prLVT-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-19">prLVT</a> = 13</label><span id='prLVT-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prMidLetter"><i>	<input type='checkbox' class="fold" id="prMidLetter-fold-content"><label for="prMidLetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-28">prMidLetter</a> = 22</label><span id='prMidLetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prMidNum"><i>	<input type='checkbox' class="fold" id="prMidNum-fold-content"><label for="prMidNum-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-29">prMidNum</a> = 23</label><span id='prMidNum-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prMidNumLet"><i>	<input type='checkbox' class="fold" id="prMidNumLet-fold-content"><label for="prMidNumLet-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-26">prMidNumLet</a> = 20</label><span id='prMidNumLet-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prN"><i>	<input type='checkbox' class="fold" id="prN-fold-content"><label for="prN-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-83">prN</a> = 77</label><span id='prN-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNa"><i>	<input type='checkbox' class="fold" id="prNa-fold-content"><label for="prNa-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-84">prNa</a> = 78</label><span id='prNa-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNewline"><i>	<input type='checkbox' class="fold" id="prNewline-fold-content"><label for="prNewline-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-22">prNewline</a> = 16</label><span id='prNewline-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNL"><i>	<input type='checkbox' class="fold" id="prNL-fold-content"><label for="prNL-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-60">prNL</a> = 54</label><span id='prNL-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNS"><i>	<input type='checkbox' class="fold" id="prNS-fold-content"><label for="prNS-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-69">prNS</a> = 63</label><span id='prNS-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNU"><i>	<input type='checkbox' class="fold" id="prNU-fold-content"><label for="prNU-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-58">prNU</a> = 52</label><span id='prNU-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prNumeric"><i>	<input type='checkbox' class="fold" id="prNumeric-fold-content"><label for="prNumeric-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-27">prNumeric</a> = 21</label><span id='prNumeric-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prOLetter"><i>	<input type='checkbox' class="fold" id="prOLetter-fold-content"><label for="prOLetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-43">prOLetter</a> = 37</label><span id='prOLetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prOP"><i>	<input type='checkbox' class="fold" id="prOP-fold-content"><label for="prOP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-53">prOP</a> = 47</label><span id='prOP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prPO"><i>	<input type='checkbox' class="fold" id="prPO-fold-content"><label for="prPO-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-52">prPO</a> = 46</label><span id='prPO-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prPR"><i>	<input type='checkbox' class="fold" id="prPR-fold-content"><label for="prPR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-51">prPR</a> = 45</label><span id='prPR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prPrepend"><i>	<input type='checkbox' class="fold" id="prPrepend-fold-content"><label for="prPrepend-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-8">prPrepend</a> = 2 // <span class="md-text">Grapheme properties must come first, to reduce the number of bits stored in the state vector.</span></label><span id='prPrepend-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prQU"><i>	<input type='checkbox' class="fold" id="prQU-fold-content"><label for="prQU-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-49">prQU</a> = 43</label><span id='prQU-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prRegionalIndicator"><i>	<input type='checkbox' class="fold" id="prRegionalIndicator-fold-content"><label for="prRegionalIndicator-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-13">prRegionalIndicator</a> = 7</label><span id='prRegionalIndicator-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prRI"><i>	<input type='checkbox' class="fold" id="prRI-fold-content"><label for="prRI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-81">prRI</a> = 75</label><span id='prRI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSA"><i>	<input type='checkbox' class="fold" id="prSA-fold-content"><label for="prSA-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-65">prSA</a> = 59</label><span id='prSA-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSContinue"><i>	<input type='checkbox' class="fold" id="prSContinue-fold-content"><label for="prSContinue-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-38">prSContinue</a> = 32</label><span id='prSContinue-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSep"><i>	<input type='checkbox' class="fold" id="prSep-fold-content"><label for="prSep-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-42">prSep</a> = 36</label><span id='prSep-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSG"><i>	<input type='checkbox' class="fold" id="prSG-fold-content"><label for="prSG-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-79">prSG</a> = 73</label><span id='prSG-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSingleQuote"><i>	<input type='checkbox' class="fold" id="prSingleQuote-fold-content"><label for="prSingleQuote-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-25">prSingleQuote</a> = 19</label><span id='prSingleQuote-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSP"><i>	<input type='checkbox' class="fold" id="prSP-fold-content"><label for="prSP-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-47">prSP</a> = 41</label><span id='prSP-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSp"><i>	<input type='checkbox' class="fold" id="prSp-fold-content"><label for="prSp-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-35">prSp</a> = 29</label><span id='prSp-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSpacingMark"><i>	<input type='checkbox' class="fold" id="prSpacingMark-fold-content"><label for="prSpacingMark-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-14">prSpacingMark</a> = 8</label><span id='prSpacingMark-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSTerm"><i>	<input type='checkbox' class="fold" id="prSTerm-fold-content"><label for="prSTerm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-36">prSTerm</a> = 30</label><span id='prSTerm-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prSY"><i>	<input type='checkbox' class="fold" id="prSY-fold-content"><label for="prSY-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-57">prSY</a> = 51</label><span id='prSY-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prT"><i>	<input type='checkbox' class="fold" id="prT-fold-content"><label for="prT-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-17">prT</a> = 11</label><span id='prT-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prUpper"><i>	<input type='checkbox' class="fold" id="prUpper-fold-content"><label for="prUpper-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-40">prUpper</a> = 34</label><span id='prUpper-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prV"><i>	<input type='checkbox' class="fold" id="prV-fold-content"><label for="prV-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-16">prV</a> = 10</label><span id='prV-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prW"><i>	<input type='checkbox' class="fold" id="prW-fold-content"><label for="prW-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-86">prW</a> = 80</label><span id='prW-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prWJ"><i>	<input type='checkbox' class="fold" id="prWJ-fold-content"><label for="prWJ-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-73">prWJ</a> = 67</label><span id='prWJ-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prWSegSpace"><i>	<input type='checkbox' class="fold" id="prWSegSpace-fold-content"><label for="prWSegSpace-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-23">prWSegSpace</a> = 17</label><span id='prWSegSpace-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prXX"><i>	<input type='checkbox' class="fold" id="prXX-fold-content"><label for="prXX-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-6">prXX</a> = 0 // <span class="md-text">Same as prAny.</span></label><span id='prXX-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prZW"><i>	<input type='checkbox' class="fold" id="prZW-fold-content"><label for="prZW-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-70">prZW</a> = 64</label><span id='prZW-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-prZWJ"><i>	<input type='checkbox' class="fold" id="prZWJ-fold-content"><label for="prZWJ-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-20">prZWJ</a> = 14</label><span id='prZWJ-fold-content-docs' class="fold-docs">
+<span class="md-text">		The Unicode properties as used in the various parsers. Only the ones needed
+		in the context of this package are included.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbAny"><i>	<input type='checkbox' class="fold" id="sbAny-fold-content"><label for="sbAny-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-7">sbAny</a> = 0</label><span id='sbAny-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbATerm"><i>	<input type='checkbox' class="fold" id="sbATerm-fold-content"><label for="sbATerm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-10">sbATerm</a> = 3</label><span id='sbATerm-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbBreak"><i>	<input type='checkbox' class="fold" id="sbBreak-fold-content"><label for="sbBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-24">sbBreak</a> = 1</label><span id='sbBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		The sentence break parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbCR"><i>	<input type='checkbox' class="fold" id="sbCR-fold-content"><label for="sbCR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-8">sbCR</a> = 1</label><span id='sbCR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbDontBreak"><i>	<input type='checkbox' class="fold" id="sbDontBreak-fold-content"><label for="sbDontBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-23">sbDontBreak</a> = 0</label><span id='sbDontBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		The sentence break parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbLower"><i>	<input type='checkbox' class="fold" id="sbLower-fold-content"><label for="sbLower-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-12">sbLower</a> = 5</label><span id='sbLower-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbParaSep"><i>	<input type='checkbox' class="fold" id="sbParaSep-fold-content"><label for="sbParaSep-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-9">sbParaSep</a> = 2</label><span id='sbParaSep-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSB7"><i>	<input type='checkbox' class="fold" id="sbSB7-fold-content"><label for="sbSB7-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-13">sbSB7</a> = 6</label><span id='sbSB7-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSB8aClose"><i>	<input type='checkbox' class="fold" id="sbSB8aClose-fold-content"><label for="sbSB8aClose-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-17">sbSB8aClose</a> = 10</label><span id='sbSB8aClose-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSB8aSp"><i>	<input type='checkbox' class="fold" id="sbSB8aSp-fold-content"><label for="sbSB8aSp-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-18">sbSB8aSp</a> = 11</label><span id='sbSB8aSp-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSB8Close"><i>	<input type='checkbox' class="fold" id="sbSB8Close-fold-content"><label for="sbSB8Close-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-14">sbSB8Close</a> = 7</label><span id='sbSB8Close-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSB8Sp"><i>	<input type='checkbox' class="fold" id="sbSB8Sp-fold-content"><label for="sbSB8Sp-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-15">sbSB8Sp</a> = 8</label><span id='sbSB8Sp-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbSTerm"><i>	<input type='checkbox' class="fold" id="sbSTerm-fold-content"><label for="sbSTerm-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-16">sbSTerm</a> = 9</label><span id='sbSTerm-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-sbUpper"><i>	<input type='checkbox' class="fold" id="sbUpper-fold-content"><label for="sbUpper-fold-content">const <a href="../../../src/github.com/rivo/uniseg/sentencerules.go.html#line-11">sbUpper</a> = 4</label><span id='sbUpper-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the sentence break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftGraphemePropState"><i>	<input type='checkbox' class="fold" id="shiftGraphemePropState-fold-content"><label for="shiftGraphemePropState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/grapheme.go.html#line-187">shiftGraphemePropState</a> = 4</label><span id='shiftGraphemePropState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The number of bits the grapheme property must be shifted to make place for
+		grapheme states.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftLineState"><i>	<input type='checkbox' class="fold" id="shiftLineState-fold-content"><label for="shiftLineState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-31">shiftLineState</a> = 13</label><span id='shiftLineState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which states are shifted by the [Step] function. These
+		values must ensure state values defined for each of the boundary algorithms
+		don't overlap (and that they all still fit in a single int). These must
+		correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftPropState"><i>	<input type='checkbox' class="fold" id="shiftPropState-fold-content"><label for="shiftPropState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-32">shiftPropState</a> = 21 // <span class="md-text">No mask as these are always the remaining bits.</span></label><span id='shiftPropState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which states are shifted by the [Step] function. These
+		values must ensure state values defined for each of the boundary algorithms
+		don't overlap (and that they all still fit in a single int). These must
+		correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftSentence"><i>	<input type='checkbox' class="fold" id="shiftSentence-fold-content"><label for="shiftSentence-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-20">shiftSentence</a> = 3</label><span id='shiftSentence-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which boundary flags are shifted by the [Step] function.
+		These must correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftSentenceState"><i>	<input type='checkbox' class="fold" id="shiftSentenceState-fold-content"><label for="shiftSentenceState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-30">shiftSentenceState</a> = 9</label><span id='shiftSentenceState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which states are shifted by the [Step] function. These
+		values must ensure state values defined for each of the boundary algorithms
+		don't overlap (and that they all still fit in a single int). These must
+		correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftWord"><i>	<input type='checkbox' class="fold" id="shiftWord-fold-content"><label for="shiftWord-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-19">shiftWord</a> = 2</label><span id='shiftWord-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which boundary flags are shifted by the [Step] function.
+		These must correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-shiftWordState"><i>	<input type='checkbox' class="fold" id="shiftWordState-fold-content"><label for="shiftWordState-fold-content">const <a href="../../../src/github.com/rivo/uniseg/step.go.html#line-29">shiftWordState</a> = 4</label><span id='shiftWordState-fold-content-docs' class="fold-docs">
+<span class="md-text">		The bit positions by which states are shifted by the [Step] function. These
+		values must ensure state values defined for each of the boundary algorithms
+		don't overlap (and that they all still fit in a single int). These must
+		correspond to the Mask constants.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-vs15"><i>	<input type='checkbox' class="fold" id="vs15-fold-content"><label for="vs15-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-130">vs15</a> = 65038 // <span class="md-text">Variation Selector-15 (text presentation)</span></label><span id='vs15-fold-content-docs' class="fold-docs">
+<span class="md-text">		Special code points.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-vs16"><i>	<input type='checkbox' class="fold" id="vs16-fold-content"><label for="vs16-fold-content">const <a href="../../../src/github.com/rivo/uniseg/properties.go.html#line-131">vs16</a> = 65039 // <span class="md-text">Variation Selector-16 (emoji presentation)</span></label><span id='vs16-fold-content-docs' class="fold-docs">
+<span class="md-text">		Special code points.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbALetter"><i>	<input type='checkbox' class="fold" id="wbALetter-fold-content"><label for="wbALetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-13">wbALetter</a> = 6</label><span id='wbALetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbAny"><i>	<input type='checkbox' class="fold" id="wbAny-fold-content"><label for="wbAny-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-7">wbAny</a> = 0</label><span id='wbAny-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbBreak"><i>	<input type='checkbox' class="fold" id="wbBreak-fold-content"><label for="wbBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-28">wbBreak</a> = 1</label><span id='wbBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		The word break parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbCR"><i>	<input type='checkbox' class="fold" id="wbCR-fold-content"><label for="wbCR-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-8">wbCR</a> = 1</label><span id='wbCR-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbDontBreak"><i>	<input type='checkbox' class="fold" id="wbDontBreak-fold-content"><label for="wbDontBreak-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-27">wbDontBreak</a> = 0</label><span id='wbDontBreak-fold-content-docs' class="fold-docs">
+<span class="md-text">		The word break parser's breaking instructions.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbEvenRI"><i>	<input type='checkbox' class="fold" id="wbEvenRI-fold-content"><label for="wbEvenRI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-21">wbEvenRI</a> = 14</label><span id='wbEvenRI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbExtendNumLet"><i>	<input type='checkbox' class="fold" id="wbExtendNumLet-fold-content"><label for="wbExtendNumLet-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-19">wbExtendNumLet</a> = 12</label><span id='wbExtendNumLet-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbHebrewLetter"><i>	<input type='checkbox' class="fold" id="wbHebrewLetter-fold-content"><label for="wbHebrewLetter-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-12">wbHebrewLetter</a> = 5</label><span id='wbHebrewLetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbKatakana"><i>	<input type='checkbox' class="fold" id="wbKatakana-fold-content"><label for="wbKatakana-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-18">wbKatakana</a> = 11</label><span id='wbKatakana-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbLF"><i>	<input type='checkbox' class="fold" id="wbLF-fold-content"><label for="wbLF-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-9">wbLF</a> = 2</label><span id='wbLF-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbNewline"><i>	<input type='checkbox' class="fold" id="wbNewline-fold-content"><label for="wbNewline-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-10">wbNewline</a> = 3</label><span id='wbNewline-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbNumeric"><i>	<input type='checkbox' class="fold" id="wbNumeric-fold-content"><label for="wbNumeric-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-16">wbNumeric</a> = 9</label><span id='wbNumeric-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbOddRI"><i>	<input type='checkbox' class="fold" id="wbOddRI-fold-content"><label for="wbOddRI-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-20">wbOddRI</a> = 13</label><span id='wbOddRI-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbWB11"><i>	<input type='checkbox' class="fold" id="wbWB11-fold-content"><label for="wbWB11-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-17">wbWB11</a> = 10</label><span id='wbWB11-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbWB7"><i>	<input type='checkbox' class="fold" id="wbWB7-fold-content"><label for="wbWB7-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-14">wbWB7</a> = 7</label><span id='wbWB7-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbWB7c"><i>	<input type='checkbox' class="fold" id="wbWB7c-fold-content"><label for="wbWB7c-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-15">wbWB7c</a> = 8</label><span id='wbWB7c-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbWSegSpace"><i>	<input type='checkbox' class="fold" id="wbWSegSpace-fold-content"><label for="wbWSegSpace-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-11">wbWSegSpace</a> = 4</label><span id='wbWSegSpace-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-wbZWJBit"><i>	<input type='checkbox' class="fold" id="wbZWJBit-fold-content"><label for="wbZWJBit-fold-content">const <a href="../../../src/github.com/rivo/uniseg/wordrules.go.html#line-22">wbZWJBit</a> = 16 // <span class="md-text">This bit is set for any states followed by at least one zero-width joiner (see WB4 and WB3c).</span></label><span id='wbZWJBit-fold-content-docs' class="fold-docs">
+<span class="md-text">		The states of the word break parser.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

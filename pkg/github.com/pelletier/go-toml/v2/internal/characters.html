@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/pelletier/go-toml/v2/internal/characters</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>characters</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/pelletier/go-toml/v2/internal/characters">github.com/pelletier/go-toml/v2/internal/characters</a><i> (on <a href="https://pkg.go.dev/github.com/pelletier/go-toml/v2/internal/characters" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/pelletier/go-toml/v2/internal/characters.html">one package</a>, and imported by <a href="../../../../../../dep/github.com/pelletier/go-toml/v2/internal/characters.html#imported-by">2 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/ascii.go.html">ascii.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html">utf8.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 2, neither is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-acceptRange" data-popularity="0">	<input type='checkbox' class="fold" id="acceptRange-fold-content"><label for="acceptRange-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-145">acceptRange</a> <i>(struct)</i></label><span id='acceptRange-fold-content-docs' class="fold-docs">
+<span class="md-text">		acceptRange gives the range of valid values for the second byte in a UTF-8
+		sequence.</span>
+
+		<input type='checkbox' class="fold" id="acceptRange-fold-fields"><label for="acceptRange-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='acceptRange-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="acceptRange-showhide-fields"><i><label for="acceptRange-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="acceptRange-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="acceptRange-fold-field-hi"><label for="acceptRange-fold-field-hi"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-147">hi</a> <i><a href="../../../../../builtin.html#name-uint8">uint8</a></i></label><span id='acceptRange-fold-field-hi-docs' class="fold-docs">
+<span class="md-text">				// highest value for second byte.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="acceptRange-fold-field-lo"><label for="acceptRange-fold-field-lo"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-146">lo</a> <i><a href="../../../../../builtin.html#name-uint8">uint8</a></i></label><span id='acceptRange-fold-field-lo-docs' class="fold-docs">
+<span class="md-text">				// lowest value for second byte.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-utf8Err" data-popularity="125">	<input type='checkbox' class="fold" id="utf8Err-fold-content"><label for="utf8Err-fold-content"> type <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-7">utf8Err</a> <i>(struct)</i></label><span id='utf8Err-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="utf8Err-fold-fields"><label for="utf8Err-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='utf8Err-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-8">Index</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-9">Size</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="utf8Err-fold-methods"><label for="utf8Err-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='utf8Err-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( utf8Err) <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-12">Zero</a>() <a href="../../../../../builtin.html#name-bool">bool</a></span></span></span>
+		<input type='checkbox' class="fold" id="utf8Err-fold-results"><label for="utf8Err-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='utf8Err-fold-results-items' class="fold-items"><span>
+			func <a href="#name-Utf8TomlValidAlreadyEscaped">Utf8TomlValidAlreadyEscaped</a>(p []<a href="../../../../../builtin.html#name-byte">byte</a>) (err <b>utf8Err</b>)</span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 3, all are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-InvalidAscii">	<span class="nodocs"> func <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/ascii.go.html#line-40">InvalidAscii</a>(b <a href="../../../../../builtin.html#name-byte">byte</a>) <a href="../../../../../builtin.html#name-bool">bool</a></span></div><div class="anchor value-res" id="name-Utf8TomlValidAlreadyEscaped">	<input type='checkbox' class="fold" id="Utf8TomlValidAlreadyEscaped-fold-content"><label for="Utf8TomlValidAlreadyEscaped-fold-content"> func <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-35">Utf8TomlValidAlreadyEscaped</a>(p []<a href="../../../../../builtin.html#name-byte">byte</a>) (err <a href="#name-utf8Err">utf8Err</a>)</label><span id='Utf8TomlValidAlreadyEscaped-fold-content-docs' class="fold-docs">
+<span class="md-text">		Verified that a given string is only made of valid UTF-8 characters allowed
+		by the TOML spec:
+		
+		Any Unicode character may be used except those that must be escaped:
+		quotation mark, backslash, and the control characters other than tab (U+0000
+		to U+0008, U+000A to U+001F, U+007F).
+		
+		It is a copy of the Go 1.17 utf8.Valid implementation, tweaked to exit early
+		when a character is not allowed.
+		
+		The returned utf8Err is Zero() if the string is valid, or contains the byte
+		index and size of the invalid character.
+		
+		quotation mark =&gt; already checked
+		backslash =&gt; already checked
+		0-0x8 =&gt; invalid
+		0x9 =&gt; tab, ok
+		0xA - 0x1F =&gt; invalid
+		0x7F =&gt; invalid</span>
+
+</span></div><div class="anchor value-res" id="name-Utf8ValidNext">	<input type='checkbox' class="fold" id="Utf8ValidNext-fold-content"><label for="Utf8ValidNext-fold-content"> func <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-109">Utf8ValidNext</a>(p []<a href="../../../../../builtin.html#name-byte">byte</a>) <a href="../../../../../builtin.html#name-int">int</a></label><span id='Utf8ValidNext-fold-content-docs' class="fold-docs">
+<span class="md-text">		Return the size of the next rune if valid, 0 otherwise.</span>
+
+</span></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 3, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-acceptRanges"><i>	<input type='checkbox' class="fold" id="acceptRanges-fold-content"><label for="acceptRanges-fold-content">  var <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-151">acceptRanges</a> [16]<a href="#name-acceptRange">acceptRange</a></label><span id='acceptRanges-fold-content-docs' class="fold-docs">
+<span class="md-text">		acceptRanges has size 16 to avoid bounds checks in the code that uses it.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-first"><i>	<input type='checkbox' class="fold" id="first-fold-content"><label for="first-fold-content">  var <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-160">first</a> [256]<a href="../../../../../builtin.html#name-uint8">uint8</a></label><span id='first-fold-content-docs' class="fold-docs">
+<span class="md-text">		first is information about the first byte in a UTF-8 sequence.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-invalidAsciiTable"><i>	<span class="nodocs">  var <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/ascii.go.html#line-3">invalidAsciiTable</a> [256]<a href="../../../../../builtin.html#name-bool">bool</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 11, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 11 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 11 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-as"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-191">as</a> = 240 // <span class="md-text">ASCII: size 1</span></span></i></div><div class="anchor value-res hidden" id="name-hicb"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-184">hicb</a> = 191</span></i></div><div class="anchor value-res hidden" id="name-locb"><i>	<input type='checkbox' class="fold" id="locb-fold-content"><label for="locb-fold-content">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-183">locb</a> = 128</label><span id='locb-fold-content-docs' class="fold-docs">
+<span class="md-text">		The default lowest and highest continuation byte.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-s1"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-192">s1</a> = 2 // <span class="md-text">accept 0, size 2</span></span></i></div><div class="anchor value-res hidden" id="name-s2"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-193">s2</a> = 19 // <span class="md-text">accept 1, size 3</span></span></i></div><div class="anchor value-res hidden" id="name-s3"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-194">s3</a> = 3 // <span class="md-text">accept 0, size 3</span></span></i></div><div class="anchor value-res hidden" id="name-s4"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-195">s4</a> = 35 // <span class="md-text">accept 2, size 3</span></span></i></div><div class="anchor value-res hidden" id="name-s5"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-196">s5</a> = 52 // <span class="md-text">accept 3, size 4</span></span></i></div><div class="anchor value-res hidden" id="name-s6"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-197">s6</a> = 4 // <span class="md-text">accept 0, size 4</span></span></i></div><div class="anchor value-res hidden" id="name-s7"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-198">s7</a> = 68 // <span class="md-text">accept 4, size 4</span></span></i></div><div class="anchor value-res hidden" id="name-xx"><i>	<input type='checkbox' class="fold" id="xx-fold-content"><label for="xx-fold-content">const <a href="../../../../../../src/github.com/pelletier/go-toml/v2/internal/characters/utf8.go.html#line-190">xx</a> = 241 // <span class="md-text">invalid: size 1</span></label><span id='xx-fold-content-docs' class="fold-docs">
+<span class="md-text">		These names of these constants are chosen to give nice alignment in the
+		table below. The first nibble is an index into acceptRanges or F for
+		special one-byte cases. The second nibble is the Rune length or the
+		Status for the special one-byte case.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

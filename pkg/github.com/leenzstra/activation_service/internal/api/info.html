@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/leenzstra/activation_service/internal/api/info</title>
+<link href="../../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>info</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/leenzstra/activation_service/internal/api/info">github.com/leenzstra/activation_service/internal/api/info</a><i> (on <a href="https://pkg.go.dev/github.com/leenzstra/activation_service/internal/api/info" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/leenzstra/activation_service/internal/api/info.html">5 packages</a>, and imported by <a href="../../../../../../dep/github.com/leenzstra/activation_service/internal/api/info.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/controller.go.html">controller.go</a></span>
+	<span class="nodocs">      <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html">get_subjects.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 2, in which 1 is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-SubjectResponse" data-popularity="75">	<input type='checkbox' class="fold" id="SubjectResponse-fold-content"><label for="SubjectResponse-fold-content"> type <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-10">SubjectResponse</a> <i>(struct)</i></label><span id='SubjectResponse-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="SubjectResponse-fold-fields"><label for="SubjectResponse-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='SubjectResponse-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-13">Alias</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-14">Classes</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-12">Name</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-11">Sid</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="SubjectResponse-fold-results"><label for="SubjectResponse-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='SubjectResponse-fold-results-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="SubjectResponse-showhide-inputofs"><i><label for="SubjectResponse-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="SubjectResponse-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-modelsToSubjectResponses">modelsToSubjectResponses</a>(subjects []*<a href="../models.html">models</a>.<a href="../models.html#name-Subject">Subject</a>) []*<b>SubjectResponse</b></i></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor type-res hidden" id="name-handler" data-popularity="50">	<input type='checkbox' class="fold" id="handler-fold-content"><label for="handler-fold-content"> type <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/controller.go.html#line-8">handler</a> <i>(struct)</i></label><span id='handler-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="handler-fold-fields"><label for="handler-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='handler-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/controller.go.html#line-9">DB</a> <i>*<a href="../db.html">db</a>.<a href="../db.html#name-Database">Database</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="handler-fold-methods"><label for="handler-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='handler-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( handler) <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-36">GetSubjects</a>(c *<a href="../../../../gofiber/fiber/v2.html">fiber</a>.<a href="../../../../gofiber/fiber/v2.html#name-Ctx">Ctx</a>) <a href="../../../../../builtin.html#name-error">error</a></span></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 2, in which 1 is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-RegisterRoutes">	<span class="nodocs"> func <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/controller.go.html#line-12">RegisterRoutes</a>(app *<a href="../../../../gofiber/fiber/v2.html">fiber</a>.<a href="../../../../gofiber/fiber/v2.html#name-App">App</a>, db *<a href="../db.html">db</a>.<a href="../db.html#name-Database">Database</a>)</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-modelsToSubjectResponses"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/leenzstra/activation_service/internal/api/info/get_subjects.go.html#line-17">modelsToSubjectResponses</a>(subjects []*<a href="../models.html">models</a>.<a href="../models.html#name-Subject">Subject</a>) []*<a href="#name-SubjectResponse">SubjectResponse</a></span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

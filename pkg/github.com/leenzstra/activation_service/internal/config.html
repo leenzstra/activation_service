@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/leenzstra/activation_service/internal/config</title>
+<link href="../../../../../css/light-v0.5.7.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.5.7.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>config</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-github.com/leenzstra/activation_service/internal/config">github.com/leenzstra/activation_service/internal/config</a><i> (on <a href="https://pkg.go.dev/github.com/leenzstra/activation_service/internal/config" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/github.com/leenzstra/activation_service/internal/config.html">one package</a>, and imported by <a href="../../../../../dep/github.com/leenzstra/activation_service/internal/config.html#imported-by">2 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">      <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html">config.go</a></span>
+	<span class="nodocs">      <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/subjects_config.go.html">subjects_config.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 2, both are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Config" data-popularity="110">	<input type='checkbox' class="fold" id="Config-fold-content"><label for="Config-fold-content"> type <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-5">Config</a> <i>(struct)</i></label><span id='Config-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Config-fold-fields"><label for="Config-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='Config-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-9">ApiKey</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-6">DBLogin</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-7">DBPassword</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-8">DBPath</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="Config-fold-results"><label for="Config-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Config-fold-results-items' class="fold-items"><span>
+			func <a href="#name-LoadConfig">LoadConfig</a>(prod <a href="../../../../builtin.html#name-bool">bool</a>) (c <b>Config</b>, err <a href="../../../../builtin.html#name-error">error</a>)</span></span>
+		<input type='checkbox' class="fold" id="Config-fold-params"><label for="Config-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='Config-fold-params-items' class="fold-items"><span>
+			func github.com/leenzstra/activation_service/internal/db.<a href="db.html#name-New">New</a>(config <b>Config</b>) *<a href="db.html">db</a>.<a href="db.html#name-Database">Database</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-SubjectsConfig" data-popularity="110">	<input type='checkbox' class="fold" id="SubjectsConfig-fold-content"><label for="SubjectsConfig-fold-content"> type <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/subjects_config.go.html#line-5">SubjectsConfig</a> <i>(struct)</i></label><span id='SubjectsConfig-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="SubjectsConfig-fold-fields"><label for="SubjectsConfig-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='SubjectsConfig-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/subjects_config.go.html#line-6">Subjects</a> <i>[]struct{Id <a href="../../../../builtin.html#name-int">int</a>; Sid <a href="../../../../builtin.html#name-int">int</a>; Name <a href="../../../../builtin.html#name-string">string</a>; Alias <a href="../../../../builtin.html#name-string">string</a>; Classes []<a href="../../../../builtin.html#name-string">string</a>}</i></span></span></span>
+		<input type='checkbox' class="fold" id="SubjectsConfig-fold-results"><label for="SubjectsConfig-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='SubjectsConfig-fold-results-items' class="fold-items"><span>
+			func <a href="#name-LoadSubjectsConfig">LoadSubjectsConfig</a>() (c <b>SubjectsConfig</b>, err <a href="../../../../builtin.html#name-error">error</a>)</span></span>
+		<input type='checkbox' class="fold" id="SubjectsConfig-fold-params"><label for="SubjectsConfig-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='SubjectsConfig-fold-params-items' class="fold-items"><span>
+			func github.com/leenzstra/activation_service/internal/db.<a href="db.html#name-Database">Database</a>.<a href="../../../../../src/github.com/leenzstra/activation_service/internal/db/db.go.html#line-40">InitSubjectsInfo</a>(sc *<b>SubjectsConfig</b>) <a href="../../../../builtin.html#name-error">error</a></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 2, both are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-LoadConfig">	<span class="nodocs"> func <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/config.go.html#line-13">LoadConfig</a>(prod <a href="../../../../builtin.html#name-bool">bool</a>) (c <a href="#name-Config">Config</a>, err <a href="../../../../builtin.html#name-error">error</a>)</span></div><div class="anchor value-res" id="name-LoadSubjectsConfig">	<span class="nodocs"> func <a href="../../../../../src/github.com/leenzstra/activation_service/internal/config/subjects_config.go.html#line-15">LoadSubjectsConfig</a>() (c <a href="#name-SubjectsConfig">SubjectsConfig</a>, err <a href="../../../../builtin.html#name-error">error</a>)</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.5.7</i>. (GOOS=linux GOARCH=amd64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
